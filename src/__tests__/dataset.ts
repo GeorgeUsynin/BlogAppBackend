@@ -106,6 +106,21 @@ const posts: TDatabase.TPost[] = [
     },
 ];
 
+export const longDescription =
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non nisi commodo, blandit dolor et, pulvinar nibh. Proin eu euismod odio. Nullam elementum erat ullamcorper odio gravida feugiat. Mauris lorem ipsum, efficitur vel dui at, ultricies commodo metus. Phasellus dignissim quam ac porttitor porttitor. Etiam ut pharetra ligula. Duis a tempor sem. Mauris sit amet porttitor metus. Aenean convallis dui a nunc lobortis mattis. Aenean nec imperdiet justo. Donec eu ipsum eu enim sagittis viverra ac nec elit. In id bibendum velit. Pellentesque in ullamcorper lectus, ut efficitur libero.';
+
+export const longWebsiteUrl =
+    'https://ecolifestyleecolifestyleecolifestyleecolifestyleecolifestylecolifestylecolifestylecolifestyle.com';
+
+export const longTitle =
+    'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...';
+
+export const longShortDescription =
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed venenatis et felis id suscipit. Quisque eleifend congue felis a sodales.';
+
+export const longContent =
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget rhoncus lectus. Nullam eu condimentum arcu, id laoreet dui. Suspendisse finibus placerat lorem sed volutpat. Proin nisi libero, ullamcorper vel ornare at, lobortis non mi. Donec porttitor magna turpis, cursus pellentesque neque pretium lobortis. Vestibulum imperdiet tellus porta, tempor nulla ut, volutpat dui. Pellentesque vitae blandit sapien. Cras vel pulvinar tortor. Duis id velit sapien. Maecenas gravida metus magna, vel iaculis augue bibendum iaculis. Nunc euismod vestibulum eros, sit amet vestibulum nibh tincidunt sed. Vestibulum hendrerit, velit pharetra pharetra gravida, augue ligula semper orci, finibus ornare magna ex pellentesque velit. Maecenas gravida metus magna, vel iaculis augue bibendum iaculis. Nunc euismod vestibulum eros, sit amet vestibulum nibh tincidunt sed. Vestibulum hendrerit, velit pharetra pharetra gravida, augue ligula semper orci, finibus ornare magna ex pellentesque velit. finibus ornare magna ex pellentesque velit.';
+
 export const dataset: TDatabase.DBType = {
     blogs,
     posts,

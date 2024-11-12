@@ -25,12 +25,6 @@ export const db: TDatabase.DBType = {
 };
 
 export const setDB = (dataset?: TDatabase.DBType) => {
-    if (!dataset) {
-        db.blogs = [];
-        db.posts = [];
-        return;
-    }
-
-    db.blogs = dataset.blogs;
-    db.posts = dataset.posts;
+    db.blogs = dataset?.blogs || [];
+    db.posts = dataset?.posts || [];
 };

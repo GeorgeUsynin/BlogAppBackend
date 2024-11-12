@@ -1,3 +1,3 @@
-import { HTTP_STATUS_CODES } from './constants';
+import { HTTP_STATUS_CODES, ROUTES } from './constants';
 
-export { HTTP_STATUS_CODES };
+export { HTTP_STATUS_CODES, ROUTES };

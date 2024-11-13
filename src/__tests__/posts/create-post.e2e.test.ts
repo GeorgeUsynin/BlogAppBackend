@@ -59,6 +59,22 @@ describe('create a post', () => {
                 expect(createErrorMessages({ title: ['isRequired'] })).toEqual(body);
             });
 
+            it('returns 400 status code and proper error object if `title` is empty or contain only spaces', async () => {
+                const newPost: CreateUpdatePostInputModel = {
+                    title: ' ',
+                    blogId: '2',
+                    content: 'New content',
+                    shortDescription: 'New short description',
+                };
+                const { body } = await request
+                    .post(ROUTES.POSTS)
+                    .set(getAuthorization())
+                    .send(newPost)
+                    .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
+
+                expect(createErrorMessages({ title: ['isEmptyString'] })).toEqual(body);
+            });
+
             it('returns 400 status code and proper error object for bad `title` type', async () => {
                 const newPost: CreateUpdatePostInputModel = {
                     //@ts-expect-error bad request (title type is invalid)
@@ -108,6 +124,22 @@ describe('create a post', () => {
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
                 expect(createErrorMessages({ shortDescription: ['isRequired'] })).toEqual(body);
+            });
+
+            it('returns 400 status code and proper error object if `shortDescription` is empty or contain only spaces', async () => {
+                const newPost: CreateUpdatePostInputModel = {
+                    title: 'New title',
+                    blogId: '2',
+                    content: 'New content',
+                    shortDescription: ' ',
+                };
+                const { body } = await request
+                    .post(ROUTES.POSTS)
+                    .set(getAuthorization())
+                    .send(newPost)
+                    .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
+
+                expect(createErrorMessages({ shortDescription: ['isEmptyString'] })).toEqual(body);
             });
 
             it('returns 400 status code and proper error object for bad `shortDescription` type', async () => {
@@ -161,6 +193,22 @@ describe('create a post', () => {
                 expect(createErrorMessages({ content: ['isRequired'] })).toEqual(body);
             });
 
+            it('returns 400 status code and proper error object if `content` is empty or contain only spaces', async () => {
+                const newPost: CreateUpdatePostInputModel = {
+                    title: 'New title',
+                    blogId: '2',
+                    content: ' ',
+                    shortDescription: 'New short description',
+                };
+                const { body } = await request
+                    .post(ROUTES.POSTS)
+                    .set(getAuthorization())
+                    .send(newPost)
+                    .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
+
+                expect(createErrorMessages({ content: ['isEmptyString'] })).toEqual(body);
+            });
+
             it('returns 400 status code and proper error object for bad `content` type', async () => {
                 const newPost: CreateUpdatePostInputModel = {
                     title: 'New title',
@@ -210,6 +258,22 @@ describe('create a post', () => {
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
                 expect(createErrorMessages({ blogId: ['isRequired'] })).toEqual(body);
+            });
+
+            it('returns 400 status code and proper error object if `blogId` is empty or contain only spaces', async () => {
+                const newPost: CreateUpdatePostInputModel = {
+                    title: 'New title',
+                    blogId: ' ',
+                    content: 'New content',
+                    shortDescription: 'New short description',
+                };
+                const { body } = await request
+                    .post(ROUTES.POSTS)
+                    .set(getAuthorization())
+                    .send(newPost)
+                    .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
+
+                expect(createErrorMessages({ blogId: ['isEmptyString'] })).toEqual(body);
             });
 
             it('returns 400 status code and proper error object for bad `blogId` type', async () => {

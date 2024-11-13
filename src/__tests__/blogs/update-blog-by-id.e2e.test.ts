@@ -48,6 +48,21 @@ describe('update blog by id', () => {
                 expect(createErrorMessages({ name: ['isRequired'] })).toEqual(body);
             });
 
+            it('returns 400 status code and proper error object if `name` is empty or contain only spaces', async () => {
+                const updatedBlog: CreateUpdateBlogInputModel = {
+                    name: ' ',
+                    description: 'Eco lifestyle description',
+                    websiteUrl: 'https://ecolifestyle.com',
+                };
+                const { body } = await request
+                    .put(`${ROUTES.BLOGS}/${requestedId}`)
+                    .set(getAuthorization())
+                    .send(updatedBlog)
+                    .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
+
+                expect(createErrorMessages({ name: ['isEmptyString'] })).toEqual(body);
+            });
+
             it('returns 400 status code and proper error object for bad `name` type', async () => {
                 const updatedBlog: CreateUpdateBlogInputModel = {
                     //@ts-expect-error bad request (name type is invalid)
@@ -96,6 +111,21 @@ describe('update blog by id', () => {
                 expect(createErrorMessages({ description: ['isRequired'] })).toEqual(body);
             });
 
+            it('returns 400 status code and proper error object if `description` is empty or contain only spaces', async () => {
+                const updatedBlog: CreateUpdateBlogInputModel = {
+                    name: 'New name',
+                    description: ' ',
+                    websiteUrl: 'https://ecolifestyle.com',
+                };
+                const { body } = await request
+                    .put(`${ROUTES.BLOGS}/${requestedId}`)
+                    .set(getAuthorization())
+                    .send(updatedBlog)
+                    .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
+
+                expect(createErrorMessages({ description: ['isEmptyString'] })).toEqual(body);
+            });
+
             it('returns 400 status code and proper error object for bad `description` type', async () => {
                 const updatedBlog: CreateUpdateBlogInputModel = {
                     name: 'New name',
@@ -142,6 +172,21 @@ describe('update blog by id', () => {
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
                 expect(createErrorMessages({ websiteUrl: ['isRequired'] })).toEqual(body);
+            });
+
+            it('returns 400 status code and proper error object if `websiteUrl` is empty or contain only spaces', async () => {
+                const updatedBlog: CreateUpdateBlogInputModel = {
+                    name: 'New name',
+                    description: 'New description',
+                    websiteUrl: ' ',
+                };
+                const { body } = await request
+                    .put(`${ROUTES.BLOGS}/${requestedId}`)
+                    .set(getAuthorization())
+                    .send(updatedBlog)
+                    .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
+
+                expect(createErrorMessages({ websiteUrl: ['isEmptyString'] })).toEqual(body);
             });
 
             it('returns 400 status code and proper error object for bad `websiteUrl` type', async () => {

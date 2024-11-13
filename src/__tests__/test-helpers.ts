@@ -6,7 +6,7 @@ import { SETTINGS } from '../app-settings';
 
 export const request = agent(app);
 
-type TProperties = 'isRequired' | 'isString' | 'maxLength';
+type TProperties = 'isRequired' | 'isString' | 'isEmptyString' | 'maxLength';
 
 type TValues = {
     name?: TProperties[];
@@ -18,8 +18,6 @@ type TValues = {
     blogId?: (Exclude<TProperties, 'maxLength'> | 'blogIdNotExist')[];
 };
 
-const websiteUrlPattern = '^https://([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$';
-
 const errorMessagesConfig = {
     isRequired: (field: string) => ({
         message: `${capitalizeFirstLetter(field)} field is required`,
@@ -29,12 +27,16 @@ const errorMessagesConfig = {
         message: `${capitalizeFirstLetter(field)} field should be a string`,
         field,
     }),
+    isEmptyString: (field: string) => ({
+        message: `${capitalizeFirstLetter(field)} field should not be empty or contain only spaces`,
+        field,
+    }),
     maxLength: (field: string, length: number) => ({
         message: `Max length should be ${length} characters`,
         field,
     }),
     isPattern: (field: string) => ({
-        message: `${capitalizeFirstLetter(field)} should follow next pattern: ${websiteUrlPattern}`,
+        message: `${capitalizeFirstLetter(field)} should match the specified URL pattern`,
         field,
     }),
     blogIdNotExist: (field: string) => ({
@@ -53,10 +55,16 @@ export const createErrorMessages = (values: TValues) => {
             switch (value) {
                 case 'isRequired':
                     errorsMessages.push(errorMessagesConfig.isRequired('name'));
+                    break;
                 case 'isString':
                     errorsMessages.push(errorMessagesConfig.isString('name'));
+                    break;
+                case 'isEmptyString':
+                    errorsMessages.push(errorMessagesConfig.isEmptyString('name'));
+                    break;
                 case 'maxLength':
                     errorsMessages.push(errorMessagesConfig.maxLength('name', 15));
+                    break;
             }
         });
     }
@@ -66,10 +74,16 @@ export const createErrorMessages = (values: TValues) => {
             switch (value) {
                 case 'isRequired':
                     errorsMessages.push(errorMessagesConfig.isRequired('description'));
+                    break;
                 case 'isString':
                     errorsMessages.push(errorMessagesConfig.isString('description'));
+                    break;
+                case 'isEmptyString':
+                    errorsMessages.push(errorMessagesConfig.isEmptyString('description'));
+                    break;
                 case 'maxLength':
                     errorsMessages.push(errorMessagesConfig.maxLength('description', 500));
+                    break;
             }
         });
     }
@@ -79,12 +93,19 @@ export const createErrorMessages = (values: TValues) => {
             switch (value) {
                 case 'isRequired':
                     errorsMessages.push(errorMessagesConfig.isRequired('websiteUrl'));
+                    break;
                 case 'isString':
                     errorsMessages.push(errorMessagesConfig.isString('websiteUrl'));
+                    break;
+                case 'isEmptyString':
+                    errorsMessages.push(errorMessagesConfig.isEmptyString('websiteUrl'));
+                    break;
                 case 'maxLength':
                     errorsMessages.push(errorMessagesConfig.maxLength('websiteUrl', 100));
+                    break;
                 case 'isPattern':
                     errorsMessages.push(errorMessagesConfig.isPattern('websiteUrl'));
+                    break;
             }
         });
     }
@@ -94,10 +115,16 @@ export const createErrorMessages = (values: TValues) => {
             switch (value) {
                 case 'isRequired':
                     errorsMessages.push(errorMessagesConfig.isRequired('title'));
+                    break;
                 case 'isString':
                     errorsMessages.push(errorMessagesConfig.isString('title'));
+                    break;
+                case 'isEmptyString':
+                    errorsMessages.push(errorMessagesConfig.isEmptyString('title'));
+                    break;
                 case 'maxLength':
                     errorsMessages.push(errorMessagesConfig.maxLength('title', 30));
+                    break;
             }
         });
     }
@@ -107,8 +134,13 @@ export const createErrorMessages = (values: TValues) => {
             switch (value) {
                 case 'isRequired':
                     errorsMessages.push(errorMessagesConfig.isRequired('shortDescription'));
+                    break;
                 case 'isString':
                     errorsMessages.push(errorMessagesConfig.isString('shortDescription'));
+                    break;
+                case 'isEmptyString':
+                    errorsMessages.push(errorMessagesConfig.isEmptyString('shortDescription'));
+                    break;
                 case 'maxLength':
                     errorsMessages.push(errorMessagesConfig.maxLength('shortDescription', 100));
             }
@@ -120,10 +152,16 @@ export const createErrorMessages = (values: TValues) => {
             switch (value) {
                 case 'isRequired':
                     errorsMessages.push(errorMessagesConfig.isRequired('content'));
+                    break;
                 case 'isString':
                     errorsMessages.push(errorMessagesConfig.isString('content'));
+                    break;
+                case 'isEmptyString':
+                    errorsMessages.push(errorMessagesConfig.isEmptyString('content'));
+                    break;
                 case 'maxLength':
                     errorsMessages.push(errorMessagesConfig.maxLength('content', 1000));
+                    break;
             }
         });
     }
@@ -133,10 +171,16 @@ export const createErrorMessages = (values: TValues) => {
             switch (value) {
                 case 'isRequired':
                     errorsMessages.push(errorMessagesConfig.isRequired('blogId'));
+                    break;
                 case 'isString':
                     errorsMessages.push(errorMessagesConfig.isString('blogId'));
+                    break;
+                case 'isEmptyString':
+                    errorsMessages.push(errorMessagesConfig.isEmptyString('blogId'));
+                    break;
                 case 'blogIdNotExist':
                     errorsMessages.push(errorMessagesConfig.blogIdNotExist('blogId'));
+                    break;
             }
         });
     }
@@ -144,9 +188,4 @@ export const createErrorMessages = (values: TValues) => {
     return { errorsMessages };
 };
 
-export const getAuthorization = () => {
-    const buff = Buffer.from(`${SETTINGS.CREDENTIALS.LOGIN}:${SETTINGS.CREDENTIALS.PASSWORD}`, 'utf8');
-    const codedAuth = buff.toString('base64');
-
-    return { Authorization: `Basic ${codedAuth}` };
-};
+export const getAuthorization = () => ({ Authorization: `Basic ${SETTINGS.CODE_AUTH_BASE64}` });

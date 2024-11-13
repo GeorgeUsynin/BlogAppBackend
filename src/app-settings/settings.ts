@@ -9,4 +9,5 @@ export const SETTINGS = {
         LOGIN: process.env.LOGIN,
         PASSWORD: process.env.PASSWORD,
     },
+    CODE_AUTH_BASE64: Buffer.from(`${process.env.LOGIN}:${process.env.PASSWORD}`, 'utf8').toString('base64'),
 };

@@ -1,7 +1,7 @@
 import { getAllBlogsHandler } from './getAllBlogsHandler';
 import { getBlogByIDHandler } from './getBlogByIDHandler';
 import { createBlogHandler } from './createBlogHandler';
-import { updateBlogHandler } from './updateBlogHandler';
+import { updateBlogByIDHandler } from './updateBlogByIDHandler';
 import { deleteBlogByID } from './deleteBlogByID';
 
-export { getAllBlogsHandler, getBlogByIDHandler, createBlogHandler, updateBlogHandler, deleteBlogByID };
+export { getAllBlogsHandler, getBlogByIDHandler, createBlogHandler, updateBlogByIDHandler, deleteBlogByID };

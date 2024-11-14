@@ -3,6 +3,7 @@ import { checkSchema } from 'express-validator';
 import { createUpdateBlogValidationSchema } from './validators';
 import * as RequestHandler from './blogsRequestHandlers';
 import { authHandler, errorHandler } from './sharedHandlers';
+
 export const BlogsRouter = Router();
 
 const commonValidators = [authHandler, checkSchema(createUpdateBlogValidationSchema, ['body']), errorHandler];
@@ -11,7 +12,7 @@ const BlogsController = {
     getAllBlogs: RequestHandler.getAllBlogsHandler,
     getBlogByID: RequestHandler.getBlogByIDHandler,
     createBlog: RequestHandler.createBlogHandler,
-    updateBlogByID: RequestHandler.updateBlogHandler,
+    updateBlogByID: RequestHandler.updateBlogByIDHandler,
     deleteBlogByID: RequestHandler.deleteBlogByID,
 };
 

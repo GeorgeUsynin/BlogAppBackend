@@ -1,4 +1,5 @@
 import { BlogsRouter } from './BlogsRouter';
 import { TestRouter } from './TestRouter';
+import { PostsRouter } from './PostsRouter';
 
-export { BlogsRouter, TestRouter };
+export { BlogsRouter, PostsRouter, TestRouter };

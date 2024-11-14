@@ -46,7 +46,7 @@ describe('update post by id', () => {
                     shortDescription: 'New short description',
                 };
                 const { body } = await request
-                    .put(ROUTES.POSTS)
+                    .put(`${ROUTES.POSTS}/${requestedId}`)
                     .set(getAuthorization())
                     .send(newUpdatedPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -62,7 +62,7 @@ describe('update post by id', () => {
                     shortDescription: 'New short description',
                 };
                 const { body } = await request
-                    .put(ROUTES.POSTS)
+                    .put(`${ROUTES.POSTS}/${requestedId}`)
                     .set(getAuthorization())
                     .send(newUpdatedPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -79,7 +79,7 @@ describe('update post by id', () => {
                     shortDescription: 'New short description',
                 };
                 const { body } = await request
-                    .put(ROUTES.POSTS)
+                    .put(`${ROUTES.POSTS}/${requestedId}`)
                     .set(getAuthorization())
                     .send(newUpdatedPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -95,7 +95,7 @@ describe('update post by id', () => {
                     shortDescription: 'New short description',
                 };
                 const { body } = await request
-                    .put(ROUTES.POSTS)
+                    .put(`${ROUTES.POSTS}/${requestedId}`)
                     .set(getAuthorization())
                     .send(newUpdatedPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -113,7 +113,7 @@ describe('update post by id', () => {
                     content: 'New content',
                 };
                 const { body } = await request
-                    .put(ROUTES.POSTS)
+                    .put(`${ROUTES.POSTS}/${requestedId}`)
                     .set(getAuthorization())
                     .send(newUpdatedPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -129,7 +129,7 @@ describe('update post by id', () => {
                     shortDescription: ' ',
                 };
                 const { body } = await request
-                    .put(ROUTES.POSTS)
+                    .put(`${ROUTES.POSTS}/${requestedId}`)
                     .set(getAuthorization())
                     .send(newUpdatedPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -146,7 +146,7 @@ describe('update post by id', () => {
                     content: 'New content',
                 };
                 const { body } = await request
-                    .put(ROUTES.POSTS)
+                    .put(`${ROUTES.POSTS}/${requestedId}`)
                     .set(getAuthorization())
                     .send(newUpdatedPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -162,7 +162,7 @@ describe('update post by id', () => {
                     content: 'New content',
                 };
                 const { body } = await request
-                    .put(ROUTES.POSTS)
+                    .put(`${ROUTES.POSTS}/${requestedId}`)
                     .set(getAuthorization())
                     .send(newUpdatedPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -180,7 +180,7 @@ describe('update post by id', () => {
                     shortDescription: 'New short description',
                 };
                 const { body } = await request
-                    .put(ROUTES.POSTS)
+                    .put(`${ROUTES.POSTS}/${requestedId}`)
                     .set(getAuthorization())
                     .send(newUpdatedPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -196,7 +196,7 @@ describe('update post by id', () => {
                     shortDescription: 'New short description',
                 };
                 const { body } = await request
-                    .put(ROUTES.POSTS)
+                    .put(`${ROUTES.POSTS}/${requestedId}`)
                     .set(getAuthorization())
                     .send(newUpdatedPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -213,7 +213,7 @@ describe('update post by id', () => {
                     content: [],
                 };
                 const { body } = await request
-                    .put(ROUTES.POSTS)
+                    .put(`${ROUTES.POSTS}/${requestedId}`)
                     .set(getAuthorization())
                     .send(newUpdatedPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -229,7 +229,7 @@ describe('update post by id', () => {
                     content: longContent,
                 };
                 const { body } = await request
-                    .put(ROUTES.POSTS)
+                    .put(`${ROUTES.POSTS}/${requestedId}`)
                     .set(getAuthorization())
                     .send(newUpdatedPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -247,7 +247,7 @@ describe('update post by id', () => {
                     content: 'New content',
                 };
                 const { body } = await request
-                    .put(ROUTES.POSTS)
+                    .put(`${ROUTES.POSTS}/${requestedId}`)
                     .set(getAuthorization())
                     .send(newUpdatedPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -263,7 +263,7 @@ describe('update post by id', () => {
                     shortDescription: 'New short description',
                 };
                 const { body } = await request
-                    .put(ROUTES.POSTS)
+                    .put(`${ROUTES.POSTS}/${requestedId}`)
                     .set(getAuthorization())
                     .send(newUpdatedPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -280,7 +280,7 @@ describe('update post by id', () => {
                     content: 'New content',
                 };
                 const { body } = await request
-                    .put(ROUTES.POSTS)
+                    .put(`${ROUTES.POSTS}/${requestedId}`)
                     .set(getAuthorization())
                     .send(newUpdatedPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -296,7 +296,7 @@ describe('update post by id', () => {
                     content: 'New content',
                 };
                 const { body } = await request
-                    .put(ROUTES.POSTS)
+                    .put(`${ROUTES.POSTS}/${requestedId}`)
                     .set(getAuthorization())
                     .send(newUpdatedPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);

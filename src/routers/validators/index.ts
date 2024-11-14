@@ -1,3 +1,4 @@
 import { createUpdateBlogValidationSchema } from './blogValidationSchema';
+import { createUpdatePostValidationSchema } from './postValidationSchema';
 
-export { createUpdateBlogValidationSchema };
+export { createUpdateBlogValidationSchema, createUpdatePostValidationSchema };

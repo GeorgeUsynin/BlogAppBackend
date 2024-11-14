@@ -4,7 +4,7 @@ import { HTTP_STATUS_CODES } from '../../constants';
 import type { RequestWithParamsAndBody } from '../../types';
 import type { CreateUpdateBlogInputModel, URIParamsBlogIDModel } from '../../models/blogs';
 
-export const updateBlogHandler = (
+export const updateBlogByIDHandler = (
     req: RequestWithParamsAndBody<URIParamsBlogIDModel, CreateUpdateBlogInputModel>,
     res: Response
 ) => {

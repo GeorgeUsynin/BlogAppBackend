@@ -1,6 +1,10 @@
 import { CreateUpdateBlogInputModel } from '../../../models/blogs';
 import { Schema } from 'express-validator';
 
+const nameMaxLength = 15;
+const descriptionMaxLength = 500;
+const websiteUrlMaxLength = 100;
+
 export const createUpdateBlogValidationSchema: Schema<keyof CreateUpdateBlogInputModel> = {
     name: {
         exists: {
@@ -15,8 +19,8 @@ export const createUpdateBlogValidationSchema: Schema<keyof CreateUpdateBlogInpu
             errorMessage: 'Name field should not be empty or contain only spaces',
         },
         isLength: {
-            options: { max: 15 },
-            errorMessage: 'Max length should be 15 characters',
+            options: { max: nameMaxLength },
+            errorMessage: `Max length should be ${nameMaxLength} characters`,
         },
     },
     description: {
@@ -32,8 +36,8 @@ export const createUpdateBlogValidationSchema: Schema<keyof CreateUpdateBlogInpu
             errorMessage: 'Description field should not be empty or contain only spaces',
         },
         isLength: {
-            options: { max: 500 },
-            errorMessage: 'Max length should be 500 characters',
+            options: { max: descriptionMaxLength },
+            errorMessage: `Max length should be ${descriptionMaxLength} characters`,
         },
     },
     websiteUrl: {
@@ -49,8 +53,8 @@ export const createUpdateBlogValidationSchema: Schema<keyof CreateUpdateBlogInpu
             errorMessage: 'WebsiteUrl field should not be empty or contain only spaces',
         },
         isLength: {
-            options: { max: 100 },
-            errorMessage: 'Max length should be 100 characters',
+            options: { max: websiteUrlMaxLength },
+            errorMessage: `Max length should be ${websiteUrlMaxLength} characters`,
         },
         isURL: {
             errorMessage: `WebsiteUrl should match the specified URL pattern`,

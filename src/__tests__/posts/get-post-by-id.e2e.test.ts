@@ -12,7 +12,7 @@ describe('get post by id', () => {
         //requesting post by id
         const { body } = await request.get(`${ROUTES.POSTS}/${requestedId}`).expect(HTTP_STATUS_CODES.OK_200);
 
-        expect(body).toEqual(dataset.posts[1]);
+        expect(body).toEqual(dataset.posts[2]);
     });
 
     it('returns 404 status code if there is no requested post in database', async () => {

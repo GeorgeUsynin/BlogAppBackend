@@ -2,7 +2,9 @@ import cors from 'cors';
 import express, { Request, Response } from 'express';
 import { HTTP_STATUS_CODES } from './constants';
 import { ROUTES } from './constants';
-import { BlogsRouter, PostsRouter, TestRouter } from './routers';
+import { BlogsRouter } from './features/blogs/router';
+import { PostsRouter } from './features/posts/router';
+import { TestRouter } from './features/tests/router';
 
 export const app = express(); // create app
 

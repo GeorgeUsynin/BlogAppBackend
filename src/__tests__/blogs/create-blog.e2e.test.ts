@@ -2,7 +2,7 @@ import { request, createErrorMessages, getAuthorization } from '../test-helpers'
 import { setDB } from '../../database';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 import { longDescription, longWebsiteUrl } from '../dataset';
-import { CreateUpdateBlogInputModel, BlogViewModel } from '../../models/blogs';
+import { CreateUpdateBlogInputModel, BlogViewModel } from '../../features/blogs/models';
 
 describe('create a blog', () => {
     beforeEach(() => {

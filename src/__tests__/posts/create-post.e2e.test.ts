@@ -2,7 +2,7 @@ import { request, createErrorMessages, getAuthorization } from '../test-helpers'
 import { setDB } from '../../database';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 import { dataset, longContent, longTitle, longShortDescription } from '../dataset';
-import { CreateUpdatePostInputModel, PostViewModel } from '../../models/posts';
+import { CreateUpdatePostInputModel, PostViewModel } from '../../features/posts/models';
 
 describe('create a post', () => {
     beforeEach(() => {

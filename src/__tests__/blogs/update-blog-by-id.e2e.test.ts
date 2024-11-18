@@ -2,7 +2,7 @@ import { request, createErrorMessages, getAuthorization } from '../test-helpers'
 import { setDB } from '../../database';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 import { dataset, longDescription, longWebsiteUrl } from '../dataset';
-import { CreateUpdateBlogInputModel } from '../../models/blogs';
+import { CreateUpdateBlogInputModel } from '../../features/blogs/models';
 
 describe('update blog by id', () => {
     beforeEach(() => {

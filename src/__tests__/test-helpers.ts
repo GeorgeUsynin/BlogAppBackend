@@ -1,6 +1,6 @@
 import { app } from '../app';
 import { agent } from 'supertest';
-import { CreateUpdateBlogErrorViewModel } from '../models/blogs';
+import { CreateUpdateBlogErrorViewModel } from '../features/blogs/models';
 import { capitalizeFirstLetter } from '../helpers';
 import { SETTINGS } from '../app-settings';
 

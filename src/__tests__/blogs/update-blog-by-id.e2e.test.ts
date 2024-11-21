@@ -1,17 +1,31 @@
-import { request, createErrorMessages, getAuthorization } from '../test-helpers';
-import { setDB } from '../../database';
+import { dbHelper, request, createErrorMessages, getAuthorization } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
-import { dataset, longDescription, longWebsiteUrl } from '../dataset';
+import { blogs, fakeRequestedObjectId, longDescription, longWebsiteUrl } from '../dataset';
 import { CreateUpdateBlogInputModel } from '../../features/blogs/models';
 
 describe('update blog by id', () => {
-    beforeEach(() => {
-        setDB({ blogs: dataset.blogs, posts: [] });
+    beforeAll(async () => {
+        await dbHelper.connectToDb();
     });
 
-    const requestedId = '2';
+    beforeEach(async () => {
+        await dbHelper.setDb({ blogs, posts: [] });
+    });
+
+    afterEach(async () => {
+        await dbHelper.resetCollections(['blogs']);
+    });
+
+    afterAll(async () => {
+        await dbHelper.dropDb();
+        await dbHelper.closeConnection();
+    });
+
+    let requestedId: string;
 
     it('updates blog by id', async () => {
+        requestedId = await dbHelper.getSecondBlogId();
+
         const updatedBlog: CreateUpdateBlogInputModel = {
             description: 'New description',
             name: 'New name',
@@ -251,7 +265,6 @@ describe('update blog by id', () => {
     });
 
     it('return 404 status code if there is no blog in database', async () => {
-        const fakeRequestedId = '999';
         const updatedBlog: CreateUpdateBlogInputModel = {
             description: 'New description',
             name: 'New name',
@@ -259,7 +272,7 @@ describe('update blog by id', () => {
         };
 
         await request
-            .put(`${ROUTES.BLOGS}/${fakeRequestedId}`)
+            .put(`${ROUTES.BLOGS}/${fakeRequestedObjectId}`)
             .set(getAuthorization())
             .send(updatedBlog)
             .expect(HTTP_STATUS_CODES.NOT_FOUND_404);

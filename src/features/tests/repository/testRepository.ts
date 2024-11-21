@@ -1,5 +1,8 @@
-import { setDB } from '../../../database';
+import { blogsCollection, postsCollection } from '../../../database/mongoDB';
 
 export const testRepository = {
-    deleteAllData: () => setDB(),
+    deleteAllData: async () => {
+        await blogsCollection.deleteMany({});
+        await postsCollection.deleteMany({});
+    },
 };

@@ -1,21 +1,28 @@
 import { request } from './test-helpers';
-import { setDB } from '../database';
+import { dbHelper } from './test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../constants';
-import { dataset } from './dataset';
+import { blogs, posts } from './dataset';
 
 describe('/testing/all-data', () => {
-    beforeEach(() => {
-        setDB();
+    beforeEach(async () => {
+        await dbHelper.connectToDb();
+    });
+
+    afterAll(async () => {
+        await dbHelper.dropDb();
+        await dbHelper.closeConnection();
     });
 
     it('deletes all data from database', async () => {
         //populating the database with blogs
-        setDB(dataset);
+        await dbHelper.setDb({ blogs, posts });
 
         // checking if all blogs are in the database
-        await request.get(ROUTES.BLOGS).expect(HTTP_STATUS_CODES.OK_200, [...dataset.blogs]);
+        const { body: allBlogs } = await request.get(ROUTES.BLOGS).expect(HTTP_STATUS_CODES.OK_200);
+        expect(allBlogs.length).toBe(4);
         // checking if all posts are in the database
-        await request.get(ROUTES.POSTS).expect(HTTP_STATUS_CODES.OK_200, [...dataset.posts]);
+        const { body: allPosts } = await request.get(ROUTES.POSTS).expect(HTTP_STATUS_CODES.OK_200);
+        expect(allPosts.length).toBe(8);
 
         // deleting all data
         await request.delete(ROUTES.TESTING).expect(HTTP_STATUS_CODES.NO_CONTENT_204);

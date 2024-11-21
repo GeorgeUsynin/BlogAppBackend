@@ -1,6 +1,7 @@
 import { CreateUpdatePostInputModel } from '../models';
 import { Schema } from 'express-validator';
 import { blogsRepository } from '../../blogs/repository';
+import { ObjectId } from 'mongodb';
 
 const titleMaxLength = 30;
 const shortDescriptionMaxLength = 100;
@@ -71,8 +72,8 @@ export const createUpdatePostValidationSchema: Schema<keyof CreateUpdatePostInpu
             errorMessage: 'BlogId field should not be empty or contain only spaces',
         },
         custom: {
-            options: (blogId: string) => {
-                const blog = blogsRepository.findBlogById(blogId);
+            options: async (blogId: string) => {
+                const blog = await blogsRepository.findBlogById(new ObjectId(blogId));
                 if (!blog) {
                     throw new Error('There is no blog existed with provided blogId');
                 }

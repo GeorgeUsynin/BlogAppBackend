@@ -3,6 +3,7 @@ import { agent } from 'supertest';
 import { CreateUpdateBlogErrorViewModel } from '../features/blogs/models';
 import { capitalizeFirstLetter } from '../helpers';
 import { SETTINGS } from '../app-settings';
+import { TDatabase, blogsCollection, postsCollection, connectToDatabase, client, db } from '../database/mongoDB';
 
 export const request = agent(app);
 
@@ -189,3 +190,49 @@ export const createErrorMessages = (values: TValues) => {
 };
 
 export const getAuthorization = () => ({ Authorization: `Basic ${SETTINGS.CODE_AUTH_BASE64}` });
+
+type TDataset = {
+    blogs: TDatabase.TBlog[];
+    posts: TDatabase.TPost[];
+};
+
+export const dbHelper = {
+    connectToDb: async () => {
+        await connectToDatabase(SETTINGS.MONGO_URL as string, SETTINGS.DB_NAMES.TEST);
+    },
+    closeConnection: async () => {
+        await client.close();
+    },
+    resetCollections: async (collectionNames: ('blogs' | 'posts')[]) => {
+        if (collectionNames.includes('blogs')) {
+            await blogsCollection.deleteMany({});
+        }
+        if (collectionNames.includes('posts')) {
+            await postsCollection.deleteMany({});
+        }
+    },
+    setDb: async (dataset: TDataset) => {
+        await blogsCollection.insertMany(dataset.blogs);
+
+        if (!dataset.posts.length) {
+            return;
+        }
+
+        const blogs = await blogsCollection.find({}).toArray();
+
+        const postsWithBlogId = dataset.posts.map(post => {
+            const blogName = post.blogName;
+            const blogId = blogs.find(blog => blog.name === blogName)?._id;
+            return { ...post, blogId: blogId?.toString() as string };
+        });
+
+        await postsCollection.insertMany(postsWithBlogId);
+    },
+    dropDb: async () => {
+        await db.dropDatabase();
+    },
+    getSecondBlogId: async () => {
+        const allBlogs = await blogsCollection.find({}).toArray();
+        return allBlogs[1]._id.toString();
+    },
+};

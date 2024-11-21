@@ -1,22 +1,31 @@
-import { db } from '../../../database';
+import { ObjectId, WithId } from 'mongodb';
+import { blogsCollection, TDatabase } from '../../../database/mongoDB';
 import type { CreateUpdateBlogInputModel, BlogViewModel } from '../models';
 
 export const blogsRepository = {
-    findAllBlogs: () => db.blogs,
-    findBlogById: (id: string) => db.blogs.find(blog => blog.id === id),
-    mapRequestedPayloadToViewModel: (payload: CreateUpdateBlogInputModel): BlogViewModel => ({
-        id: (+new Date()).toString(),
-        description: payload.description,
-        name: payload.name,
-        websiteUrl: payload.websiteUrl,
+    findAllBlogs: async () => {
+        const blogs = await blogsCollection.find({}).toArray();
+        return blogs.map(blog => blogsRepository.mapMongoBlogToViewModel(blog));
+    },
+    findBlogById: async (id: ObjectId) => {
+        const blog = await blogsCollection.findOne({ _id: id });
+        if (!blog) return null;
+        return blogsRepository.mapMongoBlogToViewModel(blog);
+    },
+    addBlog: async (payload: CreateUpdateBlogInputModel) => {
+        const { insertedId } = await blogsCollection.insertOne({ ...payload });
+        return blogsRepository.mapMongoBlogToViewModel({ _id: insertedId, ...payload });
+    },
+    updateBlog: async (id: ObjectId, payload: CreateUpdateBlogInputModel) => {
+        return await blogsCollection.findOneAndUpdate({ _id: id }, { $set: { ...payload } });
+    },
+    deleteBlogById: async (id: ObjectId) => {
+        return await blogsCollection.findOneAndDelete({ _id: id });
+    },
+    mapMongoBlogToViewModel: (blog: WithId<TDatabase.TBlog>): BlogViewModel => ({
+        id: blog._id.toString(),
+        description: blog.description,
+        name: blog.name,
+        websiteUrl: blog.websiteUrl,
     }),
-    addBlog: (blog: BlogViewModel) => db.blogs.push(blog),
-    updateBlog: (existedBlog: BlogViewModel, payload: CreateUpdateBlogInputModel) => {
-        const index = db.blogs.findIndex(blog => blog.id === existedBlog.id);
-        db.blogs.splice(index, 1, { ...existedBlog, ...payload });
-    },
-    deleteBlogById: (id: string) => {
-        const index = db.blogs.findIndex(blog => blog.id === id);
-        db.blogs.splice(index, 1);
-    },
 };

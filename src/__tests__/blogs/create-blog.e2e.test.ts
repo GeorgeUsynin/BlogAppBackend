@@ -1,12 +1,20 @@
-import { request, createErrorMessages, getAuthorization } from '../test-helpers';
-import { setDB } from '../../database';
+import { request, createErrorMessages, getAuthorization, dbHelper } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 import { longDescription, longWebsiteUrl } from '../dataset';
 import { CreateUpdateBlogInputModel, BlogViewModel } from '../../features/blogs/models';
 
 describe('create a blog', () => {
-    beforeEach(() => {
-        setDB();
+    beforeAll(async () => {
+        await dbHelper.connectToDb();
+    });
+
+    afterEach(async () => {
+        await dbHelper.resetCollections(['blogs']);
+    });
+
+    afterAll(async () => {
+        await dbHelper.dropDb();
+        await dbHelper.closeConnection();
     });
 
     it('creates a new blog', async () => {

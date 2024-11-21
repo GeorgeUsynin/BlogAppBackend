@@ -1,29 +1,25 @@
-import type { TDatabase } from '../database';
+import type { TDatabase } from '../database/mongoDB';
 
-const blogs: TDatabase.TBlog[] = [
+export const blogs: TDatabase.TBlog[] = [
     {
-        id: '1',
         name: 'Eco Lifestyle',
         description:
             'Eco Lifestyle is dedicated to sustainable living and environmental awareness. Discover practical tips on green living, eco-friendly products, and guides to help reduce your carbon footprint and live more consciously.',
         websiteUrl: 'https://ecolifestyle.com',
     },
     {
-        id: '2',
         name: 'Tech Trends',
         description:
             'Tech Trends offers the latest insights into technological advancements and digital innovations. Stay updated with the newest trends in AI, gadgets, software, and industry changes, all explained in a simple and engaging manner.',
         websiteUrl: 'https://techtrends.io',
     },
     {
-        id: '3',
         name: 'Wellness Path',
         description:
             'Wellness Path is a resource for those seeking a healthier lifestyle. From mindfulness techniques to nutritional guidance, our blog covers every aspect of physical and mental wellness for a balanced, healthier life.',
         websiteUrl: 'https://wellnesspath.org',
     },
     {
-        id: '4',
         name: 'Creative Minds',
         description:
             'Creative Minds celebrates art, design, and creativity. With interviews, tutorials, and inspiration from artists worldwide, our blog is a hub for those looking to boost their creative journey and discover new art forms.',
@@ -31,9 +27,8 @@ const blogs: TDatabase.TBlog[] = [
     },
 ];
 
-const posts: TDatabase.TPost[] = [
+export const posts: TDatabase.TPost[] = [
     {
-        id: '101',
         title: 'Easy Green Home Tips',
         shortDescription: 'Simple steps to make your home more eco-friendly.',
         content:
@@ -42,7 +37,6 @@ const posts: TDatabase.TPost[] = [
         blogName: 'Eco Lifestyle',
     },
     {
-        id: '102',
         title: 'Top 5 Eco Products',
         shortDescription: 'Our top picks for sustainable everyday products.',
         content:
@@ -51,7 +45,6 @@ const posts: TDatabase.TPost[] = [
         blogName: 'Eco Lifestyle',
     },
     {
-        id: '103',
         title: 'Latest AI Innovations',
         shortDescription: 'Discover the most exciting AI breakthroughs of 2023.',
         content:
@@ -60,7 +53,6 @@ const posts: TDatabase.TPost[] = [
         blogName: 'Tech Trends',
     },
     {
-        id: '104',
         title: 'Gadgets You Need in 2024',
         shortDescription: 'Must-have tech gadgets for the new year.',
         content:
@@ -69,7 +61,6 @@ const posts: TDatabase.TPost[] = [
         blogName: 'Tech Trends',
     },
     {
-        id: '105',
         title: 'Mindfulness for Beginners',
         shortDescription: 'A simple guide to starting mindfulness.',
         content:
@@ -78,7 +69,6 @@ const posts: TDatabase.TPost[] = [
         blogName: 'Wellness Path',
     },
     {
-        id: '106',
         title: '10 Healthy Snacks',
         shortDescription: 'Quick and nutritious snack ideas for a busy day.',
         content:
@@ -87,7 +77,6 @@ const posts: TDatabase.TPost[] = [
         blogName: 'Wellness Path',
     },
     {
-        id: '107',
         title: 'Art Therapy for Stress',
         shortDescription: 'How art can reduce stress and improve well-being.',
         content:
@@ -96,7 +85,6 @@ const posts: TDatabase.TPost[] = [
         blogName: 'Creative Minds',
     },
     {
-        id: '108',
         title: 'Tips for New Artists',
         shortDescription: 'Advice for those starting their artistic journey.',
         content:
@@ -121,7 +109,4 @@ export const longShortDescription =
 export const longContent =
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget rhoncus lectus. Nullam eu condimentum arcu, id laoreet dui. Suspendisse finibus placerat lorem sed volutpat. Proin nisi libero, ullamcorper vel ornare at, lobortis non mi. Donec porttitor magna turpis, cursus pellentesque neque pretium lobortis. Vestibulum imperdiet tellus porta, tempor nulla ut, volutpat dui. Pellentesque vitae blandit sapien. Cras vel pulvinar tortor. Duis id velit sapien. Maecenas gravida metus magna, vel iaculis augue bibendum iaculis. Nunc euismod vestibulum eros, sit amet vestibulum nibh tincidunt sed. Vestibulum hendrerit, velit pharetra pharetra gravida, augue ligula semper orci, finibus ornare magna ex pellentesque velit. Maecenas gravida metus magna, vel iaculis augue bibendum iaculis. Nunc euismod vestibulum eros, sit amet vestibulum nibh tincidunt sed. Vestibulum hendrerit, velit pharetra pharetra gravida, augue ligula semper orci, finibus ornare magna ex pellentesque velit. finibus ornare magna ex pellentesque velit.';
 
-export const dataset: TDatabase.DBType = {
-    blogs,
-    posts,
-};
+export const fakeRequestedObjectId = '673f665f87f76397b8e5ce8e';

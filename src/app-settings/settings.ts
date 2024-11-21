@@ -10,4 +10,13 @@ export const SETTINGS = {
         PASSWORD: process.env.PASSWORD,
     },
     CODE_AUTH_BASE64: Buffer.from(`${process.env.LOGIN}:${process.env.PASSWORD}`, 'utf8').toString('base64'),
+    MONGO_URL: process.env.MONGO_URL || 'mongodb://localhost:27017',
+    DB_NAMES: {
+        DEV: 'guilds_dev',
+        TEST: 'guilds_test',
+    },
+    DB_COLLECTIONS: {
+        blogsCollection: 'blogs',
+        postsCollection: 'posts',
+    },
 };

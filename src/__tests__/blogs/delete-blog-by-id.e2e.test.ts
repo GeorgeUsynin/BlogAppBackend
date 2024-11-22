@@ -21,7 +21,7 @@ describe('delete blog by id', () => {
     });
 
     it('deletes blog from database by providing ID', async () => {
-        const secondBlogId = await dbHelper.getSecondBlogId();
+        const secondBlogId = (await dbHelper.getBlog(1))._id.toString();
 
         await request
             .delete(`${ROUTES.BLOGS}/${secondBlogId}`)
@@ -43,7 +43,7 @@ describe('delete blog by id', () => {
     });
 
     it('return 401 Unauthorized status code if there is no proper Authorization header', async () => {
-        const secondBlogId = await dbHelper.getSecondBlogId();
+        const secondBlogId = (await dbHelper.getBlog(1))._id.toString();
 
         await request.delete(`${ROUTES.BLOGS}/${secondBlogId}`).expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
     });

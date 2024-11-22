@@ -1,26 +1,41 @@
-import { request, createErrorMessages, getAuthorization } from '../test-helpers';
-import { setDB } from '../../database';
+import { dbHelper, request, createErrorMessages, getAuthorization } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
-import { dataset, longContent, longTitle, longShortDescription } from '../dataset';
+import { fakeRequestedObjectId, blogs, longContent, longTitle, longShortDescription } from '../dataset';
 import { CreateUpdatePostInputModel, PostViewModel } from '../../features/posts/models';
 
 describe('create a post', () => {
-    beforeEach(() => {
-        setDB({ blogs: dataset.blogs, posts: [] });
+    beforeAll(async () => {
+        await dbHelper.connectToDb();
+    });
+
+    beforeEach(async () => {
+        await dbHelper.setDb({ blogs, posts: [] });
+    });
+
+    afterEach(async () => {
+        await dbHelper.resetCollections(['blogs', 'posts']);
+    });
+
+    afterAll(async () => {
+        await dbHelper.dropDb();
+        await dbHelper.closeConnection();
     });
 
     it('creates a new post', async () => {
+        const blogId = (await dbHelper.getBlog(1))._id.toString();
+        const blogName = (await dbHelper.getBlog(1)).name;
+
         const newPost: CreateUpdatePostInputModel = {
             title: 'New title',
-            blogId: '2',
+            blogId,
             content: 'New content',
             shortDescription: 'New short description',
         };
 
         const createdPost: PostViewModel = {
             id: expect.any(String),
-            blogId: dataset.blogs.find(blog => blog.id === newPost.blogId)?.id as string,
-            blogName: dataset.blogs.find(blog => blog.id === newPost.blogId)?.name as string,
+            blogId,
+            blogName,
             content: newPost.content,
             shortDescription: newPost.shortDescription,
             title: newPost.title,
@@ -46,7 +61,7 @@ describe('create a post', () => {
             it('returns 400 status code and proper error object if `title` is missing', async () => {
                 //@ts-expect-error bad request (title is missing)
                 const newPost: CreateUpdatePostInputModel = {
-                    blogId: '2',
+                    blogId: (await dbHelper.getBlog(1))._id.toString(),
                     content: 'New content',
                     shortDescription: 'New short description',
                 };
@@ -62,7 +77,7 @@ describe('create a post', () => {
             it('returns 400 status code and proper error object if `title` is empty or contain only spaces', async () => {
                 const newPost: CreateUpdatePostInputModel = {
                     title: ' ',
-                    blogId: '2',
+                    blogId: (await dbHelper.getBlog(1))._id.toString(),
                     content: 'New content',
                     shortDescription: 'New short description',
                 };
@@ -79,7 +94,7 @@ describe('create a post', () => {
                 const newPost: CreateUpdatePostInputModel = {
                     //@ts-expect-error bad request (title type is invalid)
                     title: [],
-                    blogId: '2',
+                    blogId: (await dbHelper.getBlog(1))._id.toString(),
                     content: 'New content',
                     shortDescription: 'New short description',
                 };
@@ -95,7 +110,7 @@ describe('create a post', () => {
             it('returns 400 status code and proper error object for bad `title` max length', async () => {
                 const newPost: CreateUpdatePostInputModel = {
                     title: longTitle,
-                    blogId: '2',
+                    blogId: (await dbHelper.getBlog(1))._id.toString(),
                     content: 'New content',
                     shortDescription: 'New short description',
                 };
@@ -114,7 +129,7 @@ describe('create a post', () => {
                 //@ts-expect-error bad request (shortDescription is missing)
                 const newPost: CreateUpdatePostInputModel = {
                     title: 'New title',
-                    blogId: '2',
+                    blogId: (await dbHelper.getBlog(1))._id.toString(),
                     content: 'New content',
                 };
                 const { body } = await request
@@ -129,7 +144,7 @@ describe('create a post', () => {
             it('returns 400 status code and proper error object if `shortDescription` is empty or contain only spaces', async () => {
                 const newPost: CreateUpdatePostInputModel = {
                     title: 'New title',
-                    blogId: '2',
+                    blogId: (await dbHelper.getBlog(1))._id.toString(),
                     content: 'New content',
                     shortDescription: ' ',
                 };
@@ -147,7 +162,7 @@ describe('create a post', () => {
                     title: 'New title',
                     //@ts-expect-error bad request (shortDescription type is invalid)
                     shortDescription: [],
-                    blogId: '2',
+                    blogId: (await dbHelper.getBlog(1))._id.toString(),
                     content: 'New content',
                 };
                 const { body } = await request
@@ -163,7 +178,7 @@ describe('create a post', () => {
                 const newPost: CreateUpdatePostInputModel = {
                     title: 'New title',
                     shortDescription: longShortDescription,
-                    blogId: '2',
+                    blogId: (await dbHelper.getBlog(1))._id.toString(),
                     content: 'New content',
                 };
                 const { body } = await request
@@ -181,7 +196,7 @@ describe('create a post', () => {
                 //@ts-expect-error bad request (content is missing)
                 const newPost: CreateUpdatePostInputModel = {
                     title: 'New title',
-                    blogId: '2',
+                    blogId: (await dbHelper.getBlog(1))._id.toString(),
                     shortDescription: 'New short description',
                 };
                 const { body } = await request
@@ -196,7 +211,7 @@ describe('create a post', () => {
             it('returns 400 status code and proper error object if `content` is empty or contain only spaces', async () => {
                 const newPost: CreateUpdatePostInputModel = {
                     title: 'New title',
-                    blogId: '2',
+                    blogId: (await dbHelper.getBlog(1))._id.toString(),
                     content: ' ',
                     shortDescription: 'New short description',
                 };
@@ -212,7 +227,7 @@ describe('create a post', () => {
             it('returns 400 status code and proper error object for bad `content` type', async () => {
                 const newPost: CreateUpdatePostInputModel = {
                     title: 'New title',
-                    blogId: '2',
+                    blogId: (await dbHelper.getBlog(1))._id.toString(),
                     shortDescription: 'New short description',
                     //@ts-expect-error bad request (content type is invalid)
                     content: [],
@@ -229,7 +244,7 @@ describe('create a post', () => {
             it('returns 400 status code and proper error object for bad `content` max length', async () => {
                 const newPost: CreateUpdatePostInputModel = {
                     title: 'New title',
-                    blogId: '2',
+                    blogId: (await dbHelper.getBlog(1))._id.toString(),
                     shortDescription: 'New short description',
                     content: longContent,
                 };
@@ -296,7 +311,7 @@ describe('create a post', () => {
             it('returns 400 status code and proper error object if `blogId` does not exist', async () => {
                 const newPost: CreateUpdatePostInputModel = {
                     title: 'New title',
-                    blogId: '999',
+                    blogId: fakeRequestedObjectId,
                     shortDescription: 'New short description',
                     content: 'New content',
                 };
@@ -314,7 +329,7 @@ describe('create a post', () => {
     it('return 401 Unauthorized status code if there is no proper Authorization header', async () => {
         const newPost: CreateUpdatePostInputModel = {
             title: 'New title',
-            blogId: '2',
+            blogId: (await dbHelper.getBlog(1))._id.toString(),
             content: 'New content',
             shortDescription: 'New short description',
         };

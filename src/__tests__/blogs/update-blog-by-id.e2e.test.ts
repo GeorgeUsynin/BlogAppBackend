@@ -24,7 +24,7 @@ describe('update blog by id', () => {
     let requestedId: string;
 
     it('updates blog by id', async () => {
-        requestedId = await dbHelper.getSecondBlogId();
+        requestedId = (await dbHelper.getBlog(1))._id.toString();
 
         const updatedBlog: CreateUpdateBlogInputModel = {
             description: 'New description',

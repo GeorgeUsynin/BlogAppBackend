@@ -1,26 +1,37 @@
-import { request } from '../test-helpers';
-import { setDB } from '../../database';
+import { dbHelper, request } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
-import { dataset } from '../dataset';
+import { fakeRequestedObjectId, posts } from '../dataset';
 
 describe('get post by id', () => {
+    beforeAll(async () => {
+        await dbHelper.connectToDb();
+    });
+
+    beforeEach(async () => {
+        await dbHelper.setDb({ blogs: [], posts });
+    });
+
+    afterEach(async () => {
+        await dbHelper.resetCollections(['posts']);
+    });
+
+    afterAll(async () => {
+        await dbHelper.dropDb();
+        await dbHelper.closeConnection();
+    });
+
     it('returns post by requested id', async () => {
-        //populating database
-        setDB({ blogs: [], posts: dataset.posts });
+        const { body: allPosts } = await request.get(ROUTES.POSTS).expect(HTTP_STATUS_CODES.OK_200);
+        const secondPostId = allPosts[1].id;
 
-        const requestedId = '103';
         //requesting post by id
-        const { body } = await request.get(`${ROUTES.POSTS}/${requestedId}`).expect(HTTP_STATUS_CODES.OK_200);
+        const { body } = await request.get(`${ROUTES.POSTS}/${secondPostId}`).expect(HTTP_STATUS_CODES.OK_200);
 
-        expect(body).toEqual(dataset.posts[2]);
+        expect(body).toEqual(allPosts[1]);
     });
 
     it('returns 404 status code if there is no requested post in database', async () => {
-        //populating database
-        setDB({ blogs: [], posts: dataset.posts });
-
-        const fakeRequestedId = '10001';
         //requesting post by id
-        await request.get(`${ROUTES.POSTS}/${fakeRequestedId}`).expect(HTTP_STATUS_CODES.NOT_FOUND_404);
+        await request.get(`${ROUTES.POSTS}/${fakeRequestedObjectId}`).expect(HTTP_STATUS_CODES.NOT_FOUND_404);
     });
 });

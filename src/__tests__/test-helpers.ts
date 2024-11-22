@@ -212,27 +212,31 @@ export const dbHelper = {
         }
     },
     setDb: async (dataset: TDataset) => {
-        await blogsCollection.insertMany(dataset.blogs);
-
-        if (!dataset.posts.length) {
-            return;
+        if (dataset.blogs.length) {
+            await blogsCollection.insertMany(dataset.blogs);
         }
 
-        const blogs = await blogsCollection.find({}).toArray();
+        if (dataset.posts.length) {
+            const blogs = await blogsCollection.find({}).toArray();
 
-        const postsWithBlogId = dataset.posts.map(post => {
-            const blogName = post.blogName;
-            const blogId = blogs.find(blog => blog.name === blogName)?._id;
-            return { ...post, blogId: blogId?.toString() as string };
-        });
+            const postsWithBlogId = dataset.posts.map(post => {
+                const blogName = post.blogName;
+                const blogId = blogs.find(blog => blog.name === blogName)?._id;
+                return { ...post, blogId: blogId?.toString() as string };
+            });
 
-        await postsCollection.insertMany(postsWithBlogId);
+            await postsCollection.insertMany(postsWithBlogId);
+        }
     },
     dropDb: async () => {
         await db.dropDatabase();
     },
-    getSecondBlogId: async () => {
+    getBlog: async (arrayIndex: number) => {
         const allBlogs = await blogsCollection.find({}).toArray();
-        return allBlogs[1]._id.toString();
+        return allBlogs[arrayIndex];
+    },
+    getPost: async (arrayIndex: number) => {
+        const allPosts = await postsCollection.find({}).toArray();
+        return allPosts[arrayIndex];
     },
 };

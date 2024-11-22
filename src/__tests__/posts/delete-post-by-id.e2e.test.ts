@@ -1,45 +1,49 @@
-import { request, getAuthorization } from '../test-helpers';
-import { setDB } from '../../database';
+import { dbHelper, request, getAuthorization } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
-import { dataset } from '../dataset';
+import { fakeRequestedObjectId, posts } from '../dataset';
 
 describe('delete post by id', () => {
-    it('deletes post from database by providing ID', async () => {
-        //populating database
-        setDB({ blogs: [], posts: dataset.posts });
+    beforeAll(async () => {
+        await dbHelper.connectToDb();
+    });
 
-        const requestedId = '103';
+    beforeEach(async () => {
+        await dbHelper.setDb({ blogs: [], posts });
+    });
+
+    afterEach(async () => {
+        await dbHelper.resetCollections(['posts']);
+    });
+
+    afterAll(async () => {
+        await dbHelper.dropDb();
+        await dbHelper.closeConnection();
+    });
+    it('deletes post from database by providing ID', async () => {
+        const secondPostId = (await dbHelper.getPost(1))._id.toString();
 
         await request
-            .delete(`${ROUTES.POSTS}/${requestedId}`)
+            .delete(`${ROUTES.POSTS}/${secondPostId}`)
             .set(getAuthorization())
             .expect(HTTP_STATUS_CODES.NO_CONTENT_204);
 
         //checking that the post was deleted
-        await request.get(`${ROUTES.POSTS}/${requestedId}`).expect(HTTP_STATUS_CODES.NOT_FOUND_404);
+        await request.get(`${ROUTES.POSTS}/${secondPostId}`).expect(HTTP_STATUS_CODES.NOT_FOUND_404);
 
         const { body } = await request.get(ROUTES.POSTS).expect(HTTP_STATUS_CODES.OK_200);
         expect(body.length).toBe(7);
     });
 
     it('returns 404 status code if the post was not founded by requested ID', async () => {
-        //populating database
-        setDB({ blogs: [], posts: dataset.posts });
-
-        const fakeRequestedId = '999';
-
         await request
-            .delete(`${ROUTES.POSTS}/${fakeRequestedId}`)
+            .delete(`${ROUTES.POSTS}/${fakeRequestedObjectId}`)
             .set(getAuthorization())
             .expect(HTTP_STATUS_CODES.NOT_FOUND_404);
     });
 
     it('return 401 Unauthorized status code if there is no proper Authorization header', async () => {
-        //populating database
-        setDB({ blogs: [], posts: dataset.posts });
+        const secondPostId = (await dbHelper.getPost(1))._id.toString();
 
-        const requestedId = '103';
-
-        await request.delete(`${ROUTES.POSTS}/${requestedId}`).expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
+        await request.delete(`${ROUTES.POSTS}/${secondPostId}`).expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
     });
 });

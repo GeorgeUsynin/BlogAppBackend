@@ -46,6 +46,7 @@ describe('update post by id', () => {
         expect(body).toEqual({
             id: requestedId,
             blogName: (await dbHelper.getBlog(0)).name,
+            createdAt: expect.any(String),
             ...updatedPost,
         });
     });

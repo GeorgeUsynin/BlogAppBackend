@@ -43,4 +43,10 @@ export type PostViewModel = {
      * @required
      */
     blogName: string;
+
+    /**
+     * The date and time when the post was created.
+     * @type {string}
+     */
+    createdAt: string;
 };

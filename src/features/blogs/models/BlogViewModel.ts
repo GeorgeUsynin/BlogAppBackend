@@ -29,4 +29,16 @@ export type BlogViewModel = {
      * @required
      */
     websiteUrl: string;
+
+    /**
+     * The date and time when the blog was created.
+     * @type {string}
+     */
+    createdAt: string;
+
+    /**
+     * Indicates whether the user is a member of the blog.
+     * @type {boolean}
+     */
+    isMembership: boolean;
 };

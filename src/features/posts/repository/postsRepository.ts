@@ -19,7 +19,9 @@ export const postsRepository = {
         const newPost = {
             ...payload,
             blogName: linkedBlogName,
+            createdAt: new Date().toISOString(),
         };
+        //@ts-expect-error since ObjectId is created by MongoDB we don't need to pass it
         const { insertedId } = await postsCollection.insertOne(newPost);
         return postsRepository.mapMongoPostToViewModel({ _id: insertedId, ...newPost });
     },
@@ -36,5 +38,6 @@ export const postsRepository = {
         blogName: post.blogName,
         content: post.content,
         blogId: post.blogId,
+        createdAt: post.createdAt,
     }),
 };

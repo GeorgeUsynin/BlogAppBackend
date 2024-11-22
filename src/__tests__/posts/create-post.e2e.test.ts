@@ -34,6 +34,7 @@ describe('create a post', () => {
 
         const createdPost: PostViewModel = {
             id: expect.any(String),
+            createdAt: expect.any(String),
             blogId,
             blogName,
             content: newPost.content,

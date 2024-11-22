@@ -42,7 +42,7 @@ describe('update blog by id', () => {
         //checking that the blog was updated
         const { body } = await request.get(`${ROUTES.BLOGS}/${requestedId}`).expect(HTTP_STATUS_CODES.OK_200);
 
-        expect(body).toEqual({ id: requestedId, ...updatedBlog });
+        expect(body).toEqual({ id: requestedId, createdAt: expect.any(String), isMembership: false, ...updatedBlog });
     });
 
     describe('blog payload validation', () => {

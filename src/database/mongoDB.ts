@@ -1,19 +1,24 @@
-import { MongoClient, Db, Collection } from 'mongodb';
+import { MongoClient, Db, Collection, ObjectId } from 'mongodb';
 import { SETTINGS } from '../app-settings';
 
 export namespace TDatabase {
     export type TBlog = {
+        _id: ObjectId;
         name: string;
         description: string;
         websiteUrl: string;
+        createdAt: string;
+        isMembership: boolean;
     };
 
     export type TPost = {
+        _id: ObjectId;
         title: string;
         shortDescription: string;
         content: string;
         blogId: string;
         blogName: string;
+        createdAt: string;
     };
 }
 

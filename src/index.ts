@@ -2,6 +2,7 @@ import { app } from './app';
 import { SETTINGS } from './app-settings';
 import { connectToDatabase } from './database/mongoDB';
 
+// DB_NAME_PROD coming from vercel env variables
 const dbName = process.env.DB_NAME_PROD || SETTINGS.DB_NAMES.DEV;
 
 app.listen(SETTINGS.PORT, async () => {

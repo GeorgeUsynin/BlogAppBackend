@@ -13,8 +13,14 @@ export const blogsRepository = {
         return blogsRepository.mapMongoBlogToViewModel(blog);
     },
     addBlog: async (payload: CreateUpdateBlogInputModel) => {
-        const { insertedId } = await blogsCollection.insertOne({ ...payload });
-        return blogsRepository.mapMongoBlogToViewModel({ _id: insertedId, ...payload });
+        const newBlog = {
+            ...payload,
+            createdAt: new Date().toISOString(),
+            isMembership: false,
+        };
+        //@ts-expect-error since ObjectId is created by MongoDB we don't need to pass it
+        const { insertedId } = await blogsCollection.insertOne(newBlog);
+        return blogsRepository.mapMongoBlogToViewModel({ _id: insertedId, ...newBlog });
     },
     updateBlog: async (id: ObjectId, payload: CreateUpdateBlogInputModel) => {
         return await blogsCollection.findOneAndUpdate({ _id: id }, { $set: { ...payload } });
@@ -27,5 +33,7 @@ export const blogsRepository = {
         description: blog.description,
         name: blog.name,
         websiteUrl: blog.websiteUrl,
+        createdAt: blog.createdAt,
+        isMembership: blog.isMembership,
     }),
 };

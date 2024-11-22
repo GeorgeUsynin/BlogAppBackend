@@ -26,6 +26,8 @@ describe('create a blog', () => {
 
         const createdBlog: BlogViewModel = {
             id: expect.any(String),
+            createdAt: expect.any(String),
+            isMembership: false,
             ...newBlog,
         };
 

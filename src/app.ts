@@ -5,8 +5,12 @@ import { ROUTES } from './constants';
 import { BlogsRouter } from './features/blogs/router';
 import { PostsRouter } from './features/posts/router';
 import { TestRouter } from './features/tests/router';
+import { databaseConnectionMiddleware } from './middlewares';
 
 export const app = express(); // create app
+
+// Middleware for database connection to proper handle Vercel deployment
+process.env.VERCEL === '1' && app.use(databaseConnectionMiddleware);
 
 app.use(express.json()); // adding body parse middleware
 app.use(cors()); // allow all clients to use our backend endpoints

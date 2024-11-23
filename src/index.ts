@@ -2,16 +2,23 @@ import { app } from './app';
 import { SETTINGS } from './app-settings';
 import { connectToDatabase } from './database/mongoDB';
 
-// DB_NAME_PROD coming from vercel env variables
-const dbName = process.env.DB_NAME_PROD || SETTINGS.DB_NAMES.DEV;
+const runExpressLongLifeServer = () => {
+    app.listen(SETTINGS.PORT, async () => {
+        const isConnected = await connectToDatabase(SETTINGS.MONGO_URL, SETTINGS.DB_NAME);
 
-app.listen(SETTINGS.PORT, async () => {
-    const isConnected = await connectToDatabase(SETTINGS.MONGO_URL, dbName);
+        if (!isConnected) {
+            console.log('MongoDB connection closed.');
+            return process.exit(1);
+        }
 
-    if (!isConnected) {
-        console.log('MongoDB connection closed.');
-        return process.exit(1);
-    }
+        console.log(`...server started in port ${SETTINGS.PORT}`);
+    });
+};
 
-    console.log(`...server started in port ${SETTINGS.PORT}`);
-});
+if (process.env.VERCEL === '1') {
+    console.log('Running on Vercel!');
+} else {
+    runExpressLongLifeServer();
+}
+
+export default app;

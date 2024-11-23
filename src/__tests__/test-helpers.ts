@@ -198,7 +198,7 @@ type TDataset = {
 
 export const dbHelper = {
     connectToDb: async () => {
-        await connectToDatabase(SETTINGS.MONGO_URL as string, SETTINGS.DB_NAMES.TEST);
+        await connectToDatabase(SETTINGS.MONGO_URL as string, SETTINGS.DB_NAME);
     },
     closeConnection: async () => {
         await client.close();

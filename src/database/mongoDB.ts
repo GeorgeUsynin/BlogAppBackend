@@ -28,6 +28,11 @@ export let blogsCollection: Collection<TDatabase.TBlog>;
 export let postsCollection: Collection<TDatabase.TPost>;
 
 export const connectToDatabase = async (url: string, dbName: string) => {
+    if (db) {
+        console.log('Database was restored from cache!');
+        return true;
+    }
+
     client = new MongoClient(url);
 
     try {
@@ -35,8 +40,8 @@ export const connectToDatabase = async (url: string, dbName: string) => {
 
         //Db and collections creation
         db = client.db(dbName);
-        blogsCollection = await db.createCollection(SETTINGS.DB_COLLECTIONS.blogsCollection);
-        postsCollection = await db.createCollection(SETTINGS.DB_COLLECTIONS.postsCollection);
+        blogsCollection = db.collection(SETTINGS.DB_COLLECTIONS.blogsCollection);
+        postsCollection = db.collection(SETTINGS.DB_COLLECTIONS.postsCollection);
 
         await db.command({ ping: 1 });
         console.log('Pinged your deployment. You successfully connected to MongoDB!');

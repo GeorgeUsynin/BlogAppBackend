@@ -2,7 +2,7 @@ import { Response, Request, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
 import { HTTP_STATUS_CODES } from '../../../constants';
 
-export const errorHandler = (req: Request, res: Response, next: NextFunction) => {
+export const errorMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req).array({ onlyFirstError: true });
 
     if (errors.length) {

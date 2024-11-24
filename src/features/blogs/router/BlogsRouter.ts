@@ -2,11 +2,11 @@ import { Router } from 'express';
 import { checkSchema } from 'express-validator';
 import { createUpdateBlogValidationSchema } from '../validation';
 import * as RequestHandler from '../requestHandlers';
-import { authHandler, errorHandler } from '../../shared/sharedHandlers';
+import { authMiddleware, errorMiddleware } from '../../shared/middlewares';
 
 export const BlogsRouter = Router();
 
-const commonValidators = [authHandler, checkSchema(createUpdateBlogValidationSchema, ['body']), errorHandler];
+const commonValidators = [authMiddleware, checkSchema(createUpdateBlogValidationSchema, ['body']), errorMiddleware];
 
 const BlogsController = {
     getAllBlogs: RequestHandler.getAllBlogsHandler,
@@ -20,4 +20,4 @@ BlogsRouter.get('/', BlogsController.getAllBlogs);
 BlogsRouter.get('/:id', BlogsController.getBlogByID);
 BlogsRouter.post('/', ...commonValidators, BlogsController.createBlog);
 BlogsRouter.put('/:id', ...commonValidators, BlogsController.updateBlogByID);
-BlogsRouter.delete('/:id', authHandler, BlogsController.deleteBlogByID);
+BlogsRouter.delete('/:id', authMiddleware, BlogsController.deleteBlogByID);

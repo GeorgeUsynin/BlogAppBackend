@@ -1,3 +1,9 @@
+import { PaginatedViewModel } from '../../shared/types';
+/**
+ * Represents the paginated response model for posts.
+ */
+export type PostsPaginatedViewModel = PaginatedViewModel<PostViewModel>;
+
 /**
  * Represents the model for a blog post.
  */

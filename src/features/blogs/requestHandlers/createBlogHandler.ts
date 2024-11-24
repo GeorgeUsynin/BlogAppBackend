@@ -1,4 +1,4 @@
-import { blogsRepository } from '../repository';
+import { blogsService } from '../domain';
 import { Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../../constants';
 import type { RequestWithBody } from '../../../types';
@@ -10,7 +10,7 @@ export const createBlogHandler = async (
 ) => {
     const payload = req.body;
 
-    const newBlog = await blogsRepository.addBlog(payload);
+    const newBlog = await blogsService.createBlog(payload);
 
     res.status(HTTP_STATUS_CODES.CREATED_201).send(newBlog);
 };

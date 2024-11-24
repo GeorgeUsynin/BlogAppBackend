@@ -1,7 +1,6 @@
 import { ObjectId, WithId } from 'mongodb';
 import { postsCollection, TDatabase } from '../../../database/mongoDB';
 import type { CreateUpdatePostInputModel, PostViewModel } from '../models';
-import { blogsRepository } from '../../blogs/repository';
 
 export const postsRepository = {
     findAllPosts: async () => {
@@ -13,14 +12,7 @@ export const postsRepository = {
         if (!post) return null;
         return postsRepository.mapMongoPostToViewModel(post);
     },
-    addPost: async (payload: CreateUpdatePostInputModel) => {
-        const blogId = new ObjectId(payload.blogId);
-        const linkedBlogName = (await blogsRepository.findBlogById(blogId))?.name as string;
-        const newPost = {
-            ...payload,
-            blogName: linkedBlogName,
-            createdAt: new Date().toISOString(),
-        };
+    createPost: async (newPost: Omit<TDatabase.TPost, '_id'>) => {
         //@ts-expect-error since ObjectId is created by MongoDB we don't need to pass it
         const { insertedId } = await postsCollection.insertOne(newPost);
         return postsRepository.mapMongoPostToViewModel({ _id: insertedId, ...newPost });

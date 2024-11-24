@@ -1,4 +1,4 @@
-import { postsRepository } from '../repository';
+import { postsService } from '../domain';
 import { Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../../constants';
 import type { RequestWithBody } from '../../../types';
@@ -10,7 +10,7 @@ export const createPostHandler = async (
 ) => {
     const payload = req.body;
 
-    const newPost = await postsRepository.addPost(payload);
+    const newPost = await postsService.createPost(payload);
 
     res.status(HTTP_STATUS_CODES.CREATED_201).send(newPost);
 };

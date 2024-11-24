@@ -1,7 +1,7 @@
 import { dbHelper, request, createErrorMessages, getAuthorization } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 import { fakeRequestedObjectId, blogs, longContent, longTitle, longShortDescription } from '../dataset';
-import { CreateUpdatePostInputModel, PostViewModel } from '../../features/posts/models';
+import { CreateUpdatePostInputModel, PostItemViewModel } from '../../features/posts/models';
 
 describe('create a post', () => {
     beforeAll(async () => {
@@ -32,7 +32,7 @@ describe('create a post', () => {
             shortDescription: 'New short description',
         };
 
-        const createdPost: PostViewModel = {
+        const createdPost: PostItemViewModel = {
             id: expect.any(String),
             createdAt: expect.any(String),
             blogId,

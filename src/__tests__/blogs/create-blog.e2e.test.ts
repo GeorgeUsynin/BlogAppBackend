@@ -1,7 +1,7 @@
 import { request, createErrorMessages, getAuthorization, dbHelper } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 import { longDescription, longWebsiteUrl } from '../dataset';
-import { CreateUpdateBlogInputModel, BlogViewModel } from '../../features/blogs/models';
+import { CreateUpdateBlogInputModel, BlogItemViewModel } from '../../features/blogs/models';
 
 describe('create a blog', () => {
     beforeAll(async () => {
@@ -24,7 +24,7 @@ describe('create a blog', () => {
             websiteUrl: 'https://ecolifestyle.com',
         };
 
-        const createdBlog: BlogViewModel = {
+        const createdBlog: BlogItemViewModel = {
             id: expect.any(String),
             createdAt: expect.any(String),
             isMembership: false,

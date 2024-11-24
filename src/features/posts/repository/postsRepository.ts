@@ -1,6 +1,6 @@
 import { ObjectId, WithId } from 'mongodb';
 import { postsCollection, TDatabase } from '../../../database/mongoDB';
-import type { CreateUpdatePostInputModel, PostViewModel } from '../models';
+import type { CreateUpdatePostInputModel, PostItemViewModel } from '../models';
 
 export const postsRepository = {
     findAllPosts: async () => {
@@ -23,7 +23,7 @@ export const postsRepository = {
     deletePostById: async (id: ObjectId) => {
         return await postsCollection.findOneAndDelete({ _id: id });
     },
-    mapMongoPostToViewModel: (post: WithId<TDatabase.TPost>): PostViewModel => ({
+    mapMongoPostToViewModel: (post: WithId<TDatabase.TPost>): PostItemViewModel => ({
         id: post._id.toString(),
         title: post.title,
         shortDescription: post.shortDescription,

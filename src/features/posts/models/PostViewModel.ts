@@ -2,12 +2,12 @@ import { PaginatedViewModel } from '../../shared/types';
 /**
  * Represents the paginated response model for posts.
  */
-export type PostsPaginatedViewModel = PaginatedViewModel<PostViewModel>;
+export type PostsPaginatedViewModel = PaginatedViewModel<PostItemViewModel>;
 
 /**
  * Represents the model for a blog post.
  */
-export type PostViewModel = {
+export type PostItemViewModel = {
     /**
      * The unique identifier for the post.
      * @type {string}

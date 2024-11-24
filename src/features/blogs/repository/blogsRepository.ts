@@ -1,6 +1,6 @@
 import { ObjectId, WithId } from 'mongodb';
 import { blogsCollection, TDatabase } from '../../../database/mongoDB';
-import type { CreateUpdateBlogInputModel, BlogViewModel } from '../models';
+import type { CreateUpdateBlogInputModel, BlogItemViewModel } from '../models';
 
 export const blogsRepository = {
     findAllBlogs: async () => {
@@ -23,7 +23,7 @@ export const blogsRepository = {
     deleteBlogById: async (id: ObjectId) => {
         return await blogsCollection.findOneAndDelete({ _id: id });
     },
-    mapMongoBlogToViewModel: (blog: WithId<TDatabase.TBlog>): BlogViewModel => ({
+    mapMongoBlogToViewModel: (blog: WithId<TDatabase.TBlog>): BlogItemViewModel => ({
         id: blog._id.toString(),
         description: blog.description,
         name: blog.name,

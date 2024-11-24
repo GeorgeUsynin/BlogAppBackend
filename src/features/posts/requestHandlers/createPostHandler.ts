@@ -2,11 +2,11 @@ import { postsService } from '../domain';
 import { Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../../constants';
 import type { RequestWithBody } from '../../../types';
-import type { CreateUpdatePostInputModel, PostViewModel } from '../models';
+import type { CreateUpdatePostInputModel, PostItemViewModel } from '../models';
 
 export const createPostHandler = async (
     req: RequestWithBody<CreateUpdatePostInputModel>,
-    res: Response<PostViewModel>
+    res: Response<PostItemViewModel>
 ) => {
     const payload = req.body;
 

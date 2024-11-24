@@ -1,6 +1,6 @@
 import { CreateUpdatePostInputModel } from './CreateUpdatePostInputModel';
 import { CreateUpdatePostErrorViewModel } from './CreateUpdatePostErrorViewModel';
 import { URIParamsPostIDModel } from './URIParamsPostIDModel';
-import { PostViewModel } from './PostViewModel';
+import { PostItemViewModel } from './PostViewModel';
 
-export { CreateUpdatePostInputModel, CreateUpdatePostErrorViewModel, URIParamsPostIDModel, PostViewModel };
+export { CreateUpdatePostInputModel, CreateUpdatePostErrorViewModel, URIParamsPostIDModel, PostItemViewModel };

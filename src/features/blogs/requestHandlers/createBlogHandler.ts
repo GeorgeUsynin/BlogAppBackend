@@ -2,11 +2,11 @@ import { blogsService } from '../domain';
 import { Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../../constants';
 import type { RequestWithBody } from '../../../types';
-import type { CreateUpdateBlogInputModel, BlogViewModel } from '../models';
+import type { CreateUpdateBlogInputModel, BlogItemViewModel } from '../models';
 
 export const createBlogHandler = async (
     req: RequestWithBody<CreateUpdateBlogInputModel>,
-    res: Response<BlogViewModel>
+    res: Response<BlogItemViewModel>
 ) => {
     const payload = req.body;
 

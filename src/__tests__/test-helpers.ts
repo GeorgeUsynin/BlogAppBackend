@@ -17,6 +17,10 @@ type TValues = {
     shortDescription?: TProperties[];
     content?: TProperties[];
     blogId?: (Exclude<TProperties, 'maxLength'> | 'blogIdNotExist')[];
+    pageNumber?: 'isPositiveNumber'[];
+    pageSize?: 'isPositiveNumber'[];
+    sortBy?: 'isEqualTo'[];
+    sortDirection?: 'isEqualTo'[];
 };
 
 const errorMessagesConfig = {
@@ -24,10 +28,32 @@ const errorMessagesConfig = {
         message: `${capitalizeFirstLetter(field)} field is required`,
         field,
     }),
+    isPositiveNumber: (field: string) => ({
+        message: `${capitalizeFirstLetter(field)} field should be a positive number`,
+        field,
+    }),
     isString: (field: string) => ({
         message: `${capitalizeFirstLetter(field)} field should be a string`,
         field,
     }),
+    isEqualTo: (field: string) => {
+        switch (field) {
+            case 'sortBy':
+                return {
+                    message: `${capitalizeFirstLetter(
+                        field
+                    )} field should be equal one of the following values: createdAt`,
+                    field,
+                };
+            case 'sortDirection':
+                return {
+                    message: `${capitalizeFirstLetter(
+                        field
+                    )} field should be equal one of the following values: asc, desc`,
+                    field,
+                };
+        }
+    },
     isEmptyString: (field: string) => ({
         message: `${capitalizeFirstLetter(field)} field should not be empty or contain only spaces`,
         field,
@@ -47,7 +73,19 @@ const errorMessagesConfig = {
 } as const;
 
 export const createErrorMessages = (values: TValues) => {
-    const { name, description, websiteUrl, title, shortDescription, content, blogId } = values;
+    const {
+        name,
+        description,
+        websiteUrl,
+        title,
+        shortDescription,
+        content,
+        blogId,
+        pageNumber,
+        pageSize,
+        sortBy,
+        sortDirection,
+    } = values;
 
     const errorsMessages: CreateUpdateBlogErrorViewModel['errorsMessages'] = [];
 
@@ -182,6 +220,40 @@ export const createErrorMessages = (values: TValues) => {
                 case 'blogIdNotExist':
                     errorsMessages.push(errorMessagesConfig.blogIdNotExist('blogId'));
                     break;
+            }
+        });
+    }
+
+    if (pageNumber) {
+        pageNumber.forEach(value => {
+            if (value === 'isPositiveNumber') {
+                errorsMessages.push(errorMessagesConfig.isPositiveNumber('pageNumber'));
+            }
+        });
+    }
+
+    if (pageSize) {
+        pageSize.forEach(value => {
+            if (value === 'isPositiveNumber') {
+                errorsMessages.push(errorMessagesConfig.isPositiveNumber('pageSize'));
+            }
+        });
+    }
+
+    if (sortBy) {
+        sortBy.forEach(value => {
+            if (value === 'isEqualTo') {
+                const error = errorMessagesConfig.isEqualTo('sortBy');
+                if (error) errorsMessages.push(error);
+            }
+        });
+    }
+
+    if (sortDirection) {
+        sortDirection.forEach(value => {
+            if (value === 'isEqualTo') {
+                const error = errorMessagesConfig.isEqualTo('sortDirection');
+                if (error) errorsMessages.push(error);
             }
         });
     }

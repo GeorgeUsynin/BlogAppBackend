@@ -1,3 +1,1 @@
-import { databaseConnectionMiddleware } from './databaseConnectionMiddleware';
-
-export { databaseConnectionMiddleware };
+export * from './databaseConnectionMiddleware';

@@ -7,27 +7,27 @@ export type QueryParamsPostModel = {
      * Default value: 1
      * @type {number}
      */
-    pageNumber: number;
+    pageNumber?: number;
 
     /**
      * The number of items to be displayed per page. Determines the size of each portion.
      * Default value: 10
      * @type {number}
      */
-    pageSize: number;
+    pageSize?: number;
 
     /**
      * The field by which to sort the results.
      * Default value: 'createdAt'
-     * @type {string}
+     * @type {'createdAt'}
      */
-    sortBy: string;
+    sortBy?: 'createdAt';
 
     /**
      * The direction of sorting, either ascending or descending.
      * Default value: 'desc'
      * Available values: 'asc', 'desc'
-     * @type {string}
+     * @type {'asc' | 'desc'}
      */
-    sortDirection: string;
+    sortDirection?: 'asc' | 'desc';
 };

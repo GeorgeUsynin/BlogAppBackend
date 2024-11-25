@@ -36,6 +36,7 @@ const errorMessagesConfig = {
         message: `${capitalizeFirstLetter(field)} field should be a string`,
         field,
     }),
+    //@ts-expect-error
     isEqualTo: (field: string) => {
         switch (field) {
             case 'sortBy':

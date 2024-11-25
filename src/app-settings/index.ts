@@ -1,3 +1,1 @@
-import { SETTINGS } from './settings';
-
-export { SETTINGS };
+export * from './settings';

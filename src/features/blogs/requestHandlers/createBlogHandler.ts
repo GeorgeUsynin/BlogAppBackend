@@ -1,7 +1,7 @@
 import { blogsService } from '../domain';
 import { Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../../constants';
-import type { RequestWithBody } from '../../../types';
+import type { RequestWithBody } from '../../shared/types';
 import type { CreateUpdateBlogInputModel, BlogItemViewModel } from '../models';
 
 export const createBlogHandler = async (

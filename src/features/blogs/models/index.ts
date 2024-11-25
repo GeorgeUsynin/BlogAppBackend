@@ -2,9 +2,8 @@ import { CreateUpdateBlogInputModel } from './CreateUpdateBlogInputModel';
 import { CreateUpdateBlogErrorViewModel } from './CreateUpdateBlogErrorViewModel';
 import { URIParamsBlogIDModel } from './URIParamsBlogIDModel';
 import { URIParamsBlogIDPostModel } from './URIParamsBlogIDPostModel';
-import { BlogItemViewModel } from './BlogViewModel';
+import { BlogItemViewModel, BlogsPaginatedViewModel } from './BlogViewModel';
 import { QueryParamsBlogModel } from './QueryParamsBlogModel';
-import { QueryParamsPostModel } from './QueryParamsPostModel';
 
 export {
     CreateUpdateBlogInputModel,
@@ -12,6 +11,6 @@ export {
     URIParamsBlogIDModel,
     URIParamsBlogIDPostModel,
     QueryParamsBlogModel,
-    QueryParamsPostModel,
     BlogItemViewModel,
+    BlogsPaginatedViewModel,
 };

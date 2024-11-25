@@ -1,7 +1,7 @@
 import { postsService } from '../domain';
 import { Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../../constants';
-import type { RequestWithParamsAndBody } from '../../../types';
+import type { RequestWithParamsAndBody } from '../../shared/types';
 import type { CreateUpdatePostInputModel, URIParamsPostIDModel } from '../models';
 
 export const updatePostByIDHandler = async (

@@ -1,3 +1,5 @@
+import type { Request } from 'express';
+
 export type PaginatedViewModel<T> = {
     /**
      * The total number of pages available.
@@ -34,3 +36,8 @@ export type PaginatedViewModel<T> = {
      */
     items: T[];
 };
+
+export type RequestWithBody<B> = Request<{}, {}, B>;
+export type RequestWithQueryParams<Q> = Request<{}, {}, {}, Q>;
+export type RequestWithParamsAndBody<P, B> = Request<P, {}, B>;
+export type RequestWithParamsAndQueries<P, Q> = Request<P, {}, {}, Q>;

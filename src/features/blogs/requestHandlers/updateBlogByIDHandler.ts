@@ -1,7 +1,7 @@
 import { blogsService } from '../domain';
 import { Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../../constants';
-import type { RequestWithParamsAndBody } from '../../../types';
+import type { RequestWithParamsAndBody } from '../../shared/types';
 import type { CreateUpdateBlogInputModel, URIParamsBlogIDModel } from '../models';
 
 export const updateBlogByIDHandler = async (

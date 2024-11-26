@@ -19,8 +19,16 @@ type TValues = {
     blogId?: (Exclude<TProperties, 'maxLength'> | 'blogIdNotExist')[];
     pageNumber?: 'isPositiveNumber'[];
     pageSize?: 'isPositiveNumber'[];
-    sortBy?: 'isEqualTo'[];
+    sortBy?: {
+        condition: 'isEqualTo'[];
+        from: 'blogs' | 'posts';
+    };
     sortDirection?: 'isEqualTo'[];
+};
+
+const sortByConfig = {
+    blogs: ['name', 'createdAt'],
+    posts: ['title', 'blogName', 'createdAt'],
 };
 
 const errorMessagesConfig = {
@@ -37,13 +45,13 @@ const errorMessagesConfig = {
         field,
     }),
     //@ts-expect-error
-    isEqualTo: (field: string) => {
+    isEqualTo: (field: string, from?: 'blogs' | 'posts') => {
         switch (field) {
             case 'sortBy':
                 return {
                     message: `${capitalizeFirstLetter(
                         field
-                    )} field should be equal one of the following values: createdAt`,
+                    )} field should be equal one of the following values: ${sortByConfig[from || 'blogs'].join(', ')}`,
                     field,
                 };
             case 'sortDirection':
@@ -242,9 +250,9 @@ export const createErrorMessages = (values: TValues) => {
     }
 
     if (sortBy) {
-        sortBy.forEach(value => {
+        sortBy.condition.forEach(value => {
             if (value === 'isEqualTo') {
-                const error = errorMessagesConfig.isEqualTo('sortBy');
+                const error = errorMessagesConfig.isEqualTo('sortBy', sortBy.from);
                 if (error) errorsMessages.push(error);
             }
         });

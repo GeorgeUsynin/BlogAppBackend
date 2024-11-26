@@ -3,10 +3,16 @@ import { blogs } from '../dataset';
 import { createErrorMessages, request } from '../test-helpers';
 
 const secondBlogId = blogs[1]._id.toString();
-const URLS = [`${ROUTES.BLOGS}`, `${ROUTES.POSTS}`, `${ROUTES.BLOGS}/${secondBlogId}${ROUTES.POSTS}`];
+const URLS = [
+    { url: `${ROUTES.BLOGS}`, from: 'blogs' },
+    { url: `${ROUTES.POSTS}`, from: 'posts' },
+    { url: `${ROUTES.BLOGS}/${secondBlogId}${ROUTES.POSTS}`, from: 'posts' },
+] as const;
 
-URLS.forEach(url => {
-    describe('query params validation', () => {
+URLS.forEach(item => {
+    const { url, from } = item;
+
+    return describe('query params validation', () => {
         describe('pageNumber', () => {
             it('returns 400 status code and proper error object if `pageNumber` is not a positive number', async () => {
                 const pageNumberQueryString = '?pageNumber=error';
@@ -32,14 +38,14 @@ URLS.forEach(url => {
         });
 
         describe('sortBy', () => {
-            it('returns 400 status code and proper error object if `sortBy` is not equal to one of the following values: `createdAt`', async () => {
+            it('returns 400 status code and proper error object if `sortBy` is not equal to allowed sorting values', async () => {
                 const sortByQueryString = '?sortBy=error';
 
                 const { body } = await request
                     .get(`${url}${sortByQueryString}`)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
-                expect(createErrorMessages({ sortBy: ['isEqualTo'] })).toEqual(body);
+                expect(createErrorMessages({ sortBy: { condition: ['isEqualTo'], from } })).toEqual(body);
             });
         });
 

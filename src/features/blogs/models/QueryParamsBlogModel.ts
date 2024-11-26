@@ -26,9 +26,9 @@ export type QueryParamsBlogModel = {
     /**
      * The field by which to sort the results.
      * Default value: 'createdAt'
-     * @type {'createdAt'}
+     * @type {'name' | 'createdAt'}
      */
-    sortBy?: 'createdAt';
+    sortBy?: 'name' | 'createdAt';
 
     /**
      * The direction of sorting, either ascending or descending.

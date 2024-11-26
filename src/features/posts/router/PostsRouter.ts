@@ -3,7 +3,7 @@ import { checkSchema } from 'express-validator';
 import { createUpdatePostValidationSchema, blogIdValidationSchema } from '../validation';
 import * as RequestHandler from '../requestHandlers';
 import { authMiddleware, errorMiddleware } from '../../shared/middlewares';
-import { queryParamsBlogAndPostValidationSchema } from '../../shared/validation';
+import { getQueryParamsBlogAndPostValidationSchema } from '../../shared/validation';
 
 export const PostsRouter = Router();
 
@@ -13,7 +13,10 @@ const createUpdateValidators = [
     checkSchema(blogIdValidationSchema, ['body']),
     errorMiddleware,
 ];
-const getAllPostsValidators = [checkSchema(queryParamsBlogAndPostValidationSchema, ['query']), errorMiddleware];
+const getAllPostsValidators = [
+    checkSchema(getQueryParamsBlogAndPostValidationSchema('posts'), ['query']),
+    errorMiddleware,
+];
 
 const PostsController = {
     getAllPosts: RequestHandler.getAllPostsHandler,

@@ -3,10 +3,6 @@ import { blogsCollection, TDatabase } from '../../../database/mongoDB';
 import type { CreateUpdateBlogInputModel, BlogItemViewModel } from '../models';
 
 export const blogsRepository = {
-    findAllBlogs: async () => {
-        const blogs = await blogsCollection.find({}).toArray();
-        return blogs.map(blog => blogsRepository.mapMongoBlogToViewModel(blog));
-    },
     findBlogById: async (id: ObjectId) => {
         const blog = await blogsCollection.findOne({ _id: id });
         if (!blog) return null;

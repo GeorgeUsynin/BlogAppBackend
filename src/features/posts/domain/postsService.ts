@@ -5,7 +5,6 @@ import type { CreateUpdatePostInputModel } from '../models';
 import type { TDatabase } from '../../../database/mongoDB';
 
 export const postsService = {
-    findAllPosts: async () => postsRepository.findAllPosts(),
     findPostById: async (postId: string) => postsRepository.findPostById(new ObjectId(postId)),
     createPost: async (payload: CreateUpdatePostInputModel) => {
         const blogId = payload.blogId;

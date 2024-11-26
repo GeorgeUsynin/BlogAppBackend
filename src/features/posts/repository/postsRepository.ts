@@ -3,10 +3,6 @@ import { postsCollection, TDatabase } from '../../../database/mongoDB';
 import type { CreateUpdatePostInputModel, PostItemViewModel } from '../models';
 
 export const postsRepository = {
-    findAllPosts: async () => {
-        const posts = await postsCollection.find({}).toArray();
-        return posts.map(post => postsRepository.mapMongoPostToViewModel(post));
-    },
     findPostById: async (id: ObjectId) => {
         const post = await postsCollection.findOne({ _id: id });
         if (!post) return null;

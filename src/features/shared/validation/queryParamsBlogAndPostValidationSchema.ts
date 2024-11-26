@@ -1,18 +1,18 @@
 import { Schema } from 'express-validator';
 import { QueryParamsBlogModel } from '../../blogs/models';
 
-export const queryParamsBlogPostValidationSchema: Schema<Exclude<keyof QueryParamsBlogModel, 'searchNameTerm'>> = {
+export const queryParamsBlogAndPostValidationSchema: Schema<Exclude<keyof QueryParamsBlogModel, 'searchNameTerm'>> = {
     sortBy: {
         optional: true,
-        matches: {
+        isIn: {
             options: ['createdAt'],
             errorMessage: 'SortBy field should be equal one of the following values: createdAt',
         },
     },
     sortDirection: {
         optional: true,
-        matches: {
-            options: ['asc', 'desc'],
+        isIn: {
+            options: [['asc', 'desc']], // List of allowed values for sortDirection
             errorMessage: 'SortDirection field should be equal one of the following values: asc, desc',
         },
     },

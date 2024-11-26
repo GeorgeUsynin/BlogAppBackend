@@ -54,7 +54,7 @@ describe('create a post', () => {
         //checking that the post was created
         const { body: allPostsBodyResponse } = await request.get(ROUTES.POSTS).expect(HTTP_STATUS_CODES.OK_200);
 
-        expect(allPostsBodyResponse).toEqual([createdPost]);
+        expect(allPostsBodyResponse.items).toEqual([createdPost]);
     });
 
     describe('post payload validation', () => {

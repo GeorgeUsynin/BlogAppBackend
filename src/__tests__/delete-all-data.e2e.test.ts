@@ -19,10 +19,10 @@ describe('/testing/all-data', () => {
 
         // checking if all blogs are in the database
         const { body: allBlogs } = await request.get(ROUTES.BLOGS).expect(HTTP_STATUS_CODES.OK_200);
-        expect(allBlogs.length).toBe(4);
+        expect(allBlogs.totalCount).toBe(4);
         // checking if all posts are in the database
         const { body: allPosts } = await request.get(ROUTES.POSTS).expect(HTTP_STATUS_CODES.OK_200);
-        expect(allPosts.length).toBe(8);
+        expect(allPosts.totalCount).toBe(8);
 
         // deleting all data
         await request.delete(ROUTES.TESTING).expect(HTTP_STATUS_CODES.NO_CONTENT_204);

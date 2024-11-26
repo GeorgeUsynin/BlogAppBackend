@@ -22,12 +22,13 @@ describe('get blog by id', () => {
 
     it('returns blog by requested id', async () => {
         const { body: allBlogs } = await request.get(ROUTES.BLOGS).expect(HTTP_STATUS_CODES.OK_200);
-        const secondBlogId = allBlogs[1].id;
+
+        const secondBlogId = allBlogs.items[1].id;
 
         //requesting blog by id
         const { body } = await request.get(`${ROUTES.BLOGS}/${secondBlogId}`).expect(HTTP_STATUS_CODES.OK_200);
 
-        expect(body).toEqual(allBlogs[1]);
+        expect(body).toEqual(allBlogs.items[1]);
     });
 
     it('returns 404 status code if there is no requested blog in database', async () => {

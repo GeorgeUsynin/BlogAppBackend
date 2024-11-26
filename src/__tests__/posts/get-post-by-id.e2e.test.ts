@@ -22,12 +22,12 @@ describe('get post by id', () => {
 
     it('returns post by requested id', async () => {
         const { body: allPosts } = await request.get(ROUTES.POSTS).expect(HTTP_STATUS_CODES.OK_200);
-        const secondPostId = allPosts[1].id;
+        const secondPostId = allPosts.items[1].id;
 
         //requesting post by id
         const { body } = await request.get(`${ROUTES.POSTS}/${secondPostId}`).expect(HTTP_STATUS_CODES.OK_200);
 
-        expect(body).toEqual(allPosts[1]);
+        expect(body).toEqual(allPosts.items[1]);
     });
 
     it('returns 404 status code if there is no requested post in database', async () => {

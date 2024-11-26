@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../../constants';
 import type { URIParamsPostIDModel } from '../models';
 
-export const deletePostByID = async (req: Request<URIParamsPostIDModel>, res: Response) => {
+export const deletePostByIDHandler = async (req: Request<URIParamsPostIDModel>, res: Response) => {
     const postId = req.params.id;
 
     const foundPost = await postsService.deletePostById(postId);

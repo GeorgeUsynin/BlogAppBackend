@@ -1,3 +1,1 @@
-import { BlogsRouter } from './BlogsRouter';
-
-export { BlogsRouter };
+export * from './BlogsRouter';

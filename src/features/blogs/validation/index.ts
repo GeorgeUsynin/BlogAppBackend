@@ -1,3 +1,1 @@
-import { createUpdateBlogValidationSchema } from './createUpdateBlogValidationSchema';
-
-export { createUpdateBlogValidationSchema };
+export * from './createUpdateBlogValidationSchema';

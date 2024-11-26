@@ -44,7 +44,7 @@ describe('create a post by requested blogId', () => {
 
         //creating new post
         const { body: newPostBodyResponse } = await request
-            .post(`${ROUTES.BLOGS}/${secondBlogId}/${ROUTES.POSTS}`)
+            .post(`${ROUTES.BLOGS}/${secondBlogId}${ROUTES.POSTS}`)
             .set(getAuthorization())
             .send(newPost)
             .expect(HTTP_STATUS_CODES.CREATED_201);
@@ -54,7 +54,7 @@ describe('create a post by requested blogId', () => {
         //checking that the post was created
         const { body: allPostsBodyResponse } = await request.get(ROUTES.POSTS).expect(HTTP_STATUS_CODES.OK_200);
 
-        expect(allPostsBodyResponse).toEqual([createdPost]);
+        expect(allPostsBodyResponse.items[0]).toEqual(createdPost);
     });
 
     describe('post payload validation', () => {
@@ -66,7 +66,7 @@ describe('create a post by requested blogId', () => {
                     shortDescription: 'New short description',
                 };
                 const { body } = await request
-                    .post(`${ROUTES.BLOGS}/${secondBlogId}/${ROUTES.POSTS}`)
+                    .post(`${ROUTES.BLOGS}/${secondBlogId}${ROUTES.POSTS}`)
                     .set(getAuthorization())
                     .send(newPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -81,7 +81,7 @@ describe('create a post by requested blogId', () => {
                     shortDescription: 'New short description',
                 };
                 const { body } = await request
-                    .post(`${ROUTES.BLOGS}/${secondBlogId}/${ROUTES.POSTS}`)
+                    .post(`${ROUTES.BLOGS}/${secondBlogId}${ROUTES.POSTS}`)
                     .set(getAuthorization())
                     .send(newPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -97,7 +97,7 @@ describe('create a post by requested blogId', () => {
                     shortDescription: 'New short description',
                 };
                 const { body } = await request
-                    .post(`${ROUTES.BLOGS}/${secondBlogId}/${ROUTES.POSTS}`)
+                    .post(`${ROUTES.BLOGS}/${secondBlogId}${ROUTES.POSTS}`)
                     .set(getAuthorization())
                     .send(newPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -112,7 +112,7 @@ describe('create a post by requested blogId', () => {
                     shortDescription: 'New short description',
                 };
                 const { body } = await request
-                    .post(`${ROUTES.BLOGS}/${secondBlogId}/${ROUTES.POSTS}`)
+                    .post(`${ROUTES.BLOGS}/${secondBlogId}${ROUTES.POSTS}`)
                     .set(getAuthorization())
                     .send(newPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -129,7 +129,7 @@ describe('create a post by requested blogId', () => {
                     content: 'New content',
                 };
                 const { body } = await request
-                    .post(`${ROUTES.BLOGS}/${secondBlogId}/${ROUTES.POSTS}`)
+                    .post(`${ROUTES.BLOGS}/${secondBlogId}${ROUTES.POSTS}`)
                     .set(getAuthorization())
                     .send(newPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -144,7 +144,7 @@ describe('create a post by requested blogId', () => {
                     shortDescription: ' ',
                 };
                 const { body } = await request
-                    .post(`${ROUTES.BLOGS}/${secondBlogId}/${ROUTES.POSTS}`)
+                    .post(`${ROUTES.BLOGS}/${secondBlogId}${ROUTES.POSTS}`)
                     .set(getAuthorization())
                     .send(newPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -160,7 +160,7 @@ describe('create a post by requested blogId', () => {
                     content: 'New content',
                 };
                 const { body } = await request
-                    .post(`${ROUTES.BLOGS}/${secondBlogId}/${ROUTES.POSTS}`)
+                    .post(`${ROUTES.BLOGS}/${secondBlogId}${ROUTES.POSTS}`)
                     .set(getAuthorization())
                     .send(newPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -175,7 +175,7 @@ describe('create a post by requested blogId', () => {
                     content: 'New content',
                 };
                 const { body } = await request
-                    .post(`${ROUTES.BLOGS}/${secondBlogId}/${ROUTES.POSTS}`)
+                    .post(`${ROUTES.BLOGS}/${secondBlogId}${ROUTES.POSTS}`)
                     .set(getAuthorization())
                     .send(newPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -192,7 +192,7 @@ describe('create a post by requested blogId', () => {
                     shortDescription: 'New short description',
                 };
                 const { body } = await request
-                    .post(`${ROUTES.BLOGS}/${secondBlogId}/${ROUTES.POSTS}`)
+                    .post(`${ROUTES.BLOGS}/${secondBlogId}${ROUTES.POSTS}`)
                     .set(getAuthorization())
                     .send(newPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -207,7 +207,7 @@ describe('create a post by requested blogId', () => {
                     shortDescription: 'New short description',
                 };
                 const { body } = await request
-                    .post(`${ROUTES.BLOGS}/${secondBlogId}/${ROUTES.POSTS}`)
+                    .post(`${ROUTES.BLOGS}/${secondBlogId}${ROUTES.POSTS}`)
                     .set(getAuthorization())
                     .send(newPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -223,7 +223,7 @@ describe('create a post by requested blogId', () => {
                     content: [],
                 };
                 const { body } = await request
-                    .post(`${ROUTES.BLOGS}/${secondBlogId}/${ROUTES.POSTS}`)
+                    .post(`${ROUTES.BLOGS}/${secondBlogId}${ROUTES.POSTS}`)
                     .set(getAuthorization())
                     .send(newPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -238,7 +238,7 @@ describe('create a post by requested blogId', () => {
                     content: longContent,
                 };
                 const { body } = await request
-                    .post(`${ROUTES.BLOGS}/${secondBlogId}/${ROUTES.POSTS}`)
+                    .post(`${ROUTES.BLOGS}/${secondBlogId}${ROUTES.POSTS}`)
                     .set(getAuthorization())
                     .send(newPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
@@ -256,7 +256,7 @@ describe('create a post by requested blogId', () => {
         };
 
         await request
-            .post(`${ROUTES.BLOGS}/${secondBlogId}/${ROUTES.POSTS}`)
+            .post(`${ROUTES.BLOGS}/${secondBlogId}${ROUTES.POSTS}`)
             .send(newPost)
             .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
     });
@@ -269,7 +269,7 @@ describe('create a post by requested blogId', () => {
         };
 
         await request
-            .post(`${ROUTES.BLOGS}/${fakeRequestedObjectId}/${ROUTES.POSTS}`)
+            .post(`${ROUTES.BLOGS}/${fakeRequestedObjectId}${ROUTES.POSTS}`)
             .set(getAuthorization())
             .send(newPost)
             .expect(HTTP_STATUS_CODES.NOT_FOUND_404);

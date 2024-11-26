@@ -1,3 +1,1 @@
-import { PostsRouter } from './PostsRouter';
-
-export { PostsRouter };
+export * from './PostsRouter';

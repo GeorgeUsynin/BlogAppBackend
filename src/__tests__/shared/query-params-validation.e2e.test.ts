@@ -3,7 +3,7 @@ import { blogs } from '../dataset';
 import { createErrorMessages, request } from '../test-helpers';
 
 const secondBlogId = blogs[1]._id.toString();
-const URLS = [`${ROUTES.BLOGS}`, `${ROUTES.POSTS}`, `${ROUTES.BLOGS}/${secondBlogId}/${ROUTES.POSTS}`];
+const URLS = [`${ROUTES.BLOGS}`, `${ROUTES.POSTS}`, `${ROUTES.BLOGS}/${secondBlogId}${ROUTES.POSTS}`];
 
 URLS.forEach(url => {
     describe('query params validation', () => {

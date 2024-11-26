@@ -1,3 +1,1 @@
-import { blogsService } from './blogsService';
-
-export { blogsService };
+export * from './blogsService';

@@ -14,7 +14,7 @@ type TValues = {
 export const queryPostsRepository = {
     findAllPosts: async (queryParams: QueryParamsPostModel, blogId?: string) => {
         const params = normalizeQueryParams(queryParams);
-        const filter = createFilter({ id: blogId });
+        const filter = createFilter({ blogId });
 
         const items = await queryPostsRepository.findPostItemsByParamsAndFilter(params, filter);
         const totalCount = await queryPostsRepository.findTotalCountOfFilteredPosts(filter);

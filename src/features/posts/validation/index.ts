@@ -1,3 +1,1 @@
-import { createUpdatePostValidationSchema } from './createUpdatePostValidationSchema';
-
-export { createUpdatePostValidationSchema };
+export * from './createUpdatePostValidationSchema';

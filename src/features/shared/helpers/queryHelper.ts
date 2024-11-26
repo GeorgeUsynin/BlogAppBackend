@@ -15,22 +15,25 @@ export const normalizeQueryParams = (queryParams: QueryParamsBlogModel | QueryPa
 };
 
 type TFilterParams = {
+    blogId?: string;
     id?: string;
     searchNameTerm?: ReturnType<typeof normalizeQueryParams>['searchNameTerm'];
 };
 
 export type TFilter = {
+    blogId?: string;
     _id?: ObjectId;
     name?: { $regex: string; $options: string };
 };
 
 export const createFilter = (params: TFilterParams) => {
-    const { id, searchNameTerm } = params;
+    const { id, searchNameTerm, blogId } = params;
 
     const filter: TFilter = {};
 
     if (id) filter._id = new ObjectId(id);
     if (searchNameTerm) filter.name = { $regex: searchNameTerm, $options: 'i' };
+    if (blogId) filter.blogId = blogId;
 
     return filter;
 };

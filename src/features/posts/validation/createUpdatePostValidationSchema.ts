@@ -59,6 +59,9 @@ export const createUpdatePostValidationSchema: Schema<keyof CreateUpdatePostInpu
             errorMessage: `Max length should be ${contentMaxLength} characters`,
         },
     },
+};
+
+export const blogIdValidationSchema: Schema<'blogId'> = {
     blogId: {
         exists: {
             errorMessage: 'BlogId field is required',

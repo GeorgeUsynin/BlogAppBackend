@@ -1,30 +1,12 @@
-import { ObjectId, WithId } from 'mongodb';
+import { ObjectId } from 'mongodb';
 import { blogsCollection, TDatabase } from '../../../database/mongoDB';
-import type { CreateUpdateBlogInputModel, BlogItemViewModel } from '../models';
+import type { CreateUpdateBlogInputModel } from '../models';
 
 export const blogsRepository = {
-    findBlogById: async (id: ObjectId) => {
-        const blog = await blogsCollection.findOne({ _id: id });
-        if (!blog) return null;
-        return blogsRepository.mapMongoBlogToViewModel(blog);
-    },
-    createBlog: async (newBlog: Omit<TDatabase.TBlog, '_id'>) => {
-        //@ts-expect-error since ObjectId will be created by MongoDB we don't need to pass it
-        const { insertedId } = await blogsCollection.insertOne(newBlog);
-        return blogsRepository.mapMongoBlogToViewModel({ _id: insertedId, ...newBlog });
-    },
-    updateBlog: async (id: ObjectId, payload: CreateUpdateBlogInputModel) => {
-        return await blogsCollection.findOneAndUpdate({ _id: id }, { $set: { ...payload } });
-    },
-    deleteBlogById: async (id: ObjectId) => {
-        return await blogsCollection.findOneAndDelete({ _id: id });
-    },
-    mapMongoBlogToViewModel: (blog: WithId<TDatabase.TBlog>): BlogItemViewModel => ({
-        id: blog._id.toString(),
-        description: blog.description,
-        name: blog.name,
-        websiteUrl: blog.websiteUrl,
-        createdAt: blog.createdAt,
-        isMembership: blog.isMembership,
-    }),
+    findBlogById: async (id: ObjectId) => blogsCollection.findOne({ _id: id }),
+    //@ts-expect-error since ObjectId will be created by MongoDB we don't need to pass it
+    createBlog: async (newBlog: Omit<TDatabase.TBlog, '_id'>) => blogsCollection.insertOne(newBlog),
+    updateBlog: async (id: ObjectId, payload: CreateUpdateBlogInputModel) =>
+        blogsCollection.findOneAndUpdate({ _id: id }, { $set: { ...payload } }),
+    deleteBlogById: async (id: ObjectId) => blogsCollection.findOneAndDelete({ _id: id }),
 };

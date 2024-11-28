@@ -1,5 +1,6 @@
 import { createFilter, normalizeQueryParams } from '../../shared/helpers';
-import { QueryParamsPostModel, PostsPaginatedViewModel, PostItemViewModel } from '../models';
+import { QueryParamsPostModel, PostsPaginatedViewModel } from '../models';
+import { postsService } from '../domain';
 import { postsCollection, TDatabase } from '../../../database/mongoDB';
 import { WithId } from 'mongodb';
 
@@ -47,18 +48,7 @@ export const queryPostsRepository = {
             page: values.pageNumber,
             pageSize: values.pageSize,
             totalCount: values.totalCount,
-            items: values.items.map(queryPostsRepository.mapPostToViewModel),
-        };
-    },
-    mapPostToViewModel: (post: WithId<TDatabase.TPost>): PostItemViewModel => {
-        return {
-            id: post._id.toString(),
-            title: post.title,
-            shortDescription: post.shortDescription,
-            content: post.content,
-            blogId: post.blogId,
-            blogName: post.blogName,
-            createdAt: post.createdAt,
+            items: values.items.map(postsService.mapMongoPostToViewModel),
         };
     },
 };

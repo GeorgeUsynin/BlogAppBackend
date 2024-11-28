@@ -1,5 +1,6 @@
 import { createFilter, normalizeQueryParams } from '../../shared/helpers';
-import { QueryParamsBlogModel, BlogsPaginatedViewModel, BlogItemViewModel } from '../models';
+import { QueryParamsBlogModel, BlogsPaginatedViewModel } from '../models';
+import { blogsService } from '../domain';
 import { blogsCollection, TDatabase } from '../../../database/mongoDB';
 import { WithId } from 'mongodb';
 
@@ -47,17 +48,7 @@ export const queryBlogsRepository = {
             page: values.pageNumber,
             pageSize: values.pageSize,
             totalCount: values.totalCount,
-            items: values.items.map(queryBlogsRepository.mapBlogToViewModel),
-        };
-    },
-    mapBlogToViewModel: (blog: WithId<TDatabase.TBlog>): BlogItemViewModel => {
-        return {
-            id: blog._id.toString(),
-            name: blog.name,
-            description: blog.description,
-            websiteUrl: blog.websiteUrl,
-            createdAt: blog.createdAt,
-            isMembership: blog.isMembership,
+            items: values.items.map(blogsService.mapMongoBlogToViewModel),
         };
     },
 };

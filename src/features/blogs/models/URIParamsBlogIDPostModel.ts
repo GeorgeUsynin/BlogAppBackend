@@ -7,5 +7,5 @@ export type URIParamsBlogIDPostModel = {
      * @type {string}
      * @required
      */
-    blogId: string;
+    id: string;
 };

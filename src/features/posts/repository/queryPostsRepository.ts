@@ -1,8 +1,7 @@
 import { createFilter, normalizeQueryParams } from '../../shared/helpers';
-import { QueryParamsPostModel, PostsPaginatedViewModel } from '../models';
-import { postsService } from '../domain';
+import { QueryParamsPostModel, PostsPaginatedViewModel, PostItemViewModel } from '../models';
 import { postsCollection, TDatabase } from '../../../database/mongoDB';
-import { WithId } from 'mongodb';
+import { ObjectId, WithId } from 'mongodb';
 
 type TFilter = ReturnType<typeof createFilter>;
 type TValues = {
@@ -13,7 +12,7 @@ type TValues = {
 };
 
 export const queryPostsRepository = {
-    findAllPosts: async (queryParams: QueryParamsPostModel, blogId?: string) => {
+    getAllPosts: async (queryParams: QueryParamsPostModel, blogId?: string) => {
         const params = normalizeQueryParams(queryParams);
         const filter = createFilter({ blogId });
 
@@ -26,6 +25,11 @@ export const queryPostsRepository = {
             pageNumber: params.pageNumber,
             pageSize: params.pageSize,
         });
+    },
+    getPostById: async (postId: string) => {
+        const post = await postsCollection.findOne({ _id: new ObjectId(postId) });
+        if (!post) return null;
+        return queryPostsRepository.mapMongoPostToViewModel(post);
     },
     findTotalCountOfFilteredPosts: async (filter: TFilter) => {
         return postsCollection.countDocuments(filter);
@@ -42,13 +46,25 @@ export const queryPostsRepository = {
             .limit(pageSize)
             .toArray();
     },
+    // For now we are doing mapping in the query repository, but we can move it to the presentation layer
+    // There can be different approaches, but for now it's ok
+    // However, we need to keep in mind that the usual approach is to do mapping in the presentation layer
+    mapMongoPostToViewModel: (post: WithId<TDatabase.TPost>): PostItemViewModel => ({
+        id: post._id.toString(),
+        title: post.title,
+        shortDescription: post.shortDescription,
+        blogName: post.blogName,
+        content: post.content,
+        blogId: post.blogId,
+        createdAt: post.createdAt,
+    }),
     mapPostsToPaginationModel: (values: TValues): PostsPaginatedViewModel => {
         return {
             pagesCount: Math.ceil(values.totalCount / values.pageSize),
             page: values.pageNumber,
             pageSize: values.pageSize,
             totalCount: values.totalCount,
-            items: values.items.map(postsService.mapMongoPostToViewModel),
+            items: values.items.map(queryPostsRepository.mapMongoPostToViewModel),
         };
     },
 };

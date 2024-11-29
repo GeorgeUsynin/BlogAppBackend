@@ -43,8 +43,8 @@ const BlogsController = {
 
 BlogsRouter.get('/', ...getAllBlogsValidators, BlogsController.getAllBlogs);
 BlogsRouter.get('/:id', BlogsController.getBlogByID);
-BlogsRouter.get(`/:blogId${ROUTES.POSTS}`, ...getAllPostsValidators, BlogsController.getAllPostsByBlogID);
+BlogsRouter.get(`/:id${ROUTES.POSTS}`, ...getAllPostsValidators, BlogsController.getAllPostsByBlogID);
 BlogsRouter.post('/', ...createUpdateBlogValidators, BlogsController.createBlog);
-BlogsRouter.post(`/:blogId${ROUTES.POSTS}`, ...createUpdatePostValidators, BlogsController.createPostsByBlogID);
+BlogsRouter.post(`/:id${ROUTES.POSTS}`, ...createUpdatePostValidators, BlogsController.createPostsByBlogID);
 BlogsRouter.put('/:id', ...createUpdateBlogValidators, BlogsController.updateBlogByID);
 BlogsRouter.delete('/:id', authMiddleware, BlogsController.deleteBlogByID);

@@ -9,7 +9,8 @@ export const getAllBlogsHandler = async (
     res: Response<BlogsPaginatedViewModel>
 ) => {
     const queryParams = req.query;
-    const allBlogs = await queryBlogsRepository.findAllBlogs(queryParams);
+
+    const allBlogs = await queryBlogsRepository.getAllBlogs(queryParams);
 
     res.status(HTTP_STATUS_CODES.OK_200).send(allBlogs);
 };

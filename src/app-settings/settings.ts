@@ -15,5 +15,6 @@ export const SETTINGS = {
     DB_COLLECTIONS: {
         blogsCollection: 'blogs',
         postsCollection: 'posts',
+        usersCollection: 'users',
     },
 };

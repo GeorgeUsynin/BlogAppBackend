@@ -9,7 +9,7 @@ describe('update blog by id', () => {
     });
 
     beforeEach(async () => {
-        await dbHelper.setDb({ blogs, posts: [] });
+        await dbHelper.setDb({ blogs });
     });
 
     afterEach(async () => {
@@ -251,7 +251,7 @@ describe('update blog by id', () => {
         });
     });
 
-    it('return 401 Unauthorized status code if there is no proper Authorization header', async () => {
+    it('returns 401 Unauthorized status code if there is no proper Authorization header', async () => {
         const updatedBlog: CreateUpdateBlogInputModel = {
             description: 'Eco lifestyle description',
             name: 'Eco Lifestyle',

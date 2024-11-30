@@ -321,7 +321,7 @@ describe('update post by id', () => {
         });
     });
 
-    it('return 401 Unauthorized status code if there is no proper Authorization header', async () => {
+    it('returns 401 Unauthorized status code if there is no proper Authorization header', async () => {
         const updatedPost: CreateUpdatePostInputModel = {
             title: 'New title',
             blogId: (await dbHelper.getBlog(0))._id.toString(),

@@ -1,9 +1,18 @@
 import { app } from '../app';
 import { agent } from 'supertest';
-import { CreateUpdateBlogErrorViewModel } from '../features/blogs/models';
+import { ErrorViewModel } from '../features/shared/types';
 import { capitalizeFirstLetter } from '../helpers';
 import { SETTINGS } from '../app-settings';
-import { TDatabase, blogsCollection, postsCollection, connectToDatabase, client, db } from '../database/mongoDB';
+import {
+    TDatabase,
+    blogsCollection,
+    postsCollection,
+    connectToDatabase,
+    client,
+    db,
+    usersCollection,
+} from '../database/mongoDB';
+import bcrypt from 'bcrypt';
 
 export const request = agent(app);
 
@@ -21,14 +30,19 @@ type TValues = {
     pageSize?: 'isPositiveNumber'[];
     sortBy?: {
         condition: 'isEqualTo'[];
-        from: 'blogs' | 'posts';
+        from: 'blogs' | 'posts' | 'users';
     };
     sortDirection?: 'isEqualTo'[];
+    login?: (TProperties | 'minLength' | 'isPattern' | 'isUnique')[];
+    email?: (Omit<TProperties, 'maxLength'> | 'isPattern')[];
+    password?: (TProperties | 'minLength')[];
+    loginOrEmail?: Omit<TProperties, 'maxLength'>[];
 };
 
 const sortByConfig = {
     blogs: ['name', 'createdAt'],
     posts: ['title', 'blogName', 'createdAt'],
+    users: ['login', 'email', 'createdAt'],
 };
 
 const errorMessagesConfig = {
@@ -45,7 +59,7 @@ const errorMessagesConfig = {
         field,
     }),
     //@ts-expect-error
-    isEqualTo: (field: string, from?: 'blogs' | 'posts') => {
+    isEqualTo: (field: string, from?: 'blogs' | 'posts' | 'users') => {
         switch (field) {
             case 'sortBy':
                 return {
@@ -71,12 +85,20 @@ const errorMessagesConfig = {
         message: `Max length should be ${length} characters`,
         field,
     }),
-    isPattern: (field: string) => ({
-        message: `${capitalizeFirstLetter(field)} should match the specified URL pattern`,
+    minLength: (field: string, length: number) => ({
+        message: `Min length should be ${length} characters`,
+        field,
+    }),
+    isPattern: (field: string, pattern: string) => ({
+        message: `${capitalizeFirstLetter(field)} should match the specified ${pattern} pattern`,
         field,
     }),
     blogIdNotExist: (field: string) => ({
         message: `There is no blog existed with provided ${field}`,
+        field,
+    }),
+    isUnique: (field: string) => ({
+        message: `${capitalizeFirstLetter(field)} field already exists.`,
         field,
     }),
 } as const;
@@ -94,9 +116,13 @@ export const createErrorMessages = (values: TValues) => {
         pageSize,
         sortBy,
         sortDirection,
+        login,
+        email,
+        password,
+        loginOrEmail,
     } = values;
 
-    const errorsMessages: CreateUpdateBlogErrorViewModel['errorsMessages'] = [];
+    const errorsMessages: ErrorViewModel['errorsMessages'] = [];
 
     if (name) {
         name.forEach(value => {
@@ -152,7 +178,12 @@ export const createErrorMessages = (values: TValues) => {
                     errorsMessages.push(errorMessagesConfig.maxLength('websiteUrl', 100));
                     break;
                 case 'isPattern':
-                    errorsMessages.push(errorMessagesConfig.isPattern('websiteUrl'));
+                    errorsMessages.push(
+                        errorMessagesConfig.isPattern(
+                            'websiteUrl',
+                            '^https://([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$'
+                        )
+                    );
                     break;
             }
         });
@@ -267,14 +298,105 @@ export const createErrorMessages = (values: TValues) => {
         });
     }
 
+    if (login) {
+        login.forEach(value => {
+            switch (value) {
+                case 'isRequired':
+                    errorsMessages.push(errorMessagesConfig.isRequired('login'));
+                    break;
+                case 'isEmptyString':
+                    errorsMessages.push(errorMessagesConfig.isEmptyString('login'));
+                    break;
+                case 'isString':
+                    errorsMessages.push(errorMessagesConfig.isString('login'));
+                    break;
+                case 'minLength':
+                    errorsMessages.push(errorMessagesConfig.minLength('login', 3));
+                    break;
+                case 'maxLength':
+                    errorsMessages.push(errorMessagesConfig.maxLength('login', 10));
+                    break;
+                case 'isPattern':
+                    errorsMessages.push(errorMessagesConfig.isPattern('login', '^[a-zA-Z0-9_-]*$'));
+                    break;
+                case 'isUnique':
+                    errorsMessages.push(errorMessagesConfig.isUnique('login'));
+                    break;
+            }
+        });
+    }
+
+    if (email) {
+        email.forEach(value => {
+            switch (value) {
+                case 'isRequired':
+                    errorsMessages.push(errorMessagesConfig.isRequired('email'));
+                    break;
+                case 'isEmptyString':
+                    errorsMessages.push(errorMessagesConfig.isEmptyString('email'));
+                    break;
+                case 'isString':
+                    errorsMessages.push(errorMessagesConfig.isString('email'));
+                    break;
+                case 'isPattern':
+                    errorsMessages.push(errorMessagesConfig.isPattern('email', '^[w-.]+@([w-]+.)+[w-]{2,4}$'));
+                    break;
+                case 'isUnique':
+                    errorsMessages.push(errorMessagesConfig.isUnique('email'));
+                    break;
+            }
+        });
+    }
+
+    if (password) {
+        password.forEach(value => {
+            switch (value) {
+                case 'isRequired':
+                    errorsMessages.push(errorMessagesConfig.isRequired('email'));
+                    break;
+                case 'isEmptyString':
+                    errorsMessages.push(errorMessagesConfig.isEmptyString('email'));
+                    break;
+                case 'isString':
+                    errorsMessages.push(errorMessagesConfig.isString('email'));
+                    break;
+                case 'minLength':
+                    errorsMessages.push(errorMessagesConfig.minLength('password', 6));
+                    break;
+                case 'maxLength':
+                    errorsMessages.push(errorMessagesConfig.maxLength('password', 20));
+                    break;
+            }
+        });
+    }
+
+    if (loginOrEmail) {
+        loginOrEmail.forEach(value => {
+            switch (value) {
+                case 'isRequired':
+                    errorsMessages.push(errorMessagesConfig.isRequired('loginOrEmail'));
+                    break;
+                case 'isEmptyString':
+                    errorsMessages.push(errorMessagesConfig.isEmptyString('loginOrEmail'));
+                    break;
+                case 'isString':
+                    errorsMessages.push(errorMessagesConfig.isString('loginOrEmail'));
+                    break;
+            }
+        });
+    }
+
     return { errorsMessages };
 };
 
 export const getAuthorization = () => ({ Authorization: `Basic ${SETTINGS.CODE_AUTH_BASE64}` });
 
+export const decryptPassword = async (password: string, salt: string) => await bcrypt.hash(password, salt);
+
 type TDataset = {
-    blogs: TDatabase.TBlog[];
-    posts: TDatabase.TPost[];
+    blogs?: TDatabase.TBlog[];
+    posts?: TDatabase.TPost[];
+    users?: TDatabase.TUser[];
 };
 
 export const dbHelper = {
@@ -284,20 +406,27 @@ export const dbHelper = {
     closeConnection: async () => {
         await client.close();
     },
-    resetCollections: async (collectionNames: ('blogs' | 'posts')[]) => {
+    resetCollections: async (collectionNames: (keyof TDataset)[]) => {
         if (collectionNames.includes('blogs')) {
             await blogsCollection.deleteMany({});
         }
         if (collectionNames.includes('posts')) {
             await postsCollection.deleteMany({});
         }
+        if (collectionNames.includes('users')) {
+            await usersCollection.deleteMany({});
+        }
     },
     setDb: async (dataset: TDataset) => {
-        if (dataset.blogs.length) {
+        if (dataset.users?.length) {
+            await usersCollection.insertMany(dataset.users);
+        }
+
+        if (dataset.blogs?.length) {
             await blogsCollection.insertMany(dataset.blogs);
         }
 
-        if (dataset.posts.length) {
+        if (dataset.posts?.length) {
             const blogs = await blogsCollection.find({}).toArray();
 
             const postsWithBlogId = dataset.posts.map(post => {
@@ -319,5 +448,9 @@ export const dbHelper = {
     getPost: async (arrayIndex: number) => {
         const allPosts = await postsCollection.find({}).toArray();
         return allPosts[arrayIndex];
+    },
+    getUser: async (arrayIndex: number) => {
+        const allUsers = await usersCollection.find({}).toArray();
+        return allUsers[arrayIndex];
     },
 };

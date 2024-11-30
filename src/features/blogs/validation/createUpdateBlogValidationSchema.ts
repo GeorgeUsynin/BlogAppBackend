@@ -4,6 +4,7 @@ import { Schema } from 'express-validator';
 const nameMaxLength = 15;
 const descriptionMaxLength = 500;
 const websiteUrlMaxLength = 100;
+const pattern = '^https://([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$';
 
 export const createUpdateBlogValidationSchema: Schema<keyof CreateUpdateBlogInputModel> = {
     name: {
@@ -57,7 +58,7 @@ export const createUpdateBlogValidationSchema: Schema<keyof CreateUpdateBlogInpu
             errorMessage: `Max length should be ${websiteUrlMaxLength} characters`,
         },
         isURL: {
-            errorMessage: `WebsiteUrl should match the specified URL pattern`,
+            errorMessage: `WebsiteUrl should match the specified ${pattern} pattern`,
         },
     },
 };

@@ -1,15 +1,7 @@
 /**
- * Represents the query parameters model for fetching blogs.
+ * Represents the query parameters model for fetching posts.
  */
-export type QueryParamsBlogModel = {
-    /**
-     * A search term used to filter blogs by name. The blog name must contain this term in any position.
-     * Default value: null
-     * @type {string}
-     * @nullable
-     */
-    searchNameTerm?: string;
-
+export type QueryParamsUserModel = {
     /**
      * The current page number for pagination. Determines which portion of the results to return.
      * Default value: 1
@@ -27,9 +19,9 @@ export type QueryParamsBlogModel = {
     /**
      * The field by which to sort the results.
      * Default value: 'createdAt'
-     * @type {'name' | 'createdAt'}
+     * @type {'login' | 'email' | 'createdAt'}
      */
-    sortBy?: 'name' | 'createdAt';
+    sortBy?: 'login' | 'email' | 'createdAt';
 
     /**
      * The direction of sorting, either ascending or descending.
@@ -38,4 +30,20 @@ export type QueryParamsBlogModel = {
      * @type {'asc' | 'desc'}
      */
     sortDirection?: 'asc' | 'desc';
+
+    /**
+     * The search term for login.
+     * Default value: 'null'
+     * @type {string}
+     * @nullable
+     */
+    searchLoginTerm?: string;
+
+    /**
+     * The search term for email.
+     * Default value: 'null'
+     * @type {string}
+     * @nullable
+     */
+    searchEmailTerm?: string;
 };

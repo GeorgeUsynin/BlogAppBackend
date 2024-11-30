@@ -6,6 +6,7 @@ type TOwner = 'blogs' | 'posts';
 const sortByConfig = {
     blogs: ['name', 'createdAt'],
     posts: ['title', 'blogName', 'createdAt'],
+    users: ['login', 'email', 'createdAt'],
 };
 
 export const getQueryParamsBlogAndPostValidationSchema = (

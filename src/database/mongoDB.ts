@@ -20,13 +20,22 @@ export namespace TDatabase {
         blogName: string;
         createdAt: string;
     };
+
+    export type TUser = {
+        _id: ObjectId;
+        login: string;
+        email: string;
+        passwordHash: string;
+        passwordSalt: string;
+        createdAt: string;
+    };
 }
 
 export let client: MongoClient;
 export let db: Db;
 export let blogsCollection: Collection<TDatabase.TBlog>;
 export let postsCollection: Collection<TDatabase.TPost>;
-
+export let usersCollection: Collection<TDatabase.TUser>;
 export const connectToDatabase = async (url: string, dbName: string) => {
     if (db) {
         console.log('Database was restored from cache!');
@@ -42,6 +51,7 @@ export const connectToDatabase = async (url: string, dbName: string) => {
         db = client.db(dbName);
         blogsCollection = db.collection(SETTINGS.DB_COLLECTIONS.blogsCollection);
         postsCollection = db.collection(SETTINGS.DB_COLLECTIONS.postsCollection);
+        usersCollection = db.collection(SETTINGS.DB_COLLECTIONS.usersCollection);
 
         await db.command({ ping: 1 });
         console.log('Pinged your deployment. You successfully connected to MongoDB!');

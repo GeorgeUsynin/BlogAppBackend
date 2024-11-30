@@ -8,7 +8,7 @@ describe('delete post by id', () => {
     });
 
     beforeEach(async () => {
-        await dbHelper.setDb({ blogs: [], posts });
+        await dbHelper.setDb({ posts });
     });
 
     afterEach(async () => {
@@ -41,7 +41,7 @@ describe('delete post by id', () => {
             .expect(HTTP_STATUS_CODES.NOT_FOUND_404);
     });
 
-    it('return 401 Unauthorized status code if there is no proper Authorization header', async () => {
+    it('returns 401 Unauthorized status code if there is no proper Authorization header', async () => {
         const secondPostId = (await dbHelper.getPost(1))._id.toString();
 
         await request.delete(`${ROUTES.POSTS}/${secondPostId}`).expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);

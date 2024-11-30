@@ -1,6 +1,6 @@
 import { request, getAuthorization, dbHelper } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
-import { blogs, fakeRequestedObjectId } from '../dataset';
+import { users, fakeRequestedObjectId } from '../dataset';
 
 describe('delete blog by id', () => {
     beforeAll(async () => {
@@ -8,11 +8,11 @@ describe('delete blog by id', () => {
     });
 
     beforeEach(async () => {
-        await dbHelper.setDb({ blogs });
+        await dbHelper.setDb({ users });
     });
 
     afterEach(async () => {
-        await dbHelper.resetCollections(['blogs']);
+        await dbHelper.resetCollections(['users']);
     });
 
     afterAll(async () => {
@@ -20,31 +20,31 @@ describe('delete blog by id', () => {
         await dbHelper.closeConnection();
     });
 
-    it('deletes blog from database by providing ID', async () => {
-        const secondBlogId = (await dbHelper.getBlog(1))._id.toString();
+    it('deletes user from database by providing ID', async () => {
+        const secondUserId = (await dbHelper.getUser(1))._id.toString();
 
         await request
-            .delete(`${ROUTES.BLOGS}/${secondBlogId}`)
+            .delete(`${ROUTES.USERS}/${secondUserId}`)
             .set(getAuthorization())
             .expect(HTTP_STATUS_CODES.NO_CONTENT_204);
 
         //checking that the blog was deleted
-        await request.get(`${ROUTES.BLOGS}/${secondBlogId}`).expect(HTTP_STATUS_CODES.NOT_FOUND_404);
+        await request.get(`${ROUTES.USERS}/${secondUserId}`).expect(HTTP_STATUS_CODES.NOT_FOUND_404);
 
-        const { body } = await request.get(ROUTES.BLOGS).expect(HTTP_STATUS_CODES.OK_200);
+        const { body } = await request.get(ROUTES.USERS).expect(HTTP_STATUS_CODES.OK_200);
         expect(body.totalCount).toBe(3);
     });
 
-    it('returns 404 status code if the blog was not founded by requested ID', async () => {
+    it('returns 404 status code if the user was not founded by requested ID', async () => {
         await request
-            .delete(`${ROUTES.BLOGS}/${fakeRequestedObjectId}`)
+            .delete(`${ROUTES.USERS}/${fakeRequestedObjectId}`)
             .set(getAuthorization())
             .expect(HTTP_STATUS_CODES.NOT_FOUND_404);
     });
 
     it('returns 401 Unauthorized status code if there is no proper Authorization header', async () => {
-        const secondBlogId = (await dbHelper.getBlog(1))._id.toString();
+        const secondUserId = (await dbHelper.getUser(1))._id.toString();
 
-        await request.delete(`${ROUTES.BLOGS}/${secondBlogId}`).expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
+        await request.delete(`${ROUTES.USERS}/${secondUserId}`).expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
     });
 });

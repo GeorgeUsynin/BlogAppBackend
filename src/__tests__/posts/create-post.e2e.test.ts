@@ -9,7 +9,7 @@ describe('create a post', () => {
     });
 
     beforeEach(async () => {
-        await dbHelper.setDb({ blogs, posts: [] });
+        await dbHelper.setDb({ blogs });
     });
 
     afterEach(async () => {
@@ -327,7 +327,7 @@ describe('create a post', () => {
         });
     });
 
-    it('return 401 Unauthorized status code if there is no proper Authorization header', async () => {
+    it('returns 401 Unauthorized status code if there is no proper Authorization header', async () => {
         const newPost: CreateUpdatePostInputModel = {
             title: 'New title',
             blogId: (await dbHelper.getBlog(1))._id.toString(),

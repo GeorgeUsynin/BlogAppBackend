@@ -7,6 +7,7 @@ const URLS = [
     { url: `${ROUTES.BLOGS}`, from: 'blogs' },
     { url: `${ROUTES.POSTS}`, from: 'posts' },
     { url: `${ROUTES.BLOGS}/${secondBlogId}${ROUTES.POSTS}`, from: 'posts' },
+    { url: `${ROUTES.USERS}`, from: 'users' },
 ] as const;
 
 URLS.forEach(item => {

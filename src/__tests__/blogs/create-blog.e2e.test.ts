@@ -252,7 +252,7 @@ describe('create a blog', () => {
         });
     });
 
-    it('return 401 Unauthorized status code if there is no proper Authorization header', async () => {
+    it('returns 401 Unauthorized status code if there is no proper Authorization header', async () => {
         const newBlog: CreateUpdateBlogInputModel = {
             description: 'Eco lifestyle description',
             name: 'Eco Lifestyle',

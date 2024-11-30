@@ -1,14 +1,14 @@
 import { ObjectId } from 'mongodb';
 import type { TDatabase } from '../database/mongoDB';
 
-const firstBlogId = new ObjectId();
-const secondBlogId = new ObjectId();
-const thirdBlogId = new ObjectId();
-const fourthBlogId = new ObjectId();
+const firstId = new ObjectId();
+const secondId = new ObjectId();
+const thirdId = new ObjectId();
+const fourthId = new ObjectId();
 
 export const blogs: TDatabase.TBlog[] = [
     {
-        _id: firstBlogId,
+        _id: firstId,
         name: 'Eco Lifestyle',
         description:
             'Eco Lifestyle is dedicated to sustainable living and environmental awareness. Discover practical tips on green living, eco-friendly products, and guides to help reduce your carbon footprint and live more consciously.',
@@ -17,7 +17,7 @@ export const blogs: TDatabase.TBlog[] = [
         isMembership: false,
     },
     {
-        _id: secondBlogId,
+        _id: secondId,
         name: 'Tech Trends',
         description:
             'Tech Trends offers the latest insights into technological advancements and digital innovations. Stay updated with the newest trends in AI, gadgets, software, and industry changes, all explained in a simple and engaging manner.',
@@ -26,7 +26,7 @@ export const blogs: TDatabase.TBlog[] = [
         isMembership: false,
     },
     {
-        _id: thirdBlogId,
+        _id: thirdId,
         name: 'Wellness Path',
         description:
             'Wellness Path is a resource for those seeking a healthier lifestyle. From mindfulness techniques to nutritional guidance, our blog covers every aspect of physical and mental wellness for a balanced, healthier life.',
@@ -35,7 +35,7 @@ export const blogs: TDatabase.TBlog[] = [
         isMembership: false,
     },
     {
-        _id: fourthBlogId,
+        _id: fourthId,
         name: 'Creative Minds',
         description:
             'Creative Minds celebrates art, design, and creativity. With interviews, tutorials, and inspiration from artists worldwide, our blog is a hub for those looking to boost their creative journey and discover new art forms.',
@@ -52,7 +52,7 @@ export const posts: TDatabase.TPost[] = [
         shortDescription: 'Simple steps to make your home more eco-friendly.',
         content:
             "Transforming your home to be more sustainable doesn't have to be hard. Start by reducing plastic, recycling properly, and using energy-efficient appliances. Discover easy swaps that make a big impact on the environment and save you money.",
-        blogId: firstBlogId.toString(),
+        blogId: firstId.toString(),
         blogName: 'Eco Lifestyle',
         createdAt: '2024-12-28T10:50:15.222Z',
     },
@@ -62,7 +62,7 @@ export const posts: TDatabase.TPost[] = [
         shortDescription: 'Our top picks for sustainable everyday products.',
         content:
             "From reusable water bottles to eco-friendly cleaning supplies, we've rounded up five essential products that make sustainable living easier. Learn about their benefits and where to find them, so you can reduce waste and promote greener practices.",
-        blogId: firstBlogId.toString(),
+        blogId: firstId.toString(),
         blogName: 'Eco Lifestyle',
         createdAt: '2024-12-22T10:50:15.222Z',
     },
@@ -72,7 +72,7 @@ export const posts: TDatabase.TPost[] = [
         shortDescription: 'Discover the most exciting AI breakthroughs of 2023.',
         content:
             'Artificial intelligence is advancing faster than ever, with recent innovations in natural language processing, image recognition, and autonomous systems. Learn how these breakthroughs are shaping industries and everyday life, and what to expect in the near future.',
-        blogId: secondBlogId.toString(),
+        blogId: secondId.toString(),
         blogName: 'Tech Trends',
         createdAt: '2024-12-27T10:50:15.222Z',
     },
@@ -82,7 +82,7 @@ export const posts: TDatabase.TPost[] = [
         shortDescription: 'Must-have tech gadgets for the new year.',
         content:
             'Stay ahead of the curve with the latest in smart home tech, wearable devices, and innovative tools designed to make life easier. This list covers cutting-edge gadgets that bring functionality, style, and convenience to your daily routine.',
-        blogId: secondBlogId.toString(),
+        blogId: secondId.toString(),
         blogName: 'Tech Trends',
         createdAt: '2024-12-22T10:50:15.222Z',
     },
@@ -92,7 +92,7 @@ export const posts: TDatabase.TPost[] = [
         shortDescription: 'A simple guide to starting mindfulness.',
         content:
             "Mindfulness is a powerful tool for reducing stress and increasing focus. This beginner's guide covers basic mindfulness techniques, from breathing exercises to guided meditation, that can help bring calmness and clarity to your day-to-day life.",
-        blogId: thirdBlogId.toString(),
+        blogId: thirdId.toString(),
         blogName: 'Wellness Path',
         createdAt: '2024-12-26T10:50:15.222Z',
     },
@@ -102,7 +102,7 @@ export const posts: TDatabase.TPost[] = [
         shortDescription: 'Quick and nutritious snack ideas for a busy day.',
         content:
             "Finding healthy snacks can be a challenge, but it doesn't have to be. Try these 10 easy snack ideas that are packed with nutrients, easy to prepare, and perfect for a quick energy boost without compromising your health goals.",
-        blogId: thirdBlogId.toString(),
+        blogId: thirdId.toString(),
         blogName: 'Wellness Path',
         createdAt: '2024-12-22T10:50:15.222Z',
     },
@@ -112,7 +112,7 @@ export const posts: TDatabase.TPost[] = [
         shortDescription: 'How art can reduce stress and improve well-being.',
         content:
             'Engaging in creative activities has been shown to relieve stress and enhance mental health. Explore various art therapy techniques such as drawing, painting, and coloring, and learn how these can be integrated into your daily routine for a calmer mind.',
-        blogId: fourthBlogId.toString(),
+        blogId: fourthId.toString(),
         blogName: 'Creative Minds',
         createdAt: '2024-12-25T10:50:15.222Z',
     },
@@ -122,9 +122,44 @@ export const posts: TDatabase.TPost[] = [
         shortDescription: 'Advice for those starting their artistic journey.',
         content:
             'Starting as an artist can be both exciting and challenging. Discover essential tips, from finding your style to practicing regularly, to help build your skills and confidence as you dive into the world of art.',
-        blogId: fourthBlogId.toString(),
+        blogId: fourthId.toString(),
         blogName: 'Creative Minds',
         createdAt: '2024-12-22T10:50:15.222Z',
+    },
+];
+
+export const users: TDatabase.TUser[] = [
+    {
+        _id: firstId,
+        login: 'george',
+        email: 'user1george@example.com',
+        passwordHash: '$2b$10$p6Hm7G2gx2ccIxXAq1krP.si7hZoQhfI22R77ux1CVG3v7osD8/hW',
+        passwordSalt: '$2b$10$p6Hm7G2gx2ccIxXAq1krP.',
+        createdAt: '2024-12-22T10:50:15.222Z',
+    },
+    {
+        _id: secondId,
+        login: 'natasha',
+        email: 'user2natasha@example.com',
+        passwordHash: '$2b$10$jpuk3Bw2dDMLKlPBtUvRZe7nD4Ru0RlRV9o36TNULHI5twYC15gDO',
+        passwordSalt: '$2b$10$jpuk3Bw2dDMLKlPBtUvRZe',
+        createdAt: '2024-12-10T10:50:15.222Z',
+    },
+    {
+        _id: thirdId,
+        login: 'vlad',
+        email: 'user3vlad@example.com',
+        passwordHash: '$2b$10$69rufEoYDA2GxsHN6l6gLOz4MNJHLofc0w5dFLtx9jXwsZ0zgQI8a',
+        passwordSalt: '$2b$10$69rufEoYDA2GxsHN6l6gLO',
+        createdAt: '2024-12-15T10:50:15.222Z',
+    },
+    {
+        _id: fourthId,
+        login: 'kate',
+        email: 'user4kate@example.com',
+        passwordHash: '$2b$10$oW7wbnms9GzvDrNXBUcZWO7ykmcFbOaQ9aeK2VSGO6ZM9Q9DYAe8q',
+        passwordSalt: '$2b$10$oW7wbnms9GzvDrNXBUcZWO',
+        createdAt: '2024-12-20T10:50:15.222Z',
     },
 ];
 

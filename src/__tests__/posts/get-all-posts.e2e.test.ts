@@ -8,7 +8,7 @@ describe('get all posts', () => {
     });
 
     beforeEach(async () => {
-        await dbHelper.setDb({ blogs: [], posts });
+        await dbHelper.setDb({ posts });
     });
 
     afterEach(async () => {

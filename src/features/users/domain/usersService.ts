@@ -19,18 +19,15 @@ export const usersService = {
             };
         }
 
-        const salt = await bcrypt.genSalt(10);
-        const hash = await usersService.generateHash(payload.password, salt);
+        const hash = await bcrypt.hash(payload.password, 10);
 
         const newUser: Omit<TDatabase.TUser, '_id'> = {
             ...payload,
             passwordHash: hash,
-            passwordSalt: salt,
             createdAt: new Date().toISOString(),
         };
 
         return usersRepository.createUser(newUser);
     },
     deleteUserById: async (userId: string) => usersRepository.deleteUserById(new ObjectId(userId)),
-    generateHash: async (password: string, salt: string) => await bcrypt.hash(password, salt),
 };

@@ -134,7 +134,6 @@ export const users: TDatabase.TUser[] = [
         login: 'george',
         email: 'user1george@example.com',
         passwordHash: '$2b$10$p6Hm7G2gx2ccIxXAq1krP.si7hZoQhfI22R77ux1CVG3v7osD8/hW',
-        passwordSalt: '$2b$10$p6Hm7G2gx2ccIxXAq1krP.',
         createdAt: '2024-12-22T10:50:15.222Z',
     },
     {
@@ -142,7 +141,6 @@ export const users: TDatabase.TUser[] = [
         login: 'natasha',
         email: 'user2natasha@example.com',
         passwordHash: '$2b$10$jpuk3Bw2dDMLKlPBtUvRZe7nD4Ru0RlRV9o36TNULHI5twYC15gDO',
-        passwordSalt: '$2b$10$jpuk3Bw2dDMLKlPBtUvRZe',
         createdAt: '2024-12-10T10:50:15.222Z',
     },
     {
@@ -150,7 +148,6 @@ export const users: TDatabase.TUser[] = [
         login: 'vlad',
         email: 'user3vlad@example.com',
         passwordHash: '$2b$10$69rufEoYDA2GxsHN6l6gLOz4MNJHLofc0w5dFLtx9jXwsZ0zgQI8a',
-        passwordSalt: '$2b$10$69rufEoYDA2GxsHN6l6gLO',
         createdAt: '2024-12-15T10:50:15.222Z',
     },
     {
@@ -158,7 +155,6 @@ export const users: TDatabase.TUser[] = [
         login: 'kate',
         email: 'user4kate@example.com',
         passwordHash: '$2b$10$oW7wbnms9GzvDrNXBUcZWO7ykmcFbOaQ9aeK2VSGO6ZM9Q9DYAe8q',
-        passwordSalt: '$2b$10$oW7wbnms9GzvDrNXBUcZWO',
         createdAt: '2024-12-20T10:50:15.222Z',
     },
 ];

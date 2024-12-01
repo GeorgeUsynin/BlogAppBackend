@@ -1,5 +1,6 @@
 import { queryUsersRepository } from '../../users/repository';
-import { usersService } from '../../users/domain';
+import bcrypt from 'bcrypt';
+
 export const authService = {
     login: async (loginOrEmail: string, password: string) => {
         const user = await queryUsersRepository.findUserByLoginOrEmail(loginOrEmail, loginOrEmail);
@@ -8,9 +9,9 @@ export const authService = {
             return null;
         }
 
-        const passwordHash = await usersService.generateHash(password, user.passwordSalt);
+        const isValidPassword = await bcrypt.compare(password, user.passwordHash);
 
-        if (passwordHash !== user.passwordHash) {
+        if (!isValidPassword) {
             return null;
         }
 

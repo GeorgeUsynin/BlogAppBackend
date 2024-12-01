@@ -3,7 +3,7 @@ import { checkSchema } from 'express-validator';
 import { createUpdateBlogValidationSchema } from '../validation';
 import * as RequestHandler from '../requestHandlers';
 import { authMiddleware, errorMiddleware } from '../../shared/middlewares';
-import { getQueryParamsBlogAndPostValidationSchema } from '../../shared/validation';
+import { queryParamsValidationSchema } from '../../shared/validation';
 import { createUpdatePostValidationSchema } from '../../posts/validation';
 import { ROUTES } from '../../../constants';
 
@@ -21,15 +21,9 @@ const createUpdatePostValidators = [
     errorMiddleware,
 ];
 
-const getAllBlogsValidators = [
-    checkSchema(getQueryParamsBlogAndPostValidationSchema('blogs'), ['query']),
-    errorMiddleware,
-];
+const getAllBlogsValidators = [checkSchema(queryParamsValidationSchema('blogs'), ['query']), errorMiddleware];
 
-const getAllPostsValidators = [
-    checkSchema(getQueryParamsBlogAndPostValidationSchema('posts'), ['query']),
-    errorMiddleware,
-];
+const getAllPostsValidators = [checkSchema(queryParamsValidationSchema('posts'), ['query']), errorMiddleware];
 
 const BlogsController = {
     getAllBlogs: RequestHandler.getAllBlogsHandler,

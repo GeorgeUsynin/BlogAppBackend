@@ -107,7 +107,7 @@ describe('create a user', () => {
                     .send(newUser)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
-                expect(createErrorMessages({ login: ['minLength'] })).toEqual(body);
+                expect(createErrorMessages({ login: ['minMaxLength'] })).toEqual(body);
             });
 
             it('returns 400 status code and proper error object for bad `login` max length', async () => {
@@ -122,7 +122,7 @@ describe('create a user', () => {
                     .send(newUser)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
-                expect(createErrorMessages({ login: ['maxLength'] })).toEqual(body);
+                expect(createErrorMessages({ login: ['minMaxLength'] })).toEqual(body);
             });
 
             it('returns 400 status code and proper error object for bad `login` pattern', async () => {
@@ -293,7 +293,7 @@ describe('create a user', () => {
                     .send(newUser)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
-                expect(createErrorMessages({ password: ['minLength'] })).toEqual(body);
+                expect(createErrorMessages({ password: ['minMaxLength'] })).toEqual(body);
             });
 
             it('returns 400 status code and proper error object for bad `password` max length', async () => {
@@ -308,7 +308,7 @@ describe('create a user', () => {
                     .send(newUser)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
-                expect(createErrorMessages({ password: ['maxLength'] })).toEqual(body);
+                expect(createErrorMessages({ password: ['minMaxLength'] })).toEqual(body);
             });
         });
     });

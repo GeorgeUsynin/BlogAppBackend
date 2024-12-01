@@ -1,7 +1,6 @@
 import { CreateUpdatePostInputModel } from '../models';
 import { Schema } from 'express-validator';
 import { queryBlogsRepository } from '../../blogs/repository';
-import { ObjectId } from 'mongodb';
 
 const titleMaxLength = 30;
 const shortDescriptionMaxLength = 100;

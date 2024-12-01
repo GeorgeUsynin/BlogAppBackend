@@ -33,9 +33,9 @@ type TValues = {
         from: 'blogs' | 'posts' | 'users';
     };
     sortDirection?: 'isEqualTo'[];
-    login?: (TProperties | 'minLength' | 'isPattern' | 'isUnique')[];
+    login?: (Omit<TProperties, 'maxLength'> | 'minMaxLength' | 'isPattern' | 'isUnique')[];
     email?: (Omit<TProperties, 'maxLength'> | 'isPattern')[];
-    password?: (TProperties | 'minLength')[];
+    password?: (Omit<TProperties, 'maxLength'> | 'minMaxLength')[];
     loginOrEmail?: Omit<TProperties, 'maxLength'>[];
 };
 
@@ -85,8 +85,8 @@ const errorMessagesConfig = {
         message: `Max length should be ${length} characters`,
         field,
     }),
-    minLength: (field: string, length: number) => ({
-        message: `Min length should be ${length} characters`,
+    minMaxLength: (field: string, minLength: number, maxLength: number) => ({
+        message: `${capitalizeFirstLetter(field)} length should be from ${minLength} to ${maxLength} characters`,
         field,
     }),
     isPattern: (field: string, pattern: string) => ({
@@ -98,7 +98,7 @@ const errorMessagesConfig = {
         field,
     }),
     isUnique: (field: string) => ({
-        message: `${capitalizeFirstLetter(field)} field already exists.`,
+        message: 'User with this login or email already exists',
         field,
     }),
 } as const;
@@ -310,17 +310,14 @@ export const createErrorMessages = (values: TValues) => {
                 case 'isString':
                     errorsMessages.push(errorMessagesConfig.isString('login'));
                     break;
-                case 'minLength':
-                    errorsMessages.push(errorMessagesConfig.minLength('login', 3));
-                    break;
-                case 'maxLength':
-                    errorsMessages.push(errorMessagesConfig.maxLength('login', 10));
+                case 'minMaxLength':
+                    errorsMessages.push(errorMessagesConfig.minMaxLength('login', 3, 10));
                     break;
                 case 'isPattern':
                     errorsMessages.push(errorMessagesConfig.isPattern('login', '^[a-zA-Z0-9_-]*$'));
                     break;
                 case 'isUnique':
-                    errorsMessages.push(errorMessagesConfig.isUnique('login'));
+                    errorsMessages.push(errorMessagesConfig.isUnique(''));
                     break;
             }
         });
@@ -342,7 +339,7 @@ export const createErrorMessages = (values: TValues) => {
                     errorsMessages.push(errorMessagesConfig.isPattern('email', '^[w-.]+@([w-]+.)+[w-]{2,4}$'));
                     break;
                 case 'isUnique':
-                    errorsMessages.push(errorMessagesConfig.isUnique('email'));
+                    errorsMessages.push(errorMessagesConfig.isUnique(''));
                     break;
             }
         });
@@ -360,11 +357,8 @@ export const createErrorMessages = (values: TValues) => {
                 case 'isString':
                     errorsMessages.push(errorMessagesConfig.isString('email'));
                     break;
-                case 'minLength':
-                    errorsMessages.push(errorMessagesConfig.minLength('password', 6));
-                    break;
-                case 'maxLength':
-                    errorsMessages.push(errorMessagesConfig.maxLength('password', 20));
+                case 'minMaxLength':
+                    errorsMessages.push(errorMessagesConfig.minMaxLength('password', 6, 20));
                     break;
             }
         });

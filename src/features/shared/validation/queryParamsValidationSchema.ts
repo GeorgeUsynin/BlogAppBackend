@@ -1,7 +1,7 @@
 import { Schema } from 'express-validator';
-import { QueryParamsBlogModel } from '../../blogs/models';
+import { SharedQueryParamsModel } from '../types';
 
-type TOwner = 'blogs' | 'posts';
+type TOwner = 'blogs' | 'posts' | 'users';
 
 const sortByConfig = {
     blogs: ['name', 'createdAt'],
@@ -9,9 +9,7 @@ const sortByConfig = {
     users: ['login', 'email', 'createdAt'],
 };
 
-export const getQueryParamsBlogAndPostValidationSchema = (
-    owner: TOwner
-): Schema<Exclude<keyof QueryParamsBlogModel, 'searchNameTerm'>> => {
+export const queryParamsValidationSchema = (owner: TOwner): Schema<keyof SharedQueryParamsModel> => {
     return {
         sortBy: {
             optional: true,

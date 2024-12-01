@@ -1,3 +1,3 @@
-import { getQueryParamsBlogAndPostValidationSchema } from './queryParamsBlogAndPostValidationSchema';
+import { queryParamsValidationSchema } from './queryParamsValidationSchema';
 
-export { getQueryParamsBlogAndPostValidationSchema };
+export { queryParamsValidationSchema };

@@ -36,6 +36,40 @@ export type PaginatedViewModel<T> = {
 };
 
 /**
+ * Represents shared query parameters model.
+ */
+export type SharedQueryParamsModel = {
+    /**
+     * The current page number for pagination. Determines which portion of the results to return.
+     * Default value: 1
+     * @type {number}
+     */
+    pageNumber?: number;
+
+    /**
+     * The number of items to be displayed per page. Determines the size of each portion.
+     * Default value: 10
+     * @type {number}
+     */
+    pageSize?: number;
+
+    /**
+     * The field by which to sort the results.
+     * Default value: 'createdAt'
+     * @type {'name' | 'title' | 'blogName' | 'login' | 'email' | 'createdAt'}
+     */
+    sortBy?: 'name' | 'title' | 'blogName' | 'login' | 'email' | 'createdAt';
+
+    /**
+     * The direction of sorting, either ascending or descending.
+     * Default value: 'desc'
+     * Available values: 'asc', 'desc'
+     * @type {'asc' | 'desc'}
+     */
+    sortDirection?: 'asc' | 'desc';
+};
+
+/**
  * Represents an error message for a specific field in the input model.
  */
 type TError = {

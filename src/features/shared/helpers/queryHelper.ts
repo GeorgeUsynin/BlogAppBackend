@@ -35,16 +35,32 @@ export type TFilter = {
     email?: { $regex: string; $options: string };
 };
 
-export const createFilter = (params: TFilterParams) => {
+type TFilterOperator = 'or' | 'and';
+
+export const createFilter = (params: TFilterParams, operator?: TFilterOperator) => {
     const { id, searchNameTerm, blogId, searchLoginTerm, searchEmailTerm } = params;
 
-    const filter: TFilter = {};
+    const filter: { [key: string]: any }[] = []; // Array to store individual conditions
 
-    if (id) filter._id = new ObjectId(id);
-    if (searchNameTerm) filter.name = { $regex: searchNameTerm, $options: 'i' };
-    if (blogId) filter.blogId = blogId;
-    if (searchLoginTerm) filter.login = { $regex: searchLoginTerm, $options: 'i' };
-    if (searchEmailTerm) filter.email = { $regex: searchEmailTerm, $options: 'i' };
+    if (id) filter.push({ _id: new ObjectId(id) });
 
-    return filter;
+    if (blogId) filter.push({ blogId });
+
+    if (searchNameTerm) filter.push({ name: { $regex: searchNameTerm, $options: 'i' } });
+
+    if (searchLoginTerm) filter.push({ login: { $regex: searchLoginTerm, $options: 'i' } });
+
+    if (searchEmailTerm) filter.push({ email: { $regex: searchEmailTerm, $options: 'i' } });
+
+    // If there are multiple filters, return a query with the operator, otherwise return a single filter or an empty object
+    if (filter.length > 1) {
+        switch (operator) {
+            case 'or':
+                return { $or: filter };
+            case 'and':
+                return { $and: filter };
+        }
+    }
+
+    return filter[0] || {};
 };

@@ -29,9 +29,12 @@ describe('delete blog by id', () => {
             .expect(HTTP_STATUS_CODES.NO_CONTENT_204);
 
         //checking that the blog was deleted
-        await request.get(`${ROUTES.USERS}/${secondUserId}`).expect(HTTP_STATUS_CODES.NOT_FOUND_404);
+        await request
+            .get(`${ROUTES.USERS}/${secondUserId}`)
+            .set(getAuthorization())
+            .expect(HTTP_STATUS_CODES.NOT_FOUND_404);
 
-        const { body } = await request.get(ROUTES.USERS).expect(HTTP_STATUS_CODES.OK_200);
+        const { body } = await request.get(ROUTES.USERS).set(getAuthorization()).expect(HTTP_STATUS_CODES.OK_200);
         expect(body.totalCount).toBe(3);
     });
 

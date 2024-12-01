@@ -1,6 +1,6 @@
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 import { blogs } from '../dataset';
-import { createErrorMessages, request } from '../test-helpers';
+import { createErrorMessages, request, getAuthorization } from '../test-helpers';
 
 const secondBlogId = blogs[1]._id.toString();
 const URLS = [
@@ -20,6 +20,7 @@ URLS.forEach(item => {
 
                 const { body } = await request
                     .get(`${url}${pageNumberQueryString}`)
+                    .set(from === 'users' ? getAuthorization() : {})
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
                 expect(createErrorMessages({ pageNumber: ['isPositiveNumber'] })).toEqual(body);
@@ -32,6 +33,7 @@ URLS.forEach(item => {
 
                 const { body } = await request
                     .get(`${url}${pageSizeQueryString}`)
+                    .set(from === 'users' ? getAuthorization() : {})
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
                 expect(createErrorMessages({ pageSize: ['isPositiveNumber'] })).toEqual(body);
@@ -44,6 +46,7 @@ URLS.forEach(item => {
 
                 const { body } = await request
                     .get(`${url}${sortByQueryString}`)
+                    .set(from === 'users' ? getAuthorization() : {})
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
                 expect(createErrorMessages({ sortBy: { condition: ['isEqualTo'], from } })).toEqual(body);
@@ -56,6 +59,7 @@ URLS.forEach(item => {
 
                 const { body } = await request
                     .get(`${url}${sortDirectionQueryString}`)
+                    .set(from === 'users' ? getAuthorization() : {})
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
                 expect(createErrorMessages({ sortDirection: ['isEqualTo'] })).toEqual(body);

@@ -27,14 +27,20 @@ describe('login', () => {
             password: '12345678',
         };
 
-        await request.post(ROUTES.LOGIN).send(credentialsWithLogin).expect(HTTP_STATUS_CODES.NO_CONTENT_204);
+        await request
+            .post(`${ROUTES.AUTH}${ROUTES.LOGIN}`)
+            .send(credentialsWithLogin)
+            .expect(HTTP_STATUS_CODES.NO_CONTENT_204);
 
         const credentialsWithEmail: LoginInputModel = {
             loginOrEmail: 'user1george@example.com',
             password: '12345678',
         };
 
-        await request.post(ROUTES.LOGIN).send(credentialsWithEmail).expect(HTTP_STATUS_CODES.NO_CONTENT_204);
+        await request
+            .post(`${ROUTES.AUTH}${ROUTES.LOGIN}`)
+            .send(credentialsWithEmail)
+            .expect(HTTP_STATUS_CODES.NO_CONTENT_204);
     });
 
     describe('login payload validation', () => {
@@ -45,11 +51,11 @@ describe('login', () => {
                     password: '12345678',
                 };
                 const { body } = await request
-                    .post(ROUTES.LOGIN)
+                    .post(`${ROUTES.AUTH}${ROUTES.LOGIN}`)
                     .send(credentials)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
-                expect(createErrorMessages({ login: ['isRequired'] })).toEqual(body);
+                expect(createErrorMessages({ loginOrEmail: ['isRequired'] })).toEqual(body);
             });
 
             it('returns 400 status code and proper error object if `loginOrEmail` is empty or contain only spaces', async () => {
@@ -58,7 +64,7 @@ describe('login', () => {
                     password: '12345678',
                 };
                 const { body } = await request
-                    .post(ROUTES.LOGIN)
+                    .post(`${ROUTES.AUTH}${ROUTES.LOGIN}`)
                     .send(credentials)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
@@ -72,7 +78,7 @@ describe('login', () => {
                     password: '12345678',
                 };
                 const { body } = await request
-                    .post(ROUTES.LOGIN)
+                    .post(`${ROUTES.AUTH}${ROUTES.LOGIN}`)
                     .send(credentials)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
@@ -87,7 +93,7 @@ describe('login', () => {
                     loginOrEmail: 'george',
                 };
                 const { body } = await request
-                    .post(ROUTES.LOGIN)
+                    .post(`${ROUTES.AUTH}${ROUTES.LOGIN}`)
                     .send(credentials)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
@@ -100,7 +106,7 @@ describe('login', () => {
                     password: ' ',
                 };
                 const { body } = await request
-                    .post(ROUTES.LOGIN)
+                    .post(`${ROUTES.AUTH}${ROUTES.LOGIN}`)
                     .send(credentials)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
@@ -114,7 +120,7 @@ describe('login', () => {
                     password: [],
                 };
                 const { body } = await request
-                    .post(ROUTES.LOGIN)
+                    .post(`${ROUTES.AUTH}${ROUTES.LOGIN}`)
                     .send(credentials)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
@@ -129,13 +135,19 @@ describe('login', () => {
             password: '12345678',
         };
 
-        await request.post(ROUTES.LOGIN).send(credentialsWithWrongLogin).expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
+        await request
+            .post(`${ROUTES.AUTH}${ROUTES.LOGIN}`)
+            .send(credentialsWithWrongLogin)
+            .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
 
         const credentialsWithWrongPassword: LoginInputModel = {
             loginOrEmail: 'george',
             password: '12345679',
         };
 
-        await request.post(ROUTES.LOGIN).send(credentialsWithWrongPassword).expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
+        await request
+            .post(`${ROUTES.AUTH}${ROUTES.LOGIN}`)
+            .send(credentialsWithWrongPassword)
+            .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
     });
 });

@@ -14,10 +14,13 @@ type TValues = {
 export const queryUsersRepository = {
     getAllUsers: async (queryParams: QueryParamsUserModel) => {
         const params = normalizeQueryParams(queryParams);
-        const filter = createFilter({
-            searchEmailTerm: params.searchEmailTerm,
-            searchLoginTerm: params.searchLoginTerm,
-        });
+        const filter = createFilter(
+            {
+                searchEmailTerm: params.searchEmailTerm,
+                searchLoginTerm: params.searchLoginTerm,
+            },
+            'or'
+        );
 
         const items = await queryUsersRepository.findUserItemsByParamsAndFilter(params, filter);
         const totalCount = await queryUsersRepository.getTotalCountOfFilteredUsers(filter);

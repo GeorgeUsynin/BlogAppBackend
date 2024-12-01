@@ -9,9 +9,10 @@ export enum HTTP_STATUS_CODES {
 }
 
 export enum ROUTES {
+    AUTH = '/auth',
+    LOGIN = '/login',
     BLOGS = '/blogs',
     POSTS = '/posts',
     USERS = '/users',
-    LOGIN = '/auth/login',
     TESTING = '/testing/all-data',
 }

@@ -32,19 +32,51 @@ describe('get all users', () => {
         );
     });
 
-    it('returns all users according to requested query parameters', async () => {
-        const queryString = `?searchLoginTerm=nat&searchEmailTerm=ge&pageNumber=1&pageSize=1&sortBy=createdAt&sortDirection=asc`;
+    describe('returns all users according to requested query parameters', () => {
+        it('searchLoginTerm and searchEmailTerm', async () => {
+            const queryString = `?searchLoginTerm=nat&searchEmailTerm=ge&pageNumber=1&pageSize=1&sortBy=createdAt&sortDirection=asc`;
 
-        const { body } = await request
-            .get(`${ROUTES.USERS}${queryString}`)
-            .set(getAuthorization())
-            .expect(HTTP_STATUS_CODES.OK_200);
+            const { body } = await request
+                .get(`${ROUTES.USERS}${queryString}`)
+                .set(getAuthorization())
+                .expect(HTTP_STATUS_CODES.OK_200);
 
-        expect(body.totalCount).toBe(2);
-        expect(body.pagesCount).toBe(2);
-        expect(body.page).toBe(1);
-        expect(body.pageSize).toBe(1);
-        expect(body.items.length).toBe(1);
+            expect(body.totalCount).toBe(2);
+            expect(body.pagesCount).toBe(2);
+            expect(body.page).toBe(1);
+            expect(body.pageSize).toBe(1);
+            expect(body.items.length).toBe(1);
+        });
+
+        // it('searchLoginTerm', async () => {
+        //     const queryString = `?searchLoginTerm=nat&pageNumber=1&pageSize=1&sortBy=createdAt&sortDirection=asc`;
+
+        //     const { body } = await request
+        //         .get(`${ROUTES.USERS}${queryString}`)
+        //         .set(getAuthorization())
+        //         .expect(HTTP_STATUS_CODES.OK_200);
+
+        //     expect(body.totalCount).toBe(1);
+        //     expect(body.pagesCount).toBe(1);
+        //     expect(body.page).toBe(1);
+        //     expect(body.pageSize).toBe(1);
+        //     expect(body.items.length).toBe(1);
+        // });
+
+        // it('searchEmailTerm', async () => {
+        //     const queryString = `?searchEmailTerm=ge&pageNumber=1&pageSize=1&sortBy=createdAt&sortDirection=asc`;
+
+        //     const { body } = await request
+        //         .get(`${ROUTES.USERS}${queryString}`)
+        //         .set(getAuthorization())
+        //         .expect(HTTP_STATUS_CODES.OK_200);
+
+        //     expect(body.totalCount).toBe(1);
+        //     expect(body.pagesCount).toBe(1);
+        //     expect(body.page).toBe(1);
+        //     expect(body.pageSize).toBe(1);
+        //     expect(body.items.length).toBe(1);
+        // });
     });
 
     it('returns 401 Unauthorized status code if there is no proper Authorization header', async () => {

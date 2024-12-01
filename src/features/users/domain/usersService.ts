@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { ObjectId } from 'mongodb';
 import { usersRepository, queryUsersRepository } from '../repository';
 import type { CreateUserInputModel } from '../models';
-import type { TDatabase } from '../../../database/mongoDB';
+import { usersCollection, type TDatabase } from '../../../database/mongoDB';
 
 export const usersService = {
     createUser: async (payload: CreateUserInputModel) => {

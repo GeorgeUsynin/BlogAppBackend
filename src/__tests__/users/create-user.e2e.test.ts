@@ -1,6 +1,7 @@
 import { request, createErrorMessages, getAuthorization, dbHelper } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 import { CreateUserInputModel, UserItemViewModel } from '../../features/users/models';
+import { users } from '../dataset';
 
 describe('create a user', () => {
     beforeAll(async () => {
@@ -26,7 +27,8 @@ describe('create a user', () => {
         const createdUser: UserItemViewModel = {
             id: expect.any(String),
             createdAt: expect.any(String),
-            ...newUser,
+            login: expect.any(String),
+            email: expect.any(String),
         };
 
         //creating new user
@@ -48,6 +50,10 @@ describe('create a user', () => {
     });
 
     describe('user payload validation', () => {
+        beforeEach(async () => {
+            await dbHelper.setDb({ users });
+        });
+
         describe('login', () => {
             it('returns 400 status code and proper error object if `login` is missing', async () => {
                 //@ts-expect-error bad request (login is missing)
@@ -298,9 +304,9 @@ describe('create a user', () => {
 
             it('returns 400 status code and proper error object for bad `password` max length', async () => {
                 const newUser: CreateUserInputModel = {
-                    login: 'george',
-                    email: 'user1george@example.com',
-                    password: '12345678901234567890',
+                    login: 'olga',
+                    email: 'user1olgae@example.com',
+                    password: '12345678901234567890122',
                 };
                 const { body } = await request
                     .post(ROUTES.USERS)

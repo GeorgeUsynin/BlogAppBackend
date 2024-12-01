@@ -349,13 +349,13 @@ export const createErrorMessages = (values: TValues) => {
         password.forEach(value => {
             switch (value) {
                 case 'isRequired':
-                    errorsMessages.push(errorMessagesConfig.isRequired('email'));
+                    errorsMessages.push(errorMessagesConfig.isRequired('password'));
                     break;
                 case 'isEmptyString':
-                    errorsMessages.push(errorMessagesConfig.isEmptyString('email'));
+                    errorsMessages.push(errorMessagesConfig.isEmptyString('password'));
                     break;
                 case 'isString':
-                    errorsMessages.push(errorMessagesConfig.isString('email'));
+                    errorsMessages.push(errorMessagesConfig.isString('password'));
                     break;
                 case 'minMaxLength':
                     errorsMessages.push(errorMessagesConfig.minMaxLength('password', 6, 20));

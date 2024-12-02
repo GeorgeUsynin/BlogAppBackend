@@ -52,8 +52,6 @@ export const queryUsersRepository = {
             .limit(pageSize)
             .toArray();
     },
-    findUserByLoginOrEmail: async (login: string, email: string) =>
-        usersCollection.findOne({ $or: [{ login }, { email }] }),
     // For now we are doing mapping in the query repository, but we can move it to the presentation layer
     // There can be different approaches, but for now it's ok
     // However, we need to keep in mind that the usual approach is to do mapping in the presentation layer

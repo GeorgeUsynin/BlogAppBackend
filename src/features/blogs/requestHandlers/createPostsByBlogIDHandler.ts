@@ -4,7 +4,6 @@ import { URIParamsBlogIDPostModel } from '../models';
 import { CreateUpdatePostInputModel, PostItemViewModel } from '../../posts/models';
 import { blogsService } from '../domain';
 import { HTTP_STATUS_CODES } from '../../../constants';
-import { queryBlogsRepository } from '../repository';
 import { queryPostsRepository } from '../../posts/repository';
 
 export const createPostsByBlogIDHandler = async (
@@ -14,15 +13,14 @@ export const createPostsByBlogIDHandler = async (
     const blogId = req.params.id;
     const payload = req.body;
 
-    const blog = await queryBlogsRepository.getBlogById(blogId);
+    const result = await blogsService.createPostByBlogId(payload, blogId);
 
-    if (!blog) {
+    if (!result) {
         res.sendStatus(HTTP_STATUS_CODES.NOT_FOUND_404);
         return;
     }
 
-    const { insertedId } = await blogsService.createPostByBlogId(payload, blogId);
-    const newPost = await queryPostsRepository.getPostById(insertedId.toString());
+    const newPost = await queryPostsRepository.getPostById(result.insertedId.toString());
 
     if (!newPost) {
         res.sendStatus(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);

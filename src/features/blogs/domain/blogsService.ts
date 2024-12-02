@@ -16,6 +16,12 @@ export const blogsService = {
         return blogsRepository.createBlog(newBlog);
     },
     createPostByBlogId: async (payload: CreateUpdatePostInputModel, blogId: string) => {
+        const blog = await blogsRepository.getBlogById(new ObjectId(blogId));
+
+        if (!blog) {
+            return null;
+        }
+
         return postsService.createPost({ ...payload, blogId });
     },
     updateBlog: async (blogId: string, payload: CreateUpdateBlogInputModel) => {

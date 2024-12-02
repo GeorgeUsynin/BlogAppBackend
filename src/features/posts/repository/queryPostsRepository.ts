@@ -1,6 +1,7 @@
 import { createFilter, normalizeQueryParams } from '../../shared/helpers';
 import { QueryParamsPostModel, PostsPaginatedViewModel, PostItemViewModel } from '../models';
 import { postsCollection, TDatabase } from '../../../database/mongoDB';
+import { blogsRepository } from '../../blogs/repository';
 import { ObjectId, WithId } from 'mongodb';
 
 type TFilter = ReturnType<typeof createFilter>;
@@ -25,6 +26,15 @@ export const queryPostsRepository = {
             pageNumber: params.pageNumber,
             pageSize: params.pageSize,
         });
+    },
+    getAllPostsByBlogId: async (queryParams: QueryParamsPostModel, blogId: string) => {
+        const blog = await blogsRepository.getBlogById(new ObjectId(blogId));
+
+        if (!blog) {
+            return null;
+        }
+
+        return queryPostsRepository.getAllPosts(queryParams, blogId);
     },
     getPostById: async (postId: string) => {
         const post = await postsCollection.findOne({ _id: new ObjectId(postId) });

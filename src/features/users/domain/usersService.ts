@@ -1,12 +1,12 @@
 import bcrypt from 'bcrypt';
 import { ObjectId } from 'mongodb';
-import { usersRepository, queryUsersRepository } from '../repository';
+import { usersRepository } from '../repository';
 import type { CreateUserInputModel } from '../models';
-import { usersCollection, type TDatabase } from '../../../database/mongoDB';
+import type { TDatabase } from '../../../database/mongoDB';
 
 export const usersService = {
     createUser: async (payload: CreateUserInputModel) => {
-        const user = await queryUsersRepository.findUserByLoginOrEmail(payload.login, payload.email);
+        const user = await usersRepository.findUserByLoginOrEmail(payload.login, payload.email);
 
         if (user) {
             return {

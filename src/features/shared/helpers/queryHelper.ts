@@ -21,6 +21,7 @@ export const normalizeQueryParams = (
 
 type TFilterParams = {
     blogId?: string;
+    postId?: string;
     id?: string;
     searchNameTerm?: ReturnType<typeof normalizeQueryParams>['searchNameTerm'];
     searchLoginTerm?: ReturnType<typeof normalizeQueryParams>['searchLoginTerm'];
@@ -29,6 +30,7 @@ type TFilterParams = {
 
 export type TFilter = {
     blogId?: string;
+    postId?: string;
     _id?: ObjectId;
     name?: { $regex: string; $options: string };
     login?: { $regex: string; $options: string };
@@ -38,13 +40,15 @@ export type TFilter = {
 type TFilterOperator = 'or' | 'and';
 
 export const createFilter = (params: TFilterParams, operator?: TFilterOperator) => {
-    const { id, searchNameTerm, blogId, searchLoginTerm, searchEmailTerm } = params;
+    const { id, searchNameTerm, blogId, postId, searchLoginTerm, searchEmailTerm } = params;
 
     const filter: { [key: string]: any }[] = []; // Array to store individual conditions
 
     if (id) filter.push({ _id: new ObjectId(id) });
 
     if (blogId) filter.push({ blogId });
+
+    if (postId) filter.push({ postId });
 
     if (searchNameTerm) filter.push({ name: { $regex: searchNameTerm, $options: 'i' } });
 

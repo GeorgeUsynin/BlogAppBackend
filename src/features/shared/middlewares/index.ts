@@ -1,4 +1,5 @@
 import { authMiddleware } from './authMiddleware';
 import { errorMiddleware } from './errorMiddleware';
+import { authBearerMiddleware } from './authBearerMiddleware';
 
-export { authMiddleware, errorMiddleware };
+export { authMiddleware, authBearerMiddleware, errorMiddleware };

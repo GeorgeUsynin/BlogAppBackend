@@ -13,6 +13,7 @@ export const createPostsByBlogIDHandler = async (
     const blogId = req.params.id;
     const payload = req.body;
 
+    //TODO: rewrite to use postService
     const result = await blogsService.createPostByBlogId(payload, blogId);
 
     if (!result) {

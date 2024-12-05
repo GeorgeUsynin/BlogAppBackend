@@ -19,9 +19,9 @@ export type QueryParamsCommentModel = {
     /**
      * The field by which to sort the results.
      * Default value: 'createdAt'
-     * @type {'name' | 'createdAt'}
+     * @type {'createdAt'}
      */
-    sortBy?: 'name' | 'createdAt';
+    sortBy?: 'createdAt';
 
     /**
      * The direction of sorting, either ascending or descending.

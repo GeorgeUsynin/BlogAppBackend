@@ -1,12 +1,13 @@
 import { Schema } from 'express-validator';
 import { SharedQueryParamsModel } from '../types';
 
-type TOwner = 'blogs' | 'posts' | 'users';
+type TOwner = 'blogs' | 'posts' | 'comments' | 'users';
 
 const sortByConfig = {
     blogs: ['name', 'createdAt'],
     posts: ['title', 'blogName', 'createdAt'],
     users: ['login', 'email', 'createdAt'],
+    comments: ['createdAt'],
 };
 
 export const queryParamsValidationSchema = (owner: TOwner): Schema<keyof SharedQueryParamsModel> => {

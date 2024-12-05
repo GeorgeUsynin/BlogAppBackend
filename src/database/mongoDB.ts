@@ -47,6 +47,7 @@ export let blogsCollection: Collection<TDatabase.TBlog>;
 export let postsCollection: Collection<TDatabase.TPost>;
 export let commentsCollection: Collection<TDatabase.TComment>;
 export let usersCollection: Collection<TDatabase.TUser>;
+
 export const connectToDatabase = async (url: string, dbName: string) => {
     if (db) {
         console.log('Database was restored from cache!');

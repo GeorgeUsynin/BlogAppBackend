@@ -255,7 +255,7 @@ describe('create a post', () => {
                     .send(newPost)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
-                expect(createErrorMessages({ content: ['maxLength'] })).toEqual(body);
+                expect(createErrorMessages({ content: ['maxLength'], from: 'posts' })).toEqual(body);
             });
         });
 

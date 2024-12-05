@@ -21,6 +21,17 @@ export namespace TDatabase {
         createdAt: string;
     };
 
+    export type TComment = {
+        _id: ObjectId;
+        content: string;
+        commentatorInfo: {
+            userId: string;
+            userLogin: string;
+        };
+        createdAt: string;
+        postId: string;
+    };
+
     export type TUser = {
         _id: ObjectId;
         login: string;
@@ -34,6 +45,7 @@ export let client: MongoClient;
 export let db: Db;
 export let blogsCollection: Collection<TDatabase.TBlog>;
 export let postsCollection: Collection<TDatabase.TPost>;
+export let commentsCollection: Collection<TDatabase.TComment>;
 export let usersCollection: Collection<TDatabase.TUser>;
 export const connectToDatabase = async (url: string, dbName: string) => {
     if (db) {
@@ -50,6 +62,7 @@ export const connectToDatabase = async (url: string, dbName: string) => {
         db = client.db(dbName);
         blogsCollection = db.collection(SETTINGS.DB_COLLECTIONS.blogsCollection);
         postsCollection = db.collection(SETTINGS.DB_COLLECTIONS.postsCollection);
+        commentsCollection = db.collection(SETTINGS.DB_COLLECTIONS.commentsCollection);
         usersCollection = db.collection(SETTINGS.DB_COLLECTIONS.usersCollection);
 
         await db.command({ ping: 1 });

@@ -5,6 +5,10 @@ const firstId = new ObjectId();
 const secondId = new ObjectId();
 const thirdId = new ObjectId();
 const fourthId = new ObjectId();
+const fifthId = new ObjectId();
+const sixthId = new ObjectId();
+const seventhId = new ObjectId();
+const eighthId = new ObjectId();
 
 export const blogs: TDatabase.TBlog[] = [
     {
@@ -47,7 +51,7 @@ export const blogs: TDatabase.TBlog[] = [
 
 export const posts: TDatabase.TPost[] = [
     {
-        _id: new ObjectId(),
+        _id: firstId,
         title: 'Easy Green Home Tips',
         shortDescription: 'Simple steps to make your home more eco-friendly.',
         content:
@@ -57,7 +61,7 @@ export const posts: TDatabase.TPost[] = [
         createdAt: '2024-12-28T10:50:15.222Z',
     },
     {
-        _id: new ObjectId(),
+        _id: secondId,
         title: 'Top 5 Eco Products',
         shortDescription: 'Our top picks for sustainable everyday products.',
         content:
@@ -67,7 +71,7 @@ export const posts: TDatabase.TPost[] = [
         createdAt: '2024-12-22T10:50:15.222Z',
     },
     {
-        _id: new ObjectId(),
+        _id: thirdId,
         title: 'Latest AI Innovations',
         shortDescription: 'Discover the most exciting AI breakthroughs of 2023.',
         content:
@@ -77,7 +81,7 @@ export const posts: TDatabase.TPost[] = [
         createdAt: '2024-12-27T10:50:15.222Z',
     },
     {
-        _id: new ObjectId(),
+        _id: fourthId,
         title: 'Gadgets You Need in 2024',
         shortDescription: 'Must-have tech gadgets for the new year.',
         content:
@@ -87,7 +91,7 @@ export const posts: TDatabase.TPost[] = [
         createdAt: '2024-12-22T10:50:15.222Z',
     },
     {
-        _id: new ObjectId(),
+        _id: fifthId,
         title: 'Mindfulness for Beginners',
         shortDescription: 'A simple guide to starting mindfulness.',
         content:
@@ -97,7 +101,7 @@ export const posts: TDatabase.TPost[] = [
         createdAt: '2024-12-26T10:50:15.222Z',
     },
     {
-        _id: new ObjectId(),
+        _id: sixthId,
         title: '10 Healthy Snacks',
         shortDescription: 'Quick and nutritious snack ideas for a busy day.',
         content:
@@ -107,7 +111,7 @@ export const posts: TDatabase.TPost[] = [
         createdAt: '2024-12-22T10:50:15.222Z',
     },
     {
-        _id: new ObjectId(),
+        _id: seventhId,
         title: 'Art Therapy for Stress',
         shortDescription: 'How art can reduce stress and improve well-being.',
         content:
@@ -117,7 +121,7 @@ export const posts: TDatabase.TPost[] = [
         createdAt: '2024-12-25T10:50:15.222Z',
     },
     {
-        _id: new ObjectId(),
+        _id: eighthId,
         title: 'Tips for New Artists',
         shortDescription: 'Advice for those starting their artistic journey.',
         content:
@@ -125,6 +129,49 @@ export const posts: TDatabase.TPost[] = [
         blogId: fourthId.toString(),
         blogName: 'Creative Minds',
         createdAt: '2024-12-22T10:50:15.222Z',
+    },
+];
+
+export const comments: TDatabase.TComment[] = [
+    {
+        _id: new ObjectId(),
+        postId: firstId.toString(),
+        content: "This is George's first comment.",
+        commentatorInfo: {
+            userId: firstId.toString(),
+            userLogin: 'george',
+        },
+        createdAt: '2024-12-29T10:50:15.222Z',
+    },
+    {
+        _id: new ObjectId(),
+        postId: firstId.toString(),
+        content: "This is George's second comment.",
+        commentatorInfo: {
+            userId: firstId.toString(),
+            userLogin: 'george',
+        },
+        createdAt: '2024-12-30T11:50:15.222Z',
+    },
+    {
+        _id: new ObjectId(),
+        postId: secondId.toString(),
+        content: "This is Natasha's first comment.",
+        commentatorInfo: {
+            userId: secondId.toString(),
+            userLogin: 'natasha',
+        },
+        createdAt: '2025-01-01T15:50:15.222Z',
+    },
+    {
+        _id: new ObjectId(),
+        postId: secondId.toString(),
+        content: "This is Natasha's second comment.",
+        commentatorInfo: {
+            userId: secondId.toString(),
+            userLogin: 'natasha',
+        },
+        createdAt: '2025-01-04T13:45:00.000Z',
     },
 ];
 

@@ -1,13 +1,13 @@
 import { Response } from 'express';
 import { RequestWithParamsAndBody } from '../../shared/types';
-import { URIParamsBlogIDPostModel } from '../models';
+import { URIParamsBlogIDModel } from '../models';
 import { CreateUpdatePostInputModel, PostItemViewModel } from '../../posts/models';
 import { blogsService } from '../domain';
 import { HTTP_STATUS_CODES } from '../../../constants';
 import { queryPostsRepository } from '../../posts/repository';
 
 export const createPostsByBlogIDHandler = async (
-    req: RequestWithParamsAndBody<URIParamsBlogIDPostModel, CreateUpdatePostInputModel>,
+    req: RequestWithParamsAndBody<URIParamsBlogIDModel, CreateUpdatePostInputModel>,
     res: Response<PostItemViewModel>
 ) => {
     const blogId = req.params.id;

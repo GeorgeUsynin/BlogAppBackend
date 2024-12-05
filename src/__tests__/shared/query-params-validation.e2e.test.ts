@@ -1,14 +1,27 @@
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
-import { blogs } from '../dataset';
+import { blogs, posts } from '../dataset';
 import { createErrorMessages, request, getAuthorization } from '../test-helpers';
 
 const secondBlogId = blogs[1]._id.toString();
+const secondPostId = posts[1]._id.toString();
+
 const URLS = [
     { url: `${ROUTES.BLOGS}`, from: 'blogs' },
     { url: `${ROUTES.POSTS}`, from: 'posts' },
     { url: `${ROUTES.BLOGS}/${secondBlogId}${ROUTES.POSTS}`, from: 'posts' },
+    { url: `${ROUTES.POSTS}/${secondPostId}${ROUTES.COMMENTS}`, from: 'comments' },
     { url: `${ROUTES.USERS}`, from: 'users' },
 ] as const;
+
+const setAuthorization = (from: 'users' | 'comments' | 'posts' | 'blogs') => {
+    if (from === 'comments') {
+        return getBearerAuthorization(userId);
+    }
+    if (from === 'users') {
+        return getAuthorization();
+    }
+    return {};
+};
 
 URLS.forEach(item => {
     const { url, from } = item;
@@ -20,7 +33,7 @@ URLS.forEach(item => {
 
                 const { body } = await request
                     .get(`${url}${pageNumberQueryString}`)
-                    .set(from === 'users' ? getAuthorization() : {})
+                    .set(setAuthorization(from))
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
                 expect(createErrorMessages({ pageNumber: ['isPositiveNumber'] })).toEqual(body);
@@ -33,7 +46,7 @@ URLS.forEach(item => {
 
                 const { body } = await request
                     .get(`${url}${pageSizeQueryString}`)
-                    .set(from === 'users' ? getAuthorization() : {})
+                    .set(setAuthorization(from))
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
                 expect(createErrorMessages({ pageSize: ['isPositiveNumber'] })).toEqual(body);
@@ -46,7 +59,7 @@ URLS.forEach(item => {
 
                 const { body } = await request
                     .get(`${url}${sortByQueryString}`)
-                    .set(from === 'users' ? getAuthorization() : {})
+                    .set(setAuthorization(from))
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
                 expect(createErrorMessages({ sortBy: { condition: ['isEqualTo'], from } })).toEqual(body);
@@ -59,7 +72,7 @@ URLS.forEach(item => {
 
                 const { body } = await request
                     .get(`${url}${sortDirectionQueryString}`)
-                    .set(from === 'users' ? getAuthorization() : {})
+                    .set(setAuthorization(from))
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
                 expect(createErrorMessages({ sortDirection: ['isEqualTo'] })).toEqual(body);

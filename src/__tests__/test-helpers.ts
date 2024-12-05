@@ -11,6 +11,7 @@ import {
     client,
     db,
     usersCollection,
+    commentsCollection,
 } from '../database/mongoDB';
 import bcrypt from 'bcrypt';
 
@@ -24,19 +25,20 @@ type TValues = {
     websiteUrl?: (TProperties | 'isPattern')[];
     title?: TProperties[];
     shortDescription?: TProperties[];
-    content?: TProperties[];
+    content?: (TProperties | 'minMaxLength')[];
     blogId?: (Exclude<TProperties, 'maxLength'> | 'blogIdNotExist')[];
     pageNumber?: 'isPositiveNumber'[];
     pageSize?: 'isPositiveNumber'[];
     sortBy?: {
         condition: 'isEqualTo'[];
-        from: 'blogs' | 'posts' | 'users';
+        from: 'blogs' | 'posts' | 'comments' | 'users';
     };
     sortDirection?: 'isEqualTo'[];
     login?: (Omit<TProperties, 'maxLength'> | 'minMaxLength' | 'isPattern' | 'isUnique')[];
     email?: (Omit<TProperties, 'maxLength'> | 'isPattern')[];
     password?: (Omit<TProperties, 'maxLength'> | 'minMaxLength')[];
     loginOrEmail?: Omit<TProperties, 'maxLength'>[];
+    from?: 'blogs' | 'posts' | 'comments' | 'users';
 };
 
 const sortByConfig = {
@@ -120,6 +122,7 @@ export const createErrorMessages = (values: TValues) => {
         email,
         password,
         loginOrEmail,
+        from,
     } = values;
 
     const errorsMessages: ErrorViewModel['errorsMessages'] = [];
@@ -239,7 +242,10 @@ export const createErrorMessages = (values: TValues) => {
                     errorsMessages.push(errorMessagesConfig.isEmptyString('content'));
                     break;
                 case 'maxLength':
-                    errorsMessages.push(errorMessagesConfig.maxLength('content', 1000));
+                    errorsMessages.push(errorMessagesConfig.maxLength('content', from === 'posts' ? 1000 : 300));
+                    break;
+                case 'minMaxLength':
+                    errorsMessages.push(errorMessagesConfig.minMaxLength('content', 20, 300));
                     break;
             }
         });
@@ -391,6 +397,7 @@ type TDataset = {
     blogs?: TDatabase.TBlog[];
     posts?: TDatabase.TPost[];
     users?: TDatabase.TUser[];
+    comments?: TDatabase.TComment[];
 };
 
 export const dbHelper = {
@@ -407,6 +414,9 @@ export const dbHelper = {
         if (collectionNames.includes('posts')) {
             await postsCollection.deleteMany({});
         }
+        if (collectionNames.includes('comments')) {
+            await commentsCollection.deleteMany({});
+        }
         if (collectionNames.includes('users')) {
             await usersCollection.deleteMany({});
         }
@@ -421,15 +431,11 @@ export const dbHelper = {
         }
 
         if (dataset.posts?.length) {
-            const blogs = await blogsCollection.find({}).toArray();
+            await postsCollection.insertMany(dataset.posts);
+        }
 
-            const postsWithBlogId = dataset.posts.map(post => {
-                const blogName = post.blogName;
-                const blogId = blogs.find(blog => blog.name === blogName)?._id;
-                return { ...post, blogId: blogId?.toString() as string };
-            });
-
-            await postsCollection.insertMany(postsWithBlogId);
+        if (dataset.comments?.length) {
+            await commentsCollection.insertMany(dataset.comments);
         }
     },
     dropDb: async () => {
@@ -446,5 +452,9 @@ export const dbHelper = {
     getUser: async (arrayIndex: number) => {
         const allUsers = await usersCollection.find({}).toArray();
         return allUsers[arrayIndex];
+    },
+    getComment: async (arrayIndex: number) => {
+        const allComments = await commentsCollection.find({}).toArray();
+        return allComments[arrayIndex];
     },
 };

@@ -44,6 +44,7 @@ type TValues = {
 const sortByConfig = {
     blogs: ['name', 'createdAt'],
     posts: ['title', 'blogName', 'createdAt'],
+    comments: ['createdAt'],
     users: ['login', 'email', 'createdAt'],
 };
 
@@ -61,7 +62,7 @@ const errorMessagesConfig = {
         field,
     }),
     //@ts-expect-error
-    isEqualTo: (field: string, from?: 'blogs' | 'posts' | 'users') => {
+    isEqualTo: (field: string, from?: 'blogs' | 'posts' | 'comments' | 'users') => {
         switch (field) {
             case 'sortBy':
                 return {

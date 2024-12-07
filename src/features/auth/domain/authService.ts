@@ -1,5 +1,8 @@
 import bcrypt from 'bcrypt';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { usersRepository } from '../../users/repository';
+import { SETTINGS } from '../../../app-settings';
+import { HTTP_STATUS_CODES } from '../../../constants';
 
 export const authService = {
     login: async (loginOrEmail: string, password: string) => {
@@ -15,6 +18,30 @@ export const authService = {
             return null;
         }
 
-        return user;
+        return { accessToken: authService.createJWTToken(user._id.toString()) };
+    },
+    verifyBasicAuthorization: (authorizationHeader: string) => {
+        return authorizationHeader === `Basic ${SETTINGS.CODE_AUTH_BASE64}`;
+    },
+    verifyBearerAuthorization: async (authorizationHeader: string) => {
+        const token = authorizationHeader.split(' ')[1];
+        const decoded = authService.verifyJWTToken(token) as JwtPayload;
+
+        const expirationInMilliseconds = Number(decoded.exp) * 1000;
+        const isTokenExpired = Date.now() > expirationInMilliseconds;
+        const isUserExists = Boolean(await usersRepository.findUserById(decoded.userId));
+
+        if (isTokenExpired || !isUserExists) {
+            return { statusCode: HTTP_STATUS_CODES.UNAUTHORIZED_401 };
+        }
+
+        return { userId: decoded.userId };
+    },
+    createJWTToken: (userId: string) => {
+        const token = jwt.sign({ userId }, process.env.JWT_SECRET as string, { expiresIn: '7d' });
+        return token;
+    },
+    verifyJWTToken: (token: string) => {
+        return jwt.verify(token, process.env.JWT_SECRET as string);
     },
 };

@@ -1,6 +1,6 @@
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
-import { blogs, posts } from '../dataset';
-import { createErrorMessages, request, getAuthorization } from '../test-helpers';
+import { blogs, posts, users } from '../dataset';
+import { createErrorMessages, request, getAuthorization, getBearerAuthorization } from '../test-helpers';
 
 const secondBlogId = blogs[1]._id.toString();
 const secondPostId = posts[1]._id.toString();
@@ -13,9 +13,11 @@ const URLS = [
     { url: `${ROUTES.USERS}`, from: 'users' },
 ] as const;
 
+const secondUser = users[1];
+
 const setAuthorization = (from: 'users' | 'comments' | 'posts' | 'blogs') => {
     if (from === 'comments') {
-        return getBearerAuthorization(userId);
+        return getBearerAuthorization(secondUser._id.toString());
     }
     if (from === 'users') {
         return getAuthorization();

@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { RequestWithParamsAndBody } from '../../shared/types';
 import { URIParamsBlogIDModel } from '../models';
 import { CreateUpdatePostInputModel, PostItemViewModel } from '../../posts/models';
-import { blogsService } from '../domain';
+import { postsService } from '../../posts/domain';
 import { HTTP_STATUS_CODES } from '../../../constants';
 import { queryPostsRepository } from '../../posts/repository';
 
@@ -13,8 +13,7 @@ export const createPostsByBlogIDHandler = async (
     const blogId = req.params.id;
     const payload = req.body;
 
-    //TODO: rewrite to use postService
-    const result = await blogsService.createPostByBlogId(payload, blogId);
+    const result = await postsService.createPostByBlogId(payload, blogId);
 
     if (!result) {
         res.sendStatus(HTTP_STATUS_CODES.NOT_FOUND_404);

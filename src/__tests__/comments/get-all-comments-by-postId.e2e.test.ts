@@ -1,6 +1,6 @@
 import { dbHelper, request } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
-import { blogs, comments, posts, fakeRequestedObjectId } from '../dataset';
+import { blogs, posts, comments, fakeRequestedObjectId } from '../dataset';
 
 describe('get all comments by post id', () => {
     beforeAll(async () => {
@@ -12,7 +12,7 @@ describe('get all comments by post id', () => {
     });
 
     afterEach(async () => {
-        await dbHelper.resetCollections(['posts', 'comments']);
+        await dbHelper.resetCollections(['blogs', 'posts', 'comments']);
     });
 
     afterAll(async () => {

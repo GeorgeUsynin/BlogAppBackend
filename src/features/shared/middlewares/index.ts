@@ -1,5 +1,5 @@
-import { authMiddleware } from './authMiddleware';
+import { authBasicMiddleware } from './authBasicMiddleware';
 import { errorMiddleware } from './errorMiddleware';
 import { authBearerMiddleware } from './authBearerMiddleware';
 
-export { authMiddleware, authBearerMiddleware, errorMiddleware };
+export { authBasicMiddleware, authBearerMiddleware, errorMiddleware };

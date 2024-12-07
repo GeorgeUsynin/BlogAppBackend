@@ -7,7 +7,7 @@ import { blogsRepository } from '../../blogs/repository';
 export const postsService = {
     createPost: async (payload: CreateUpdatePostInputModel) => {
         const blogId = payload.blogId;
-        const linkedBlogName = (await blogsRepository.getBlogById(new ObjectId(blogId)))?.name as string;
+        const linkedBlogName = (await blogsRepository.getBlogById(blogId))?.name as string;
         const newPost: Omit<TDatabase.TPost, '_id'> = {
             ...payload,
             blogName: linkedBlogName,
@@ -16,7 +16,16 @@ export const postsService = {
 
         return postsRepository.createPost(newPost);
     },
+    createPostByBlogId: async (payload: CreateUpdatePostInputModel, blogId: string) => {
+        const blog = await blogsRepository.getBlogById(blogId);
+
+        if (!blog) {
+            return null;
+        }
+
+        return postsService.createPost({ ...payload, blogId });
+    },
     updatePost: async (postId: string, payload: CreateUpdatePostInputModel) =>
-        postsRepository.updatePost(new ObjectId(postId), payload),
-    deletePostById: async (postId: string) => postsRepository.deletePostById(new ObjectId(postId)),
+        postsRepository.updatePost(postId, payload),
+    deletePostById: async (postId: string) => postsRepository.deletePostById(postId),
 };

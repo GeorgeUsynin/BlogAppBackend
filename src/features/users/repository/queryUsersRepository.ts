@@ -39,6 +39,17 @@ export const queryUsersRepository = {
 
         return queryUsersRepository.mapMongoUserToViewModel(user);
     },
+    getUserInfoById: async (userId: string) => {
+        const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+
+        if (!user) return null;
+
+        return {
+            email: user.email,
+            login: user.login,
+            userId: user._id.toString(),
+        };
+    },
     getTotalCountOfFilteredUsers: async (filter: TFilter) => usersCollection.countDocuments(filter),
     findUserItemsByParamsAndFilter: async (
         params: ReturnType<typeof normalizeQueryParams>,

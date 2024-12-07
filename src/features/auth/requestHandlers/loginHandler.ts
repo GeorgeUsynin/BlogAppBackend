@@ -1,18 +1,18 @@
 import { Response } from 'express';
 import { RequestWithBody } from '../../shared/types';
-import { LoginInputModel } from '../models';
+import { LoginInputModel, LoginViewModel } from '../models';
 import { authService } from '../domain';
 import { HTTP_STATUS_CODES } from '../../../constants';
 
-export const loginHandler = async (req: RequestWithBody<LoginInputModel>, res: Response) => {
+export const loginHandler = async (req: RequestWithBody<LoginInputModel>, res: Response<LoginViewModel>) => {
     const { loginOrEmail, password } = req.body;
 
-    const user = await authService.login(loginOrEmail, password);
+    const token = await authService.login(loginOrEmail, password);
 
-    if (!user) {
+    if (!token) {
         res.sendStatus(HTTP_STATUS_CODES.UNAUTHORIZED_401);
         return;
     }
 
-    res.sendStatus(HTTP_STATUS_CODES.NO_CONTENT_204);
+    res.status(HTTP_STATUS_CODES.OK_200).send(token);
 };

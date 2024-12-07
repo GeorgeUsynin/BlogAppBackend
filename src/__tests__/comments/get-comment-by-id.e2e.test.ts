@@ -21,14 +21,12 @@ describe('get comment by id', () => {
     });
 
     it('returns comment by requested id', async () => {
-        const { body: allComments } = await request.get(ROUTES.COMMENTS).expect(HTTP_STATUS_CODES.OK_200);
-
-        const secondCommentId = allComments.items[1].id;
+        const secondCommentId = comments[1]._id.toString();
 
         //requesting comment by id
         const { body } = await request.get(`${ROUTES.COMMENTS}/${secondCommentId}`).expect(HTTP_STATUS_CODES.OK_200);
 
-        expect(body).toEqual(allComments.items[1]);
+        expect(body.id).toEqual(secondCommentId);
     });
 
     it('returns 404 status code if there is no requested comment in database', async () => {

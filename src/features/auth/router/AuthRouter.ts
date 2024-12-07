@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { checkSchema } from 'express-validator';
 import * as RequestHandler from '../requestHandlers';
-import { errorMiddleware } from '../../shared/middlewares';
+import { authBearerMiddleware, errorMiddleware } from '../../shared/middlewares';
 import { loginValidationSchema } from '../validation';
 import { ROUTES } from '../../../constants';
 
@@ -11,6 +11,8 @@ const loginValidators = [checkSchema(loginValidationSchema, ['body']), errorMidd
 
 const AuthController = {
     login: RequestHandler.loginHandler,
+    me: RequestHandler.meHandler,
 };
 
+AuthRouter.get(ROUTES.ME, authBearerMiddleware, AuthController.me);
 AuthRouter.post(ROUTES.LOGIN, ...loginValidators, AuthController.login);

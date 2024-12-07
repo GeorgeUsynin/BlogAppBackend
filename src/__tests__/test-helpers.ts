@@ -1,3 +1,5 @@
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import { app } from '../app';
 import { agent } from 'supertest';
 import { ErrorViewModel } from '../features/shared/types';
@@ -13,7 +15,6 @@ import {
     usersCollection,
     commentsCollection,
 } from '../database/mongoDB';
-import bcrypt from 'bcrypt';
 
 export const request = agent(app);
 
@@ -391,6 +392,11 @@ export const createErrorMessages = (values: TValues) => {
 };
 
 export const getAuthorization = () => ({ Authorization: `Basic ${SETTINGS.CODE_AUTH_BASE64}` });
+
+export const getBearerAuthorization = (userId: string) => {
+    const token = jwt.sign({ userId }, process.env.JWT_SECRET as string, { expiresIn: '7d' });
+    return { Authorization: `Bearer ${token}` };
+};
 
 export const decryptPassword = async (password: string, salt: string) => await bcrypt.hash(password, salt);
 

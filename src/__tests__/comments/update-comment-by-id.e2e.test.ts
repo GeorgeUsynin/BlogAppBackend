@@ -1,6 +1,6 @@
-import { dbHelper, request, createErrorMessages, getAuthorization } from '../test-helpers';
+import { dbHelper, request, createErrorMessages, getBearerAuthorization } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
-import { comments, fakeRequestedObjectId, longContent, users } from '../dataset';
+import { comments, users, fakeRequestedObjectId, longContent } from '../dataset';
 import { CreateUpdateCommentInputModel } from '../../features/comments/models';
 
 describe('update comment by id', () => {
@@ -9,11 +9,11 @@ describe('update comment by id', () => {
     });
 
     beforeEach(async () => {
-        await dbHelper.setDb({ comments });
+        await dbHelper.setDb({ comments, users });
     });
 
     afterEach(async () => {
-        await dbHelper.resetCollections(['comments']);
+        await dbHelper.resetCollections(['comments', 'users']);
     });
 
     afterAll(async () => {
@@ -22,7 +22,7 @@ describe('update comment by id', () => {
     });
 
     const secondCommentId = comments[1]._id.toString();
-    const secondUser = users[1];
+    const firstUser = users[0];
     const fourthUser = users[3];
 
     it('updates comment by id', async () => {
@@ -33,7 +33,7 @@ describe('update comment by id', () => {
         //updating comment
         await request
             .put(`${ROUTES.COMMENTS}/${secondCommentId}`)
-            .set(getBearerAuthorization(secondUser._id.toString()))
+            .set(getBearerAuthorization(firstUser._id.toString()))
             .send(updatedComment)
             .expect(HTTP_STATUS_CODES.NO_CONTENT_204);
 
@@ -58,7 +58,7 @@ describe('update comment by id', () => {
                 const updatedComment: CreateUpdateCommentInputModel = {};
                 const { body } = await request
                     .put(`${ROUTES.COMMENTS}/${secondCommentId}`)
-                    .set(getBearerAuthorization(secondUser._id.toString()))
+                    .set(getBearerAuthorization(firstUser._id.toString()))
                     .send(updatedComment)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
@@ -71,7 +71,7 @@ describe('update comment by id', () => {
                 };
                 const { body } = await request
                     .put(`${ROUTES.COMMENTS}/${secondCommentId}`)
-                    .set(getBearerAuthorization(secondUser._id.toString()))
+                    .set(getBearerAuthorization(firstUser._id.toString()))
                     .send(updatedComment)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
@@ -85,7 +85,7 @@ describe('update comment by id', () => {
                 };
                 const { body } = await request
                     .put(`${ROUTES.COMMENTS}/${secondCommentId}`)
-                    .set(getBearerAuthorization(secondUser._id.toString()))
+                    .set(getBearerAuthorization(firstUser._id.toString()))
                     .send(updatedComment)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
@@ -98,7 +98,7 @@ describe('update comment by id', () => {
                 };
                 const { body } = await request
                     .put(`${ROUTES.COMMENTS}/${secondCommentId}`)
-                    .set(getBearerAuthorization(secondUser._id.toString()))
+                    .set(getBearerAuthorization(firstUser._id.toString()))
                     .send(updatedComment)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
@@ -111,7 +111,7 @@ describe('update comment by id', () => {
                 };
                 const { body } = await request
                     .put(`${ROUTES.COMMENTS}/${secondCommentId}`)
-                    .set(getBearerAuthorization(secondUser._id.toString()))
+                    .set(getBearerAuthorization(firstUser._id.toString()))
                     .send(updatedComment)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
@@ -138,7 +138,7 @@ describe('update comment by id', () => {
 
         await request
             .put(`${ROUTES.COMMENTS}/${fakeRequestedObjectId}`)
-            .set(getBearerAuthorization(secondUser._id.toString()))
+            .set(getBearerAuthorization(firstUser._id.toString()))
             .send(updatedComment)
             .expect(HTTP_STATUS_CODES.NOT_FOUND_404);
     });

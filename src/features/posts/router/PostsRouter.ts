@@ -3,14 +3,14 @@ import { checkSchema } from 'express-validator';
 import { createUpdatePostValidationSchema, blogIdValidationSchema } from '../validation';
 import { createUpdateCommentValidationSchema } from '../../comments/validation';
 import * as RequestHandler from '../requestHandlers';
-import { authMiddleware, authBearerMiddleware, errorMiddleware } from '../../shared/middlewares';
+import { authBasicMiddleware, authBearerMiddleware, errorMiddleware } from '../../shared/middlewares';
 import { queryParamsValidationSchema } from '../../shared/validation';
 import { ROUTES } from '../../../constants';
 
 export const PostsRouter = Router();
 
 const createUpdateValidators = [
-    authMiddleware,
+    authBasicMiddleware,
     checkSchema(createUpdatePostValidationSchema, ['body']),
     checkSchema(blogIdValidationSchema, ['body']),
     errorMiddleware,
@@ -39,4 +39,4 @@ PostsRouter.get(`/:id${ROUTES.COMMENTS}`, ...getAllCommentsByPostID, PostsContro
 PostsRouter.post('/', ...createUpdateValidators, PostsController.createPost);
 PostsRouter.post(`/:id${ROUTES.COMMENTS}`, ...createCommentValidators, PostsController.createCommentByPostID);
 PostsRouter.put('/:id', ...createUpdateValidators, PostsController.updatePostByID);
-PostsRouter.delete('/:id', authMiddleware, PostsController.deletePostByID);
+PostsRouter.delete('/:id', authBasicMiddleware, PostsController.deletePostByID);

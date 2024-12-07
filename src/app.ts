@@ -5,6 +5,7 @@ import { AuthRouter } from './features/auth/router';
 import { UsersRouter } from './features/users/router';
 import { BlogsRouter } from './features/blogs/router';
 import { PostsRouter } from './features/posts/router';
+import { CommentsRouter } from './features/comments/router';
 import { TestRouter } from './features/tests/router';
 import { databaseConnectionMiddleware } from './middlewares';
 
@@ -20,6 +21,7 @@ app.use(ROUTES.AUTH, AuthRouter);
 app.use(ROUTES.USERS, UsersRouter);
 app.use(ROUTES.BLOGS, BlogsRouter);
 app.use(ROUTES.POSTS, PostsRouter);
+app.use(ROUTES.COMMENTS, CommentsRouter);
 app.use(ROUTES.TESTING, TestRouter);
 
 app.get('/', (req: Request, res: Response) => {

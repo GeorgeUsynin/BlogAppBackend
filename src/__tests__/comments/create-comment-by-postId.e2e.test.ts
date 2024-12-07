@@ -1,4 +1,4 @@
-import { dbHelper, request, createErrorMessages } from '../test-helpers';
+import { dbHelper, request, createErrorMessages, getBearerAuthorization } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 import { comments, posts, fakeRequestedObjectId, longContent, users } from '../dataset';
 import { CommentItemViewModel, CreateUpdateCommentInputModel } from '../../features/comments/models';
@@ -9,11 +9,11 @@ describe('create a comment by requested postId', () => {
     });
 
     beforeEach(async () => {
-        await dbHelper.setDb({ posts, comments });
+        await dbHelper.setDb({ posts, comments, users });
     });
 
     afterEach(async () => {
-        await dbHelper.resetCollections(['posts', 'comments']);
+        await dbHelper.resetCollections(['posts', 'comments', 'users']);
     });
 
     afterAll(async () => {
@@ -53,7 +53,7 @@ describe('create a comment by requested postId', () => {
             .get(`${ROUTES.POSTS}/${secondPostId}${ROUTES.COMMENTS}`)
             .expect(HTTP_STATUS_CODES.OK_200);
 
-        expect(allCommentsBodyResponse.items[0]).toEqual(createdComment);
+        expect(allCommentsBodyResponse.items[2]).toEqual(createdComment);
         expect(allCommentsBodyResponse.items.length).toEqual(3);
     });
 

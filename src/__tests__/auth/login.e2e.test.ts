@@ -21,26 +21,30 @@ describe('login', () => {
         await dbHelper.closeConnection();
     });
 
-    it('returns 204 No Content status code if login/email and password are correct', async () => {
+    it('returns access token if login/email and password are correct', async () => {
         const credentialsWithLogin: LoginInputModel = {
             loginOrEmail: 'george',
             password: '12345678',
         };
 
-        await request
+        const { body } = await request
             .post(`${ROUTES.AUTH}${ROUTES.LOGIN}`)
             .send(credentialsWithLogin)
-            .expect(HTTP_STATUS_CODES.NO_CONTENT_204);
+            .expect(HTTP_STATUS_CODES.OK_200);
+
+        expect(body.accessToken).toEqual(expect.any(String));
 
         const credentialsWithEmail: LoginInputModel = {
             loginOrEmail: 'user1george@example.com',
             password: '12345678',
         };
 
-        await request
+        const { body: body1 } = await request
             .post(`${ROUTES.AUTH}${ROUTES.LOGIN}`)
             .send(credentialsWithEmail)
-            .expect(HTTP_STATUS_CODES.NO_CONTENT_204);
+            .expect(HTTP_STATUS_CODES.OK_200);
+
+        expect(body1.accessToken).toEqual(expect.any(String));
     });
 
     describe('login payload validation', () => {

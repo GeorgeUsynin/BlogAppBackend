@@ -25,7 +25,18 @@ export const authService = {
     },
     verifyBearerAuthorization: async (authorizationHeader: string) => {
         const token = authorizationHeader.split(' ')[1];
-        const decoded = authService.verifyJWTToken(token) as JwtPayload;
+
+        let decoded: JwtPayload | null = null;
+
+        try {
+            decoded = authService.verifyJWTToken(token) as JwtPayload;
+        } catch (err) {
+            return { statusCode: HTTP_STATUS_CODES.UNAUTHORIZED_401 };
+        }
+
+        if (!decoded) {
+            return { statusCode: HTTP_STATUS_CODES.UNAUTHORIZED_401 };
+        }
 
         const expirationInMilliseconds = Number(decoded.exp) * 1000;
         const isTokenExpired = Date.now() > expirationInMilliseconds;

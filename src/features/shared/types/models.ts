@@ -1,3 +1,5 @@
+import { HTTP_STATUS_CODES } from '../../../constants';
+
 export type PaginatedViewModel<T> = {
     /**
      * The total number of pages available.
@@ -97,4 +99,17 @@ export type ErrorViewModel = {
      * @nullable
      */
     errorsMessages: TError[] | null;
+};
+
+export enum ResultStatus {
+    Success = 'Success',
+    NotFound = 'NotFound',
+    Forbidden = 'Forbidden',
+    Unauthorized = 'Unauthorized',
+    BadRequest = 'BadRequest',
+}
+export type Result<T = null> = {
+    status: ResultStatus;
+    errorMessages?: ErrorViewModel['errorsMessages'];
+    data: T;
 };

@@ -3,6 +3,7 @@ import { RequestWithParamsAndBody } from '../../shared/types';
 import { URIParamsCommentIDModel, CreateUpdateCommentInputModel } from '../models';
 import { commentsService } from '../domain';
 import { HTTP_STATUS_CODES } from '../../../constants';
+import { ResultStatus } from '../../shared/types';
 
 export const updateCommentByIDHandler = async (
     req: RequestWithParamsAndBody<URIParamsCommentIDModel, CreateUpdateCommentInputModel>,
@@ -12,15 +13,15 @@ export const updateCommentByIDHandler = async (
     const payload = req.body;
     const userId = req.userId;
 
-    const comment = await commentsService.updateCommentById(commentId, userId as string, payload);
+    const { status } = await commentsService.updateCommentById(commentId, userId as string, payload);
 
-    if (!comment) {
+    if (status === ResultStatus.NotFound) {
         res.sendStatus(HTTP_STATUS_CODES.NOT_FOUND_404);
         return;
     }
 
-    if ('statusCode' in comment) {
-        res.sendStatus(comment.statusCode);
+    if (status === ResultStatus.Forbidden) {
+        res.sendStatus(HTTP_STATUS_CODES.FORBIDDEN_403);
         return;
     }
 

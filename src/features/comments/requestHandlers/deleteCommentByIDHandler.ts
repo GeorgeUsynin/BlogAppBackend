@@ -1,6 +1,6 @@
 import { Response } from 'express';
-import { RequestWithParams } from '../../shared/types';
-import { CommentItemViewModel, URIParamsCommentIDModel } from '../models';
+import { RequestWithParams, ResultStatus } from '../../shared/types';
+import { URIParamsCommentIDModel } from '../models';
 import { commentsService } from '../domain';
 import { HTTP_STATUS_CODES } from '../../../constants';
 
@@ -8,15 +8,15 @@ export const deleteCommentByIDHandler = async (req: RequestWithParams<URIParamsC
     const commentId = req.params.id;
     const userId = req.userId;
 
-    const foundComment = await commentsService.deleteCommentById(commentId, userId as string);
+    const { status } = await commentsService.deleteCommentById(commentId, userId as string);
 
-    if (!foundComment) {
+    if (status === ResultStatus.NotFound) {
         res.sendStatus(HTTP_STATUS_CODES.NOT_FOUND_404);
         return;
     }
 
-    if ('statusCode' in foundComment) {
-        res.sendStatus(foundComment.statusCode);
+    if (status === ResultStatus.Forbidden) {
+        res.sendStatus(HTTP_STATUS_CODES.FORBIDDEN_403);
         return;
     }
 

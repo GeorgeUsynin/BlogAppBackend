@@ -1,6 +1,7 @@
 import { Response, Request, NextFunction } from 'express';
 import { HTTP_STATUS_CODES } from '../../../constants';
-import { authService } from '../../auth/domain';
+import { authService } from '../services';
+import { ResultStatus } from '../types';
 
 export const authBasicMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const authorizationHeader = req.headers.authorization;
@@ -10,7 +11,12 @@ export const authBasicMiddleware = (req: Request, res: Response, next: NextFunct
         return;
     }
 
-    const isMatched = authService.verifyBasicAuthorization(authorizationHeader);
+    const { data, status } = authService.verifyBasicAuthorization(authorizationHeader);
 
-    isMatched ? next() : res.sendStatus(HTTP_STATUS_CODES.UNAUTHORIZED_401);
+    if (!data.isMatched && status === ResultStatus.Unauthorized) {
+        res.sendStatus(HTTP_STATUS_CODES.UNAUTHORIZED_401);
+        return;
+    }
+
+    next();
 };

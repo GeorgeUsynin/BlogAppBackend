@@ -7,7 +7,7 @@ import { BlogsRouter } from './features/blogs/router';
 import { PostsRouter } from './features/posts/router';
 import { CommentsRouter } from './features/comments/router';
 import { TestRouter } from './features/tests/router';
-import { databaseConnectionMiddleware } from './middlewares';
+import { databaseConnectionMiddleware } from './features/shared/middlewares';
 
 export const app = express(); // create app
 

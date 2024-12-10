@@ -1,6 +1,7 @@
 import { Response, Request, NextFunction } from 'express';
 import { HTTP_STATUS_CODES } from '../../../constants';
-import { authService } from '../../auth/domain';
+import { authService } from '../services';
+import { ResultStatus } from '../types';
 
 export const authBearerMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     const authorizationHeader = req.headers.authorization;
@@ -10,14 +11,19 @@ export const authBearerMiddleware = async (req: Request, res: Response, next: Ne
         return;
     }
 
-    const result = await authService.verifyBearerAuthorization(authorizationHeader);
+    const { data, status } = await authService.verifyBearerAuthorization(authorizationHeader);
 
-    if (result.statusCode) {
-        res.sendStatus(HTTP_STATUS_CODES.UNAUTHORIZED_401);
-        return;
+    if (!data) {
+        if (status === ResultStatus.Unauthorized) {
+            res.sendStatus(HTTP_STATUS_CODES.UNAUTHORIZED_401);
+            return;
+        } else {
+            res.sendStatus(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
+            return;
+        }
     }
 
-    req.userId = result.userId;
+    req.userId = data.userId;
 
     next();
 };

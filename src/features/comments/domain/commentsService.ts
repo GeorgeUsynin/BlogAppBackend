@@ -1,16 +1,21 @@
+import { InsertOneResult } from 'mongodb';
 import { CreateUpdateCommentInputModel } from '../models';
+import { Result, ResultStatus } from '../../shared/types';
 import { TDatabase } from '../../../database/mongoDB';
 import { postsRepository } from '../../posts/repository';
 import { usersRepository } from '../../users/repository';
 import { commentsRepository } from '../repository';
-import { HTTP_STATUS_CODES } from '../../../constants';
 
 export const commentsService = {
-    createCommentByPostId: async (payload: CreateUpdateCommentInputModel, postId: string, userId: string) => {
+    createCommentByPostId: async (
+        payload: CreateUpdateCommentInputModel,
+        postId: string,
+        userId: string
+    ): Promise<Result<InsertOneResult<TDatabase.TComment> | null>> => {
         const post = await postsRepository.findPostById(postId);
 
         if (!post) {
-            return null;
+            return { data: null, status: ResultStatus.NotFound };
         }
 
         const user = await usersRepository.findUserById(userId);
@@ -25,32 +30,41 @@ export const commentsService = {
             createdAt: new Date().toISOString(),
         };
 
-        return commentsRepository.createComment(newComment);
+        const data = await commentsRepository.createComment(newComment);
+
+        return { data, status: ResultStatus.Success };
     },
-    updateCommentById: async (commentId: string, userId: string, payload: CreateUpdateCommentInputModel) => {
+    updateCommentById: async (
+        commentId: string,
+        userId: string,
+        payload: CreateUpdateCommentInputModel
+    ): Promise<Result<TDatabase.TComment | null>> => {
         const comment = await commentsRepository.findCommentById(commentId);
 
         if (!comment) {
-            return null;
+            return { data: null, status: ResultStatus.NotFound };
         }
 
         if (comment.commentatorInfo.userId === userId) {
-            return commentsRepository.updateComment(commentId, payload);
+            const data = await commentsRepository.updateComment(commentId, payload);
+            const status = ResultStatus.Success;
+            return { data, status };
         }
 
-        return { statusCode: HTTP_STATUS_CODES.FORBIDDEN_403 };
+        return { data: null, status: ResultStatus.Forbidden };
     },
-    deleteCommentById: async (commentId: string, userId: string) => {
+    deleteCommentById: async (commentId: string, userId: string): Promise<Result<TDatabase.TComment | null>> => {
         const comment = await commentsRepository.findCommentById(commentId);
 
         if (!comment) {
-            return null;
+            return { data: null, status: ResultStatus.NotFound };
         }
 
         if (comment.commentatorInfo.userId === userId) {
-            return commentsRepository.deleteCommentById(commentId);
+            const data = await commentsRepository.deleteCommentById(commentId);
+            return { data, status: ResultStatus.Success };
         }
 
-        return { statusCode: HTTP_STATUS_CODES.FORBIDDEN_403 };
+        return { data: null, status: ResultStatus.Forbidden };
     },
 };

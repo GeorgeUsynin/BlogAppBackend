@@ -1,4 +1,4 @@
-import { HTTP_STATUS_CODES } from '../../../constants';
+import { ResultStatus } from '../../../constants';
 
 export type PaginatedViewModel<T> = {
     /**
@@ -101,13 +101,6 @@ export type ErrorViewModel = {
     errorsMessages: TError[] | null;
 };
 
-export enum ResultStatus {
-    Success = 'Success',
-    NotFound = 'NotFound',
-    Forbidden = 'Forbidden',
-    Unauthorized = 'Unauthorized',
-    BadRequest = 'BadRequest',
-}
 export type Result<T = null> = {
     status: ResultStatus;
     errorMessages?: ErrorViewModel['errorsMessages'];

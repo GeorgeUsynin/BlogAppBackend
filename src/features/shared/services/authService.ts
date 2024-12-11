@@ -2,7 +2,8 @@ import { JwtPayload } from 'jsonwebtoken';
 import { usersRepository } from '../../users/repository';
 import { SETTINGS } from '../../../app-settings';
 import { JWTService } from './JWTService';
-import { Result, ResultStatus } from '../types';
+import { Result } from '../types';
+import { ResultStatus } from '../../../constants';
 
 export const authService = {
     verifyBasicAuthorization: (authorizationHeader: string): Result<{ isMatched: boolean }> => {

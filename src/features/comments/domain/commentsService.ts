@@ -1,10 +1,11 @@
 import { InsertOneResult } from 'mongodb';
 import { CreateUpdateCommentInputModel } from '../models';
-import { Result, ResultStatus } from '../../shared/types';
+import { Result } from '../../shared/types';
 import { TDatabase } from '../../../database/mongoDB';
 import { postsRepository } from '../../posts/repository';
 import { usersRepository } from '../../users/repository';
 import { commentsRepository } from '../repository';
+import { ResultStatus } from '../../../constants';
 
 export const commentsService = {
     createCommentByPostId: async (

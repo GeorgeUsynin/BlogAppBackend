@@ -1,9 +1,9 @@
 import { Response } from 'express';
-import { RequestWithParamsAndBody, ResultStatus } from '../../shared/types';
+import { RequestWithParamsAndBody } from '../../shared/types';
 import { URIParamsPostIDModel } from '../models';
 import { CreateUpdateCommentInputModel, CommentItemViewModel } from '../../comments/models';
 import { commentsService } from '../../comments/domain';
-import { HTTP_STATUS_CODES } from '../../../constants';
+import { HTTP_STATUS_CODES, ResultStatus } from '../../../constants';
 import { queryCommentsRepository } from '../../comments/repository';
 
 export const createCommentByPostIDHandler = async (

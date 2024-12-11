@@ -1,8 +1,8 @@
 import { Response } from 'express';
-import { RequestWithParams, ResultStatus } from '../../shared/types';
+import { RequestWithParams } from '../../shared/types';
 import { URIParamsCommentIDModel } from '../models';
 import { commentsService } from '../domain';
-import { HTTP_STATUS_CODES } from '../../../constants';
+import { HTTP_STATUS_CODES, ResultStatus } from '../../../constants';
 
 export const deleteCommentByIDHandler = async (req: RequestWithParams<URIParamsCommentIDModel>, res: Response) => {
     const commentId = req.params.id;

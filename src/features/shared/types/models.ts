@@ -103,6 +103,6 @@ export type ErrorViewModel = {
 
 export type Result<T = null> = {
     status: ResultStatus;
-    errorMessages?: ErrorViewModel['errorsMessages'];
+    errorsMessages?: ErrorViewModel['errorsMessages'];
     data: T;
 };

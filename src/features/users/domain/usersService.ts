@@ -3,34 +3,41 @@ import { usersRepository } from '../repository';
 import { JWTService } from '../../shared/services';
 import type { CreateUserInputModel } from '../models';
 import type { TDatabase } from '../../../database/mongoDB';
+import { Result } from '../../shared/types';
+import { ResultStatus } from '../../../constants';
+import { InsertOneResult, WithId } from 'mongodb';
 
 export const usersService = {
-    login: async (loginOrEmail: string, password: string) => {
+    login: async (loginOrEmail: string, password: string): Promise<Result<{ accessToken: string } | null>> => {
         const user = await usersRepository.findUserByLoginOrEmail(loginOrEmail, loginOrEmail);
 
         if (!user) {
-            return null;
+            return { data: null, status: ResultStatus.Unauthorized };
         }
 
         const isValidPassword = await bcrypt.compare(password, user.passwordHash);
 
         if (!isValidPassword) {
-            return null;
+            return { data: null, status: ResultStatus.Unauthorized };
         }
 
-        return { accessToken: JWTService.createJWTToken(user._id.toString()) };
+        const data = { accessToken: JWTService.createJWTToken(user._id.toString()) };
+
+        return { data, status: ResultStatus.Success };
     },
-    createUser: async (payload: CreateUserInputModel) => {
+    createUser: async (payload: CreateUserInputModel): Promise<Result<InsertOneResult<TDatabase.TUser> | null>> => {
         const user = await usersRepository.findUserByLoginOrEmail(payload.login, payload.email);
 
         if (user) {
             return {
+                data: null,
                 errorsMessages: [
                     {
                         message: 'User with this login or email already exists',
                         field: '',
                     },
                 ],
+                status: ResultStatus.BadRequest,
             };
         }
 
@@ -42,7 +49,17 @@ export const usersService = {
             createdAt: new Date().toISOString(),
         };
 
-        return usersRepository.createUser(newUser);
+        const data = await usersRepository.createUser(newUser);
+
+        return { data, status: ResultStatus.Success };
     },
-    deleteUserById: async (userId: string) => usersRepository.deleteUserById(userId),
+    deleteUserById: async (userId: string): Promise<Result<WithId<TDatabase.TUser> | null>> => {
+        const data = await usersRepository.deleteUserById(userId);
+
+        if (!data) {
+            return { data: null, status: ResultStatus.NotFound };
+        }
+
+        return { data, status: ResultStatus.Success };
+    },
 };

@@ -1,9 +1,8 @@
 import { Response } from 'express';
-import { RequestWithParamsAndBody } from '../../shared/types';
+import { RequestWithParamsAndBody, ResultStatus } from '../../shared/types';
 import { URIParamsCommentIDModel, CreateUpdateCommentInputModel } from '../models';
 import { commentsService } from '../domain';
 import { HTTP_STATUS_CODES } from '../../../constants';
-import { ResultStatus } from '../../shared/types';
 
 export const updateCommentByIDHandler = async (
     req: RequestWithParamsAndBody<URIParamsCommentIDModel, CreateUpdateCommentInputModel>,

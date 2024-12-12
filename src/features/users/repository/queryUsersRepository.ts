@@ -12,7 +12,7 @@ type TValues = {
 };
 
 export const queryUsersRepository = {
-    getAllUsers: async (queryParams: QueryParamsUserModel) => {
+    async getAllUsers(queryParams: QueryParamsUserModel) {
         const params = normalizeQueryParams(queryParams);
         const filter = createFilter(
             {
@@ -22,39 +22,37 @@ export const queryUsersRepository = {
             'or'
         );
 
-        const items = await queryUsersRepository.findUserItemsByParamsAndFilter(params, filter);
-        const totalCount = await queryUsersRepository.getTotalCountOfFilteredUsers(filter);
+        const items = await this.findUserItemsByParamsAndFilter(params, filter);
+        const totalCount = await this.getTotalCountOfFilteredUsers(filter);
 
-        return queryUsersRepository.mapUsersToPaginationModel({
+        return this.mapUsersToPaginationModel({
             items,
             totalCount,
             pageNumber: params.pageNumber,
             pageSize: params.pageSize,
         });
     },
-    getUserById: async (userId: string) => {
+    async getUserById(userId: string) {
         const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
-
         if (!user) return null;
-
-        return queryUsersRepository.mapMongoUserToViewModel(user);
+        return this.mapMongoUserToViewModel(user);
     },
-    getUserInfoById: async (userId: string) => {
+    async getUserInfoById(userId: string) {
         const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
-
         if (!user) return null;
-
         return {
             email: user.email,
             login: user.login,
             userId: user._id.toString(),
         };
     },
-    getTotalCountOfFilteredUsers: async (filter: TFilter) => usersCollection.countDocuments(filter),
-    findUserItemsByParamsAndFilter: async (
+    async getTotalCountOfFilteredUsers(filter: TFilter) {
+        return usersCollection.countDocuments(filter);
+    },
+    async findUserItemsByParamsAndFilter(
         params: ReturnType<typeof normalizeQueryParams>,
         filter: ReturnType<typeof createFilter>
-    ) => {
+    ) {
         const { sortBy, sortDirection, pageNumber, pageSize } = params;
         return usersCollection
             .find(filter)
@@ -63,22 +61,21 @@ export const queryUsersRepository = {
             .limit(pageSize)
             .toArray();
     },
-    // For now we are doing mapping in the query repository, but we can move it to the presentation layer
-    // There can be different approaches, but for now it's ok
-    // However, we need to keep in mind that the usual approach is to do mapping in the presentation layer
-    mapMongoUserToViewModel: (user: WithId<TDatabase.TUser>): UserItemViewModel => ({
-        id: user._id.toString(),
-        login: user.login,
-        email: user.email,
-        createdAt: user.createdAt,
-    }),
-    mapUsersToPaginationModel: (values: TValues): UsersPaginatedViewModel => {
+    mapMongoUserToViewModel(user: WithId<TDatabase.TUser>): UserItemViewModel {
+        return {
+            id: user._id.toString(),
+            login: user.login,
+            email: user.email,
+            createdAt: user.createdAt,
+        };
+    },
+    mapUsersToPaginationModel(values: TValues): UsersPaginatedViewModel {
         return {
             pagesCount: Math.ceil(values.totalCount / values.pageSize),
             page: values.pageNumber,
             pageSize: values.pageSize,
             totalCount: values.totalCount,
-            items: values.items.map(queryUsersRepository.mapMongoUserToViewModel),
+            items: values.items.map(user => this.mapMongoUserToViewModel(user)),
         };
     },
 };

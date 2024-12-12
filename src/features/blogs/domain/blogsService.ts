@@ -3,7 +3,7 @@ import type { CreateUpdateBlogInputModel } from '../models';
 import type { TDatabase } from '../../../database/mongoDB';
 
 export const blogsService = {
-    createBlog: async (payload: CreateUpdateBlogInputModel) => {
+    async createBlog(payload: CreateUpdateBlogInputModel) {
         const newBlog: Omit<TDatabase.TBlog, '_id'> = {
             ...payload,
             createdAt: new Date().toISOString(),
@@ -12,8 +12,12 @@ export const blogsService = {
 
         return blogsRepository.createBlog(newBlog);
     },
-    updateBlog: async (blogId: string, payload: CreateUpdateBlogInputModel) => {
+
+    async updateBlog(blogId: string, payload: CreateUpdateBlogInputModel) {
         return blogsRepository.updateBlog(blogId, payload);
     },
-    deleteBlogById: async (blogId: string) => blogsRepository.deleteBlogById(blogId),
+
+    async deleteBlogById(blogId: string) {
+        return blogsRepository.deleteBlogById(blogId);
+    },
 };

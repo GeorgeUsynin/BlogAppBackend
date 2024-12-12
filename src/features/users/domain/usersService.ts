@@ -8,7 +8,7 @@ import { ResultStatus } from '../../../constants';
 import { InsertOneResult, WithId } from 'mongodb';
 
 export const usersService = {
-    login: async (loginOrEmail: string, password: string): Promise<Result<{ accessToken: string } | null>> => {
+    async login(loginOrEmail: string, password: string): Promise<Result<{ accessToken: string } | null>> {
         const user = await usersRepository.findUserByLoginOrEmail(loginOrEmail, loginOrEmail);
 
         if (!user) {
@@ -25,7 +25,7 @@ export const usersService = {
 
         return { data, status: ResultStatus.Success };
     },
-    createUser: async (payload: CreateUserInputModel): Promise<Result<InsertOneResult<TDatabase.TUser> | null>> => {
+    async createUser(payload: CreateUserInputModel): Promise<Result<InsertOneResult<TDatabase.TUser> | null>> {
         const user = await usersRepository.findUserByLoginOrEmail(payload.login, payload.email);
 
         if (user) {
@@ -53,7 +53,7 @@ export const usersService = {
 
         return { data, status: ResultStatus.Success };
     },
-    deleteUserById: async (userId: string): Promise<Result<WithId<TDatabase.TUser> | null>> => {
+    async deleteUserById(userId: string): Promise<Result<WithId<TDatabase.TUser> | null>> {
         const data = await usersRepository.deleteUserById(userId);
 
         if (!data) {

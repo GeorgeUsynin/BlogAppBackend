@@ -1,11 +1,10 @@
-import { ObjectId } from 'mongodb';
 import { postsRepository } from '../repository';
 import type { CreateUpdatePostInputModel } from '../models';
 import type { TDatabase } from '../../../database/mongoDB';
 import { blogsRepository } from '../../blogs/repository';
 
 export const postsService = {
-    createPost: async (payload: CreateUpdatePostInputModel) => {
+    async createPost(payload: CreateUpdatePostInputModel) {
         const blogId = payload.blogId;
         const linkedBlogName = (await blogsRepository.getBlogById(blogId))?.name as string;
         const newPost: Omit<TDatabase.TPost, '_id'> = {
@@ -16,16 +15,22 @@ export const postsService = {
 
         return postsRepository.createPost(newPost);
     },
-    createPostByBlogId: async (payload: CreateUpdatePostInputModel, blogId: string) => {
+
+    async createPostByBlogId(payload: CreateUpdatePostInputModel, blogId: string) {
         const blog = await blogsRepository.getBlogById(blogId);
 
         if (!blog) {
             return null;
         }
 
-        return postsService.createPost({ ...payload, blogId });
+        return this.createPost({ ...payload, blogId });
     },
-    updatePost: async (postId: string, payload: CreateUpdatePostInputModel) =>
-        postsRepository.updatePost(postId, payload),
-    deletePostById: async (postId: string) => postsRepository.deletePostById(postId),
+
+    async updatePost(postId: string, payload: CreateUpdatePostInputModel) {
+        return postsRepository.updatePost(postId, payload);
+    },
+
+    async deletePostById(postId: string) {
+        return postsRepository.deletePostById(postId);
+    },
 };

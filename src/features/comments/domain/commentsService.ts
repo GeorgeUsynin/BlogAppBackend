@@ -8,11 +8,11 @@ import { commentsRepository } from '../repository';
 import { ResultStatus } from '../../../constants';
 
 export const commentsService = {
-    createCommentByPostId: async (
+    async createCommentByPostId(
         payload: CreateUpdateCommentInputModel,
         postId: string,
         userId: string
-    ): Promise<Result<InsertOneResult<TDatabase.TComment> | null>> => {
+    ): Promise<Result<InsertOneResult<TDatabase.TComment> | null>> {
         const post = await postsRepository.findPostById(postId);
 
         if (!post) {
@@ -35,11 +35,12 @@ export const commentsService = {
 
         return { data, status: ResultStatus.Success };
     },
-    updateCommentById: async (
+
+    async updateCommentById(
         commentId: string,
         userId: string,
         payload: CreateUpdateCommentInputModel
-    ): Promise<Result<TDatabase.TComment | null>> => {
+    ): Promise<Result<TDatabase.TComment | null>> {
         const comment = await commentsRepository.findCommentById(commentId);
 
         if (!comment) {
@@ -54,7 +55,8 @@ export const commentsService = {
 
         return { data: null, status: ResultStatus.Forbidden };
     },
-    deleteCommentById: async (commentId: string, userId: string): Promise<Result<TDatabase.TComment | null>> => {
+
+    async deleteCommentById(commentId: string, userId: string): Promise<Result<TDatabase.TComment | null>> {
         const comment = await commentsRepository.findCommentById(commentId);
 
         if (!comment) {

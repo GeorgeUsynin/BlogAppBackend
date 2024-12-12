@@ -12,41 +12,41 @@ type TValues = {
 };
 
 export const queryPostsRepository = {
-    getAllPosts: async (queryParams: QueryParamsPostModel, blogId?: string) => {
+    async getAllPosts(queryParams: QueryParamsPostModel, blogId?: string) {
         const params = normalizeQueryParams(queryParams);
         const filter = createFilter({ blogId });
 
-        const items = await queryPostsRepository.findPostItemsByParamsAndFilter(params, filter);
-        const totalCount = await queryPostsRepository.findTotalCountOfFilteredPosts(filter);
+        const items = await this.findPostItemsByParamsAndFilter(params, filter);
+        const totalCount = await this.findTotalCountOfFilteredPosts(filter);
 
-        return queryPostsRepository.mapPostsToPaginationModel({
+        return this.mapPostsToPaginationModel({
             items,
             totalCount,
             pageNumber: params.pageNumber,
             pageSize: params.pageSize,
         });
     },
-    getAllPostsByBlogId: async (queryParams: QueryParamsPostModel, blogId: string) => {
+    async getAllPostsByBlogId(queryParams: QueryParamsPostModel, blogId: string) {
         const blog = await blogsCollection.findOne({ _id: new ObjectId(blogId) });
 
         if (!blog) {
             return null;
         }
 
-        return queryPostsRepository.getAllPosts(queryParams, blogId);
+        return this.getAllPosts(queryParams, blogId);
     },
-    getPostById: async (postId: string) => {
+    async getPostById(postId: string) {
         const post = await postsCollection.findOne({ _id: new ObjectId(postId) });
         if (!post) return null;
-        return queryPostsRepository.mapMongoPostToViewModel(post);
+        return this.mapMongoPostToViewModel(post);
     },
-    findTotalCountOfFilteredPosts: async (filter: TFilter) => {
+    async findTotalCountOfFilteredPosts(filter: TFilter) {
         return postsCollection.countDocuments(filter);
     },
-    findPostItemsByParamsAndFilter: async (
+    async findPostItemsByParamsAndFilter(
         params: ReturnType<typeof normalizeQueryParams>,
         filter: ReturnType<typeof createFilter>
-    ) => {
+    ) {
         const { sortBy, sortDirection, pageNumber, pageSize } = params;
         return postsCollection
             .find(filter)
@@ -55,25 +55,24 @@ export const queryPostsRepository = {
             .limit(pageSize)
             .toArray();
     },
-    // For now we are doing mapping in the query repository, but we can move it to the presentation layer
-    // There can be different approaches, but for now it's ok
-    // However, we need to keep in mind that the usual approach is to do mapping in the presentation layer
-    mapMongoPostToViewModel: (post: WithId<TDatabase.TPost>): PostItemViewModel => ({
-        id: post._id.toString(),
-        title: post.title,
-        shortDescription: post.shortDescription,
-        blogName: post.blogName,
-        content: post.content,
-        blogId: post.blogId,
-        createdAt: post.createdAt,
-    }),
-    mapPostsToPaginationModel: (values: TValues): PostsPaginatedViewModel => {
+    mapMongoPostToViewModel(post: WithId<TDatabase.TPost>): PostItemViewModel {
+        return {
+            id: post._id.toString(),
+            title: post.title,
+            shortDescription: post.shortDescription,
+            blogName: post.blogName,
+            content: post.content,
+            blogId: post.blogId,
+            createdAt: post.createdAt,
+        };
+    },
+    mapPostsToPaginationModel(values: TValues): PostsPaginatedViewModel {
         return {
             pagesCount: Math.ceil(values.totalCount / values.pageSize),
             page: values.pageNumber,
             pageSize: values.pageSize,
             totalCount: values.totalCount,
-            items: values.items.map(queryPostsRepository.mapMongoPostToViewModel),
+            items: values.items.map(this.mapMongoPostToViewModel.bind(this)),
         };
     },
 };

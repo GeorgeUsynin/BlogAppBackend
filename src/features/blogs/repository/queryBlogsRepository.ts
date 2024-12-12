@@ -12,32 +12,34 @@ type TValues = {
 };
 
 export const queryBlogsRepository = {
-    getAllBlogs: async (queryParams: QueryParamsBlogModel) => {
+    async getAllBlogs(queryParams: QueryParamsBlogModel) {
         const params = normalizeQueryParams(queryParams);
         const filter = createFilter({ searchNameTerm: params.searchNameTerm });
 
-        const items = await queryBlogsRepository.findBlogItemsByParamsAndFilter(params, filter);
-        const totalCount = await queryBlogsRepository.getTotalCountOfFilteredBlogs(filter);
+        const items = await this.findBlogItemsByParamsAndFilter(params, filter);
+        const totalCount = await this.getTotalCountOfFilteredBlogs(filter);
 
-        return queryBlogsRepository.mapBlogsToPaginationModel({
+        return this.mapBlogsToPaginationModel({
             items,
             totalCount,
             pageNumber: params.pageNumber,
             pageSize: params.pageSize,
         });
     },
-    getBlogById: async (blogId: string) => {
+    async getBlogById(blogId: string) {
         const blog = await blogsCollection.findOne({ _id: new ObjectId(blogId) });
 
         if (!blog) return null;
 
-        return queryBlogsRepository.mapMongoBlogToViewModel(blog);
+        return this.mapMongoBlogToViewModel(blog);
     },
-    getTotalCountOfFilteredBlogs: async (filter: TFilter) => blogsCollection.countDocuments(filter),
-    findBlogItemsByParamsAndFilter: async (
+    async getTotalCountOfFilteredBlogs(filter: TFilter) {
+        return blogsCollection.countDocuments(filter);
+    },
+    async findBlogItemsByParamsAndFilter(
         params: ReturnType<typeof normalizeQueryParams>,
         filter: ReturnType<typeof createFilter>
-    ) => {
+    ) {
         const { sortBy, sortDirection, pageNumber, pageSize } = params;
         return blogsCollection
             .find(filter)
@@ -46,24 +48,23 @@ export const queryBlogsRepository = {
             .limit(pageSize)
             .toArray();
     },
-    // For now we are doing mapping in the query repository, but we can move it to the presentation layer
-    // There can be different approaches, but for now it's ok
-    // However, we need to keep in mind that the usual approach is to do mapping in the presentation layer
-    mapMongoBlogToViewModel: (blog: WithId<TDatabase.TBlog>): BlogItemViewModel => ({
-        id: blog._id.toString(),
-        description: blog.description,
-        name: blog.name,
-        websiteUrl: blog.websiteUrl,
-        createdAt: blog.createdAt,
-        isMembership: blog.isMembership,
-    }),
-    mapBlogsToPaginationModel: (values: TValues): BlogsPaginatedViewModel => {
+    mapMongoBlogToViewModel(blog: WithId<TDatabase.TBlog>): BlogItemViewModel {
+        return {
+            id: blog._id.toString(),
+            description: blog.description,
+            name: blog.name,
+            websiteUrl: blog.websiteUrl,
+            createdAt: blog.createdAt,
+            isMembership: blog.isMembership,
+        };
+    },
+    mapBlogsToPaginationModel(values: TValues): BlogsPaginatedViewModel {
         return {
             pagesCount: Math.ceil(values.totalCount / values.pageSize),
             page: values.pageNumber,
             pageSize: values.pageSize,
             totalCount: values.totalCount,
-            items: values.items.map(queryBlogsRepository.mapMongoBlogToViewModel),
+            items: values.items.map(this.mapMongoBlogToViewModel),
         };
     },
 };

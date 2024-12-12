@@ -6,12 +6,14 @@ import { Result } from '../types';
 import { ResultStatus } from '../../../constants';
 
 export const authService = {
-    verifyBasicAuthorization: (authorizationHeader: string): Result<{ isMatched: boolean }> => {
+    verifyBasicAuthorization: function (authorizationHeader: string): Result<{ isMatched: boolean }> {
         const isMatched = authorizationHeader === `Basic ${SETTINGS.CODE_AUTH_BASE64}`;
 
         return { data: { isMatched }, status: isMatched ? ResultStatus.Success : ResultStatus.Unauthorized };
     },
-    verifyBearerAuthorization: async (authorizationHeader: string): Promise<Result<{ userId: string } | null>> => {
+    verifyBearerAuthorization: async function (
+        authorizationHeader: string
+    ): Promise<Result<{ userId: string } | null>> {
         const [type, token] = authorizationHeader.split(' ');
 
         if (type !== 'Bearer') {

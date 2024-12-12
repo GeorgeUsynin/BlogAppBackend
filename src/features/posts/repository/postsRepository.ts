@@ -3,10 +3,17 @@ import { postsCollection, TDatabase } from '../../../database/mongoDB';
 import type { CreateUpdatePostInputModel } from '../models';
 
 export const postsRepository = {
-    //@ts-expect-error since ObjectId is created by MongoDB we don't need to pass it
-    createPost: async (newPost: Omit<TDatabase.TPost, '_id'>) => postsCollection.insertOne(newPost),
-    findPostById: async (id: string) => postsCollection.findOne({ _id: new ObjectId(id) }),
-    updatePost: async (id: string, payload: CreateUpdatePostInputModel) =>
-        postsCollection.findOneAndUpdate({ _id: new ObjectId(id) }, { $set: { ...payload } }),
-    deletePostById: async (id: string) => postsCollection.findOneAndDelete({ _id: new ObjectId(id) }),
+    async createPost(newPost: Omit<TDatabase.TPost, '_id'>) {
+        //@ts-expect-error since ObjectId is created by MongoDB we don't need to pass it
+        return postsCollection.insertOne(newPost);
+    },
+    async findPostById(id: string) {
+        return postsCollection.findOne({ _id: new ObjectId(id) });
+    },
+    async updatePost(id: string, payload: CreateUpdatePostInputModel) {
+        return postsCollection.findOneAndUpdate({ _id: new ObjectId(id) }, { $set: { ...payload } });
+    },
+    async deletePostById(id: string) {
+        return postsCollection.findOneAndDelete({ _id: new ObjectId(id) });
+    },
 };

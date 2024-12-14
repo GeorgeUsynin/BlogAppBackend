@@ -38,6 +38,11 @@ export namespace TDatabase {
         email: string;
         passwordHash: string;
         createdAt: string;
+        emailConfirmation: {
+            isConfirmed: boolean;
+            confirmationCode: string;
+            expirationDate: Date;
+        };
     };
 }
 

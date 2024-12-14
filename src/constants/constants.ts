@@ -11,19 +11,23 @@ export enum HTTP_STATUS_CODES {
 
 export enum ROUTES {
     AUTH = '/auth',
+    BLOGS = '/blogs',
+    COMMENTS = '/comments',
     LOGIN = '/login',
     ME = '/me',
-    BLOGS = '/blogs',
     POSTS = '/posts',
-    COMMENTS = '/comments',
-    USERS = '/users',
+    REGISTRATION = '/registration',
+    REGISTRATION_CONFIRMATION = '/registration-confirmation',
+    REGISTRATION_EMAIL_RESENDING = '/registration-email-resending',
     TESTING = '/testing/all-data',
+    USERS = '/users',
 }
 
 export enum ResultStatus {
-    Success = 'Success',
-    NotFound = 'NotFound',
-    Forbidden = 'Forbidden',
-    Unauthorized = 'Unauthorized',
     BadRequest = 'BadRequest',
+    Failure = 'Failure',
+    Forbidden = 'Forbidden',
+    NotFound = 'NotFound',
+    Success = 'Success',
+    Unauthorized = 'Unauthorized',
 }

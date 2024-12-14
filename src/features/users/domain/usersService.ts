@@ -15,6 +15,10 @@ export const usersService = {
             return { data: null, status: ResultStatus.Unauthorized };
         }
 
+        if (!user.emailConfirmation.isConfirmed) {
+            return { data: null, status: ResultStatus.Unauthorized };
+        }
+
         const isValidPassword = await bcrypt.compare(password, user.passwordHash);
 
         if (!isValidPassword) {
@@ -43,6 +47,7 @@ export const usersService = {
 
         const hash = await bcrypt.hash(payload.password, 10);
 
+        //@ts-expect-error this method is deprecated and not contain full type
         const newUser: Omit<TDatabase.TUser, '_id'> = {
             ...payload,
             passwordHash: hash,

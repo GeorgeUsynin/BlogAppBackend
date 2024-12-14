@@ -23,7 +23,7 @@ describe('get all users', () => {
     it('gets all users according to default query parameters', async () => {
         const { body } = await request.get(ROUTES.USERS).set(getAuthorization()).expect(HTTP_STATUS_CODES.OK_200);
 
-        expect(body.totalCount).toBe(4);
+        expect(body.totalCount).toBe(6);
         expect(body.pagesCount).toBe(1);
         expect(body.page).toBe(1);
         expect(body.pageSize).toBe(10);

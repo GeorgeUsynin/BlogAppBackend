@@ -39,6 +39,7 @@ type TValues = {
     email?: (Omit<TProperties, 'maxLength'> | 'isPattern')[];
     password?: (Omit<TProperties, 'maxLength'> | 'minMaxLength')[];
     loginOrEmail?: Omit<TProperties, 'maxLength'>[];
+    code?: Omit<TProperties, 'maxLength'>[];
     from?: 'blogs' | 'posts' | 'comments' | 'users';
 };
 
@@ -125,6 +126,7 @@ export const createErrorMessages = (values: TValues) => {
         password,
         loginOrEmail,
         from,
+        code,
     } = values;
 
     const errorsMessages: ErrorViewModel['errorsMessages'] = [];
@@ -383,6 +385,22 @@ export const createErrorMessages = (values: TValues) => {
                     break;
                 case 'isString':
                     errorsMessages.push(errorMessagesConfig.isString('loginOrEmail'));
+                    break;
+            }
+        });
+    }
+
+    if (code) {
+        code.forEach(value => {
+            switch (value) {
+                case 'isRequired':
+                    errorsMessages.push(errorMessagesConfig.isRequired('code'));
+                    break;
+                case 'isString':
+                    errorsMessages.push(errorMessagesConfig.isString('code'));
+                    break;
+                case 'isEmptyString':
+                    errorsMessages.push(errorMessagesConfig.isEmptyString('code'));
                     break;
             }
         });

@@ -27,7 +27,7 @@ describe('/testing/all-data', () => {
             .get(ROUTES.USERS)
             .set(getAuthorization())
             .expect(HTTP_STATUS_CODES.OK_200);
-        expect(allUsers.totalCount).toBe(4);
+        expect(allUsers.totalCount).toBe(6);
 
         // deleting all data
         await request.delete(ROUTES.TESTING).expect(HTTP_STATUS_CODES.NO_CONTENT_204);

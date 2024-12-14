@@ -35,7 +35,7 @@ describe('delete blog by id', () => {
             .expect(HTTP_STATUS_CODES.NOT_FOUND_404);
 
         const { body } = await request.get(ROUTES.USERS).set(getAuthorization()).expect(HTTP_STATUS_CODES.OK_200);
-        expect(body.totalCount).toBe(3);
+        expect(body.totalCount).toBe(5);
     });
 
     it('returns 404 status code if the user was not founded by requested ID', async () => {

@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import type { TDatabase } from '../database/mongoDB';
+import { add } from 'date-fns/add';
 
 const firstId = new ObjectId();
 const secondId = new ObjectId();
@@ -182,6 +183,11 @@ export const users: TDatabase.TUser[] = [
         email: 'user1george@example.com',
         passwordHash: '$2b$10$p6Hm7G2gx2ccIxXAq1krP.si7hZoQhfI22R77ux1CVG3v7osD8/hW',
         createdAt: '2024-12-22T10:50:15.222Z',
+        emailConfirmation: {
+            isConfirmed: true,
+            confirmationCode: '124365',
+            expirationDate: add(new Date(), { hours: 1 }),
+        },
     },
     {
         _id: secondId,
@@ -189,6 +195,11 @@ export const users: TDatabase.TUser[] = [
         email: 'user2natasha@example.com',
         passwordHash: '$2b$10$jpuk3Bw2dDMLKlPBtUvRZe7nD4Ru0RlRV9o36TNULHI5twYC15gDO',
         createdAt: '2024-12-10T10:50:15.222Z',
+        emailConfirmation: {
+            isConfirmed: true,
+            confirmationCode: '123465',
+            expirationDate: add(new Date(), { hours: 1 }),
+        },
     },
     {
         _id: thirdId,
@@ -196,6 +207,11 @@ export const users: TDatabase.TUser[] = [
         email: 'user3vlad@example.com',
         passwordHash: '$2b$10$69rufEoYDA2GxsHN6l6gLOz4MNJHLofc0w5dFLtx9jXwsZ0zgQI8a',
         createdAt: '2024-12-15T10:50:15.222Z',
+        emailConfirmation: {
+            isConfirmed: true,
+            confirmationCode: '214365',
+            expirationDate: add(new Date(), { hours: 1 }),
+        },
     },
     {
         _id: fourthId,
@@ -203,6 +219,35 @@ export const users: TDatabase.TUser[] = [
         email: 'user4kate@example.com',
         passwordHash: '$2b$10$oW7wbnms9GzvDrNXBUcZWO7ykmcFbOaQ9aeK2VSGO6ZM9Q9DYAe8q',
         createdAt: '2024-12-20T10:50:15.222Z',
+        emailConfirmation: {
+            isConfirmed: true,
+            confirmationCode: '321456',
+            expirationDate: add(new Date(), { hours: 1 }),
+        },
+    },
+    {
+        _id: fifthId,
+        login: 'angiejo04',
+        email: 'angiejo04@example.com',
+        passwordHash: '$2b$10$oW7wbnms9GzvDrNXBUcZWO7ykmcFbOaQ9aeK2VSGO6ZM9Q9DYAe8q',
+        createdAt: '2024-12-22T10:50:15.222Z',
+        emailConfirmation: {
+            isConfirmed: false,
+            confirmationCode: '654321',
+            expirationDate: add(new Date(), { hours: 1 }),
+        },
+    },
+    {
+        _id: sixthId,
+        login: 'john',
+        email: 'john@example.com',
+        passwordHash: '$2b$10$oW7wbnms9GzvDrNXBUcZWO7ykmcFbOaQ9aeK2VSGO6ZM9Q9DYAe8q',
+        createdAt: '2024-12-22T10:50:15.222Z',
+        emailConfirmation: {
+            isConfirmed: false,
+            confirmationCode: '111111',
+            expirationDate: add(new Date(), { seconds: 0.5 }),
+        },
     },
 ];
 

@@ -6,6 +6,8 @@ import type { TDatabase } from '../../../database/mongoDB';
 import { Result } from '../../shared/types';
 import { ResultStatus } from '../../../constants';
 import { InsertOneResult, WithId } from 'mongodb';
+import { randomUUID } from 'crypto';
+import { add } from 'date-fns';
 
 export const usersService = {
     async login(loginOrEmail: string, password: string): Promise<Result<{ accessToken: string } | null>> {
@@ -15,6 +17,7 @@ export const usersService = {
             return { data: null, status: ResultStatus.Unauthorized };
         }
 
+        // check if user's email is confirmed
         if (!user.emailConfirmation.isConfirmed) {
             return { data: null, status: ResultStatus.Unauthorized };
         }
@@ -47,11 +50,15 @@ export const usersService = {
 
         const hash = await bcrypt.hash(payload.password, 10);
 
-        //@ts-expect-error this method is deprecated and not contain full type
         const newUser: Omit<TDatabase.TUser, '_id'> = {
             ...payload,
             passwordHash: hash,
             createdAt: new Date().toISOString(),
+            emailConfirmation: {
+                isConfirmed: true,
+                confirmationCode: randomUUID(),
+                expirationDate: add(new Date(), { hours: 1 }),
+            },
         };
 
         const data = await usersRepository.createUser(newUser);

@@ -132,7 +132,9 @@ describe('registration', () => {
                     .send(newCredentials)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
-                expect(createErrorMessages({ login: ['isUnique'] })).toEqual(body);
+                expect({
+                    errorsMessages: [{ field: 'login', message: 'User with this login already exists' }],
+                }).toEqual(body);
             });
         });
 
@@ -205,7 +207,9 @@ describe('registration', () => {
                     .send(newCredentials)
                     .expect(HTTP_STATUS_CODES.BAD_REQUEST_400);
 
-                expect(createErrorMessages({ email: ['isUnique'] })).toEqual(body);
+                expect({
+                    errorsMessages: [{ field: 'email', message: 'User with this email already exists' }],
+                }).toEqual(body);
             });
         });
 

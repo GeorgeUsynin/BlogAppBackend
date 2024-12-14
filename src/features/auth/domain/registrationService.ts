@@ -14,15 +14,16 @@ export const registrationService = {
         const { login, email, password } = payload;
 
         // check if user already exists
-        const user = await usersRepository.findUserByLoginOrEmail(login, email);
+        const userWithLogin = await usersRepository.findUserByLogin(login);
+        const userWithEmail = await usersRepository.findUserByEmail(email);
 
-        if (user) {
+        if (userWithLogin || userWithEmail) {
             return {
                 data: null,
                 errorsMessages: [
                     {
-                        message: 'User with this login or email already exists',
-                        field: '',
+                        message: `User with this ${userWithLogin ? 'login' : 'email'} already exists`,
+                        field: userWithLogin ? 'login' : 'email',
                     },
                 ],
                 status: ResultStatus.BadRequest,
@@ -132,9 +133,21 @@ export const registrationService = {
             };
         }
 
+        const newConfirmationCode = randomUUID();
+
+        const result = await usersRepository.updateUserEmailConfirmationCode(user._id.toString(), newConfirmationCode);
+
+        if (!result.acknowledged) {
+            return {
+                data: null,
+                status: ResultStatus.Failure,
+                errorsMessages: [{ field: '', message: 'Data update failed' }],
+            };
+        }
+
         const { data, status, errorsMessages } = await emailManager.sendPasswordConfirmationEmail(
             email,
-            user.emailConfirmation.confirmationCode
+            newConfirmationCode
         );
 
         if (!data || data.accepted.length === 0) {

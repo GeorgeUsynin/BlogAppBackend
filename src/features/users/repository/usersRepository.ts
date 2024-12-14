@@ -5,6 +5,9 @@ export const usersRepository = {
     async findUserByLoginOrEmail(login: string, email: string) {
         return usersCollection.findOne({ $or: [{ login }, { email }] });
     },
+    async findUserByLogin(login: string) {
+        return usersCollection.findOne({ login });
+    },
     async findUserByEmail(email: string) {
         return usersCollection.findOne({ email });
     },
@@ -18,6 +21,12 @@ export const usersRepository = {
         return usersCollection.updateOne(
             { _id: new ObjectId(id) },
             { $set: { 'emailConfirmation.isConfirmed': isConfirmed } }
+        );
+    },
+    async updateUserEmailConfirmationCode(id: string, code: string) {
+        return usersCollection.updateOne(
+            { _id: new ObjectId(id) },
+            { $set: { 'emailConfirmation.confirmationCode': code } }
         );
     },
     async createUser(newUser: Omit<TDatabase.TUser, '_id'>) {

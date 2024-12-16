@@ -6,20 +6,21 @@ import { Result } from '../types';
 import { ResultStatus } from '../../../constants';
 
 export const authService = {
-    verifyBasicAuthorization: function (authorizationHeader: string): Result<{ isMatched: boolean }> {
+    verifyBasicAuthorization(authorizationHeader: string): Result<{ isMatched: boolean }> {
         const isMatched = authorizationHeader === `Basic ${SETTINGS.CODE_AUTH_BASE64}`;
 
         return { data: { isMatched }, status: isMatched ? ResultStatus.Success : ResultStatus.Unauthorized };
     },
-    verifyBearerAuthorization: async function (
-        authorizationHeader: string
-    ): Promise<Result<{ userId: string } | null>> {
+    async verifyBearerAuthorization(authorizationHeader: string): Promise<Result<{ userId: string } | null>> {
         const [type, token] = authorizationHeader.split(' ');
 
         if (type !== 'Bearer') {
             return { data: null, status: ResultStatus.Unauthorized };
         }
 
+        return this.parseJWTToken(token);
+    },
+    async parseJWTToken(token: string): Promise<Result<{ userId: string } | null>> {
         let decoded: JwtPayload | null = null;
 
         try {

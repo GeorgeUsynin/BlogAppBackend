@@ -29,6 +29,12 @@ export const usersRepository = {
             { $set: { 'emailConfirmation.confirmationCode': code } }
         );
     },
+    async updateUserRevokedRefreshTokenList(id: string, revokedRefreshToken: string) {
+        return usersCollection.updateOne(
+            { _id: new ObjectId(id) },
+            { $push: { revokedRefreshTokenList: revokedRefreshToken } }
+        );
+    },
     async createUser(newUser: Omit<TDatabase.TUser, '_id'>) {
         //@ts-expect-error since ObjectId will be created by MongoDB we don't need to pass it
         return usersCollection.insertOne(newUser);

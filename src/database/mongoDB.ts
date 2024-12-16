@@ -43,6 +43,7 @@ export namespace TDatabase {
             confirmationCode: string;
             expirationDate: Date;
         };
+        revokedRefreshTokenList: string[];
     };
 }
 

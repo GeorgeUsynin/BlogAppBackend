@@ -1,4 +1,5 @@
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import express, { Request, Response } from 'express';
 import { HTTP_STATUS_CODES, ROUTES } from './constants';
 import { AuthRouter } from './features/auth/router';
@@ -14,6 +15,7 @@ export const app = express(); // create app
 // Middleware for database connection to proper handle Vercel deployment
 process.env.VERCEL === '1' && app.use(databaseConnectionMiddleware);
 
+app.use(cookieParser());
 app.use(express.json()); // adding body parse middleware
 app.use(cors()); // allow all clients to use our backend endpoints
 

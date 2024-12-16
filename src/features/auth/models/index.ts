@@ -4,6 +4,7 @@ import { LoginViewModel } from './LoginViewModel';
 import { RegistrationInputModel } from './RegistrationInputModel';
 import { RegistrationEmailResendingInputModel } from './RegistrationEmailResendingInputModel';
 import { RegistrationConfirmationInputModel } from './RegistrationConfirmationInputModel';
+import { RefreshTokenViewModel } from './RefreshTokenViewModel';
 
 export {
     LoginInputModel,
@@ -12,4 +13,5 @@ export {
     RegistrationInputModel,
     RegistrationEmailResendingInputModel,
     RegistrationConfirmationInputModel,
+    RefreshTokenViewModel,
 };

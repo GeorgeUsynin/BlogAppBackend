@@ -188,6 +188,7 @@ export const users: TDatabase.TUser[] = [
             confirmationCode: '124365',
             expirationDate: add(new Date(), { hours: 1 }),
         },
+        revokedRefreshTokenList: [],
     },
     {
         _id: secondId,
@@ -200,6 +201,7 @@ export const users: TDatabase.TUser[] = [
             confirmationCode: '123465',
             expirationDate: add(new Date(), { hours: 1 }),
         },
+        revokedRefreshTokenList: [],
     },
     {
         _id: thirdId,
@@ -212,6 +214,7 @@ export const users: TDatabase.TUser[] = [
             confirmationCode: '214365',
             expirationDate: add(new Date(), { hours: 1 }),
         },
+        revokedRefreshTokenList: [],
     },
     {
         _id: fourthId,
@@ -224,6 +227,7 @@ export const users: TDatabase.TUser[] = [
             confirmationCode: '321456',
             expirationDate: add(new Date(), { hours: 1 }),
         },
+        revokedRefreshTokenList: [],
     },
     {
         _id: fifthId,
@@ -236,6 +240,7 @@ export const users: TDatabase.TUser[] = [
             confirmationCode: '654321',
             expirationDate: add(new Date(), { hours: 1 }),
         },
+        revokedRefreshTokenList: [],
     },
     {
         _id: sixthId,
@@ -248,6 +253,7 @@ export const users: TDatabase.TUser[] = [
             confirmationCode: '111111',
             expirationDate: add(new Date(), { seconds: 0.5 }),
         },
+        revokedRefreshTokenList: [],
     },
 ];
 

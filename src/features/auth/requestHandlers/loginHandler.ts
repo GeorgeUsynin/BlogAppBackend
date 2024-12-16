@@ -7,9 +7,9 @@ import { HTTP_STATUS_CODES, ResultStatus } from '../../../constants';
 export const loginHandler = async (req: RequestWithBody<LoginInputModel>, res: Response<LoginViewModel>) => {
     const { loginOrEmail, password } = req.body;
 
-    const { data: token, status } = await usersService.login(loginOrEmail, password);
+    const { data, status } = await usersService.login(loginOrEmail, password);
 
-    if (!token) {
+    if (!data) {
         if (status === ResultStatus.Unauthorized) {
             res.sendStatus(HTTP_STATUS_CODES.UNAUTHORIZED_401);
         } else {
@@ -18,5 +18,8 @@ export const loginHandler = async (req: RequestWithBody<LoginInputModel>, res: R
         return;
     }
 
-    res.status(HTTP_STATUS_CODES.OK_200).send(token);
+    const { accessToken, refreshToken } = data;
+
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
+    res.status(HTTP_STATUS_CODES.OK_200).send({ accessToken });
 };

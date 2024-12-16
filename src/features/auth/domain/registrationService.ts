@@ -44,6 +44,7 @@ export const registrationService = {
                 confirmationCode: randomUUID(),
                 expirationDate: add(new Date(), { hours: 1 }),
             },
+            revokedRefreshTokenList: [],
         };
 
         const createdUser = await usersRepository.createUser(newUser);

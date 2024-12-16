@@ -1,8 +1,11 @@
 import jwt from 'jsonwebtoken';
 
+type TPayload = Record<string, string>;
+type TOptions = jwt.SignOptions;
+
 export const JWTService = {
-    createJWTToken: function (userId: string) {
-        const token = jwt.sign({ userId }, process.env.JWT_SECRET as string, { expiresIn: '7d' });
+    createJWTToken: function (payload: TPayload, options: TOptions) {
+        const token = jwt.sign(payload, process.env.JWT_SECRET as string, options);
         return token;
     },
     verifyJWTToken: function (token: string) {

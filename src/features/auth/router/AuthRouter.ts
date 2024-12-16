@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { checkSchema } from 'express-validator';
 import * as RequestHandler from '../requestHandlers';
-import { authBearerMiddleware, errorMiddleware } from '../../shared/middlewares';
+import { authBearerMiddleware, authRefreshTokenMiddleware, errorMiddleware } from '../../shared/middlewares';
 import {
     loginValidationSchema,
     registrationValidationSchema,
@@ -25,7 +25,9 @@ const registrationEmailResendingValidators = [
 
 const AuthController = {
     login: RequestHandler.loginHandler,
+    logout: RequestHandler.logoutHandler,
     me: RequestHandler.meHandler,
+    refreshToken: RequestHandler.refreshTokenHandler,
     registration: RequestHandler.registrationHandler,
     registrationConfirmation: RequestHandler.registrationConfirmationHandler,
     registrationEmailResending: RequestHandler.registrationEmailResendingHandler,
@@ -33,6 +35,8 @@ const AuthController = {
 
 AuthRouter.get(ROUTES.ME, authBearerMiddleware, AuthController.me);
 AuthRouter.post(ROUTES.LOGIN, ...loginValidators, AuthController.login);
+AuthRouter.post(ROUTES.LOGOUT, authRefreshTokenMiddleware, AuthController.logout);
+AuthRouter.post(ROUTES.REFRESH_TOKEN, authRefreshTokenMiddleware, AuthController.refreshToken);
 AuthRouter.post(ROUTES.REGISTRATION, ...registrationValidators, AuthController.registration);
 AuthRouter.post(
     ROUTES.REGISTRATION_CONFIRMATION,

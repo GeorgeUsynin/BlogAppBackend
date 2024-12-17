@@ -45,8 +45,8 @@ export const usersService = {
 
         return { data: { accessToken, refreshToken }, status: ResultStatus.Success };
     },
-    async logout(userId: string, revokedRefreshToken: string): Promise<Result> {
-        const result = await usersRepository.updateUserRevokedRefreshTokenList(userId, revokedRefreshToken);
+    async logout(userId: string, refreshToken: string): Promise<Result> {
+        const result = await usersRepository.updateUserRevokedRefreshTokenList(userId, refreshToken);
 
         if (!result.acknowledged) {
             return {
@@ -60,9 +60,9 @@ export const usersService = {
     },
     async revokeRefreshToken(
         userId: string,
-        revokedRefreshToken: string
-    ): Promise<Result<{ accessToken: string; refreshToken: string } | null>> {
-        const result = await usersRepository.updateUserRevokedRefreshTokenList(userId, revokedRefreshToken);
+        refreshToken: string
+    ): Promise<Result<{ accessToken: string; newRefreshToken: string } | null>> {
+        const result = await usersRepository.updateUserRevokedRefreshTokenList(userId, refreshToken);
 
         if (!result.acknowledged) {
             return {
@@ -73,18 +73,16 @@ export const usersService = {
         }
 
         const accessToken = JWTService.createJWTToken({ userId }, { expiresIn: accessTokenExpirationTime });
-        const refreshToken = JWTService.createJWTToken({ userId }, { expiresIn: refreshTokenExpirationTime });
+        const newRefreshToken = JWTService.createJWTToken({ userId }, { expiresIn: refreshTokenExpirationTime });
 
-        return { data: { accessToken, refreshToken }, status: ResultStatus.Success };
+        return { data: { accessToken, newRefreshToken }, status: ResultStatus.Success };
     },
-    async checkRefreshTokenAlreadyBeenUsed(userId: string, revokedRefreshToken: string) {
+    async checkRefreshTokenAlreadyBeenUsed(userId: string, refreshToken: string) {
         const user = await usersRepository.findUserById(userId);
 
-        const isRevokedRefreshTokenAlreadyBeenUsed = user!.revokedRefreshTokenList.some(
-            token => token === revokedRefreshToken
-        );
+        const isRefreshTokenAlreadyBeenUsed = user!.revokedRefreshTokenList.some(token => token === refreshToken);
 
-        return isRevokedRefreshTokenAlreadyBeenUsed;
+        return isRefreshTokenAlreadyBeenUsed;
     },
     async createUser(payload: CreateUserInputModel): Promise<Result<InsertOneResult<TDatabase.TUser> | null>> {
         const user = await usersRepository.findUserByLoginOrEmail(payload.login, payload.email);
@@ -119,6 +117,9 @@ export const usersService = {
         const data = await usersRepository.createUser(newUser);
 
         return { data, status: ResultStatus.Success };
+    },
+    async findUserById(userId: string) {
+        return await usersRepository.findUserById(userId);
     },
     async deleteUserById(userId: string): Promise<Result<WithId<TDatabase.TUser> | null>> {
         const data = await usersRepository.deleteUserById(userId);

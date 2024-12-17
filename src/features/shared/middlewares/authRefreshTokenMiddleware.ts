@@ -1,42 +1,44 @@
 import { Response, Request, NextFunction } from 'express';
-import { HTTP_STATUS_CODES, ResultStatus } from '../../../constants';
-import { authService } from '../services';
+import { HTTP_STATUS_CODES } from '../../../constants';
+import { JWTService } from '../services';
 import { usersService } from '../../users/domain';
 import { ErrorViewModel } from '../types';
 
 export const authRefreshTokenMiddleware = async (req: Request, res: Response<ErrorViewModel>, next: NextFunction) => {
-    const revokedRefreshToken = req.cookies.refreshToken;
+    const refreshToken = req.cookies.refreshToken;
 
-    if (!revokedRefreshToken) {
+    if (!refreshToken) {
         res.sendStatus(HTTP_STATUS_CODES.UNAUTHORIZED_401);
         return;
     }
 
-    const { data, status } = await authService.parseJWTToken(revokedRefreshToken);
+    const decoded = await JWTService.parseJWTToken(refreshToken);
 
-    if (!data) {
-        if (status === ResultStatus.Unauthorized) {
-            res.sendStatus(HTTP_STATUS_CODES.UNAUTHORIZED_401);
-            return;
-        } else {
-            res.sendStatus(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
-            return;
-        }
+    if (!decoded) {
+        res.sendStatus(HTTP_STATUS_CODES.UNAUTHORIZED_401);
+        return;
     }
 
-    const isRevokedRefreshTokenAlreadyBeenUsed = await usersService.checkRefreshTokenAlreadyBeenUsed(
-        data.userId,
-        revokedRefreshToken
+    const isUserExists = Boolean(await usersService.findUserById(decoded.userId));
+
+    if (!isUserExists) {
+        res.sendStatus(HTTP_STATUS_CODES.UNAUTHORIZED_401);
+        return;
+    }
+
+    const isRefreshTokenAlreadyBeenUsed = await usersService.checkRefreshTokenAlreadyBeenUsed(
+        decoded.userId,
+        refreshToken
     );
 
-    if (isRevokedRefreshTokenAlreadyBeenUsed) {
+    if (isRefreshTokenAlreadyBeenUsed) {
         res.status(HTTP_STATUS_CODES.UNAUTHORIZED_401).send({
             errorsMessages: [{ field: '', message: 'Token already been used' }],
         });
         return;
     }
 
-    req.userId = data.userId;
+    req.userId = decoded.userId;
 
     next();
 };

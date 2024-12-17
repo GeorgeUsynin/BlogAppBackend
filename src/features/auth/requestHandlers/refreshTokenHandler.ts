@@ -7,9 +7,9 @@ import { ErrorViewModel } from '../../shared/types';
 export const refreshTokenHandler = async (req: Request, res: Response<RefreshTokenViewModel | ErrorViewModel>) => {
     const userId = req.userId as string;
 
-    const revokedRefreshToken = req.cookies.refreshToken;
+    const refreshToken = req.cookies.refreshToken;
 
-    const { data, status, errorsMessages } = await usersService.revokeRefreshToken(userId, revokedRefreshToken);
+    const { data, status, errorsMessages } = await usersService.revokeRefreshToken(userId, refreshToken);
 
     if (!data) {
         if (status === ResultStatus.Failure && errorsMessages) {
@@ -20,8 +20,8 @@ export const refreshTokenHandler = async (req: Request, res: Response<RefreshTok
         return;
     }
 
-    const { accessToken, refreshToken } = data;
+    const { accessToken, newRefreshToken } = data;
 
-    res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
+    res.cookie('refreshToken', newRefreshToken, { httpOnly: true, secure: true });
     res.status(HTTP_STATUS_CODES.OK_200).send({ accessToken });
 };

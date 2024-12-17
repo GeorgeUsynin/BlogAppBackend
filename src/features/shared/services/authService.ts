@@ -1,5 +1,3 @@
-import { JwtPayload } from 'jsonwebtoken';
-import { usersRepository } from '../../users/repository';
 import { SETTINGS } from '../../../app-settings';
 import { JWTService } from './JWTService';
 import { Result } from '../types';
@@ -18,24 +16,9 @@ export const authService = {
             return { data: null, status: ResultStatus.Unauthorized };
         }
 
-        return this.parseJWTToken(token);
-    },
-    async parseJWTToken(token: string): Promise<Result<{ userId: string } | null>> {
-        let decoded: JwtPayload | null = null;
-
-        try {
-            decoded = JWTService.verifyJWTToken(token) as JwtPayload;
-        } catch (err) {
-            return { data: null, status: ResultStatus.Unauthorized };
-        }
+        const decoded = await JWTService.parseJWTToken(token);
 
         if (!decoded) {
-            return { data: null, status: ResultStatus.Unauthorized };
-        }
-
-        const isUserExists = Boolean(await usersRepository.findUserById(decoded.userId));
-
-        if (!isUserExists) {
             return { data: null, status: ResultStatus.Unauthorized };
         }
 

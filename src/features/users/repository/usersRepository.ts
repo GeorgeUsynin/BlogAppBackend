@@ -29,10 +29,10 @@ export const usersRepository = {
             { $set: { 'emailConfirmation.confirmationCode': code } }
         );
     },
-    async updateUserRevokedRefreshTokenList(id: string, revokedRefreshToken: string) {
+    async updateUserRevokedRefreshTokenList(id: string, refreshToken: string) {
         return usersCollection.updateOne(
             { _id: new ObjectId(id) },
-            { $push: { revokedRefreshTokenList: revokedRefreshToken } }
+            { $push: { revokedRefreshTokenList: refreshToken } }
         );
     },
     async createUser(newUser: Omit<TDatabase.TUser, '_id'>) {

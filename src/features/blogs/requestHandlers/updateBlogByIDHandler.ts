@@ -1,22 +1,22 @@
 import { blogsService } from '../domain';
-import { Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../../constants';
 import type { RequestWithParamsAndBody } from '../../shared/types';
 import type { CreateUpdateBlogInputModel, URIParamsBlogIDModel } from '../models';
 
 export const updateBlogByIDHandler = async (
     req: RequestWithParamsAndBody<URIParamsBlogIDModel, CreateUpdateBlogInputModel>,
-    res: Response
+    res: Response,
+    next: NextFunction
 ) => {
-    const blogId = req.params.id;
-    const payload = req.body;
+    try {
+        const blogId = req.params.id;
+        const payload = req.body;
 
-    const foundBlog = await blogsService.updateBlog(blogId, payload);
+        await blogsService.updateBlog(blogId, payload);
 
-    if (!foundBlog) {
-        res.sendStatus(HTTP_STATUS_CODES.NOT_FOUND_404);
-        return;
+        res.sendStatus(HTTP_STATUS_CODES.NO_CONTENT_204);
+    } catch (err) {
+        next(err);
     }
-
-    res.sendStatus(HTTP_STATUS_CODES.NO_CONTENT_204);
 };

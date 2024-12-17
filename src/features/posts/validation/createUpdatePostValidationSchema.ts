@@ -81,6 +81,7 @@ export const blogIdValidationSchema: Schema<'blogId'> = {
                 }
                 return true;
             },
+            errorMessage: 'There is no blog existed with provided blogId',
         },
     },
 };

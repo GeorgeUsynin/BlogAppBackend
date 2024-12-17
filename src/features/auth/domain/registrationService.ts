@@ -8,9 +8,10 @@ import { ResultStatus } from '../../../constants';
 import { TDatabase } from '../../../database/mongoDB';
 import { emailManager } from '../../shared/managers/emailManager';
 import { Result } from '../../shared/types';
+import { APIError } from '../../shared/helpers';
 
 export const registrationService = {
-    async registerUser(payload: RegistrationInputModel): Promise<Result<SMTPTransport.SentMessageInfo | null>> {
+    async registerUser(payload: RegistrationInputModel) {
         const { login, email, password } = payload;
 
         // check if user already exists
@@ -18,16 +19,11 @@ export const registrationService = {
         const userWithEmail = await usersRepository.findUserByEmail(email);
 
         if (userWithLogin || userWithEmail) {
-            return {
-                data: null,
-                errorsMessages: [
-                    {
-                        message: `User with this ${userWithLogin ? 'login' : 'email'} already exists`,
-                        field: userWithLogin ? 'login' : 'email',
-                    },
-                ],
+            throw new APIError({
                 status: ResultStatus.BadRequest,
-            };
+                field: userWithLogin ? 'login' : 'email',
+                message: `User with this ${userWithLogin ? 'login' : 'email'} already exists`,
+            });
         }
 
         // hash password
@@ -47,94 +43,63 @@ export const registrationService = {
             revokedRefreshTokenList: [],
         };
 
-        const createdUser = await usersRepository.createUser(newUser);
-
-        // check if user was created
-        if (!createdUser.acknowledged) {
-            return {
-                data: null,
-                status: ResultStatus.Failure,
-                errorsMessages: [{ field: '', message: 'Data insertion failed' }],
-            };
-        }
+        await usersRepository.createUser(newUser);
 
         // sent confirmation email
         emailManager.sendPasswordConfirmationEmail(email, newUser.emailConfirmation.confirmationCode);
-
-        return { data: null, status: ResultStatus.Success };
     },
-    async registrationConfirmation(code: string): Promise<Result<null>> {
+    async registrationConfirmation(code: string) {
         const user = await usersRepository.findUserByConfirmationCode(code);
 
         if (!user) {
-            return {
-                data: null,
+            throw new APIError({
                 status: ResultStatus.BadRequest,
-                errorsMessages: [{ field: 'code', message: 'Invalid code' }],
-            };
+                field: 'code',
+                message: 'Invalid code',
+            });
         }
 
         if (user.emailConfirmation.isConfirmed) {
-            return {
-                data: null,
+            throw new APIError({
                 status: ResultStatus.BadRequest,
-                errorsMessages: [{ field: 'code', message: 'Email already confirmed' }],
-            };
+                field: 'code',
+                message: 'Email already confirmed',
+            });
         }
 
         if (Date.now() > user.emailConfirmation.expirationDate.getTime()) {
-            return {
-                data: null,
+            throw new APIError({
                 status: ResultStatus.BadRequest,
-                errorsMessages: [{ field: 'code', message: 'Code expired' }],
-            };
+                field: 'code',
+                message: 'Code expired',
+            });
         }
 
-        const result = await usersRepository.updateUserEmailConfirmation(user._id.toString(), true);
-
-        if (!result.acknowledged) {
-            return {
-                data: null,
-                status: ResultStatus.Failure,
-                errorsMessages: [{ field: '', message: 'Data update failed' }],
-            };
-        }
-
-        return { data: null, status: ResultStatus.Success };
+        await usersRepository.updateUserEmailConfirmation(user._id.toString(), true);
     },
-    async registrationEmailResending(email: string): Promise<Result<SMTPTransport.SentMessageInfo | null>> {
+    async registrationEmailResending(email: string) {
         const user = await usersRepository.findUserByEmail(email);
 
         if (!user) {
-            return {
-                data: null,
+            throw new APIError({
                 status: ResultStatus.BadRequest,
-                errorsMessages: [{ field: 'email', message: 'User with this email not found' }],
-            };
+                field: 'email',
+                message: 'User with this email not found',
+            });
         }
 
         if (user.emailConfirmation.isConfirmed) {
-            return {
-                data: null,
+            throw new APIError({
                 status: ResultStatus.BadRequest,
-                errorsMessages: [{ field: 'email', message: 'Email already confirmed' }],
-            };
+                field: 'email',
+                message: 'Email already confirmed',
+            });
         }
 
         const newConfirmationCode = randomUUID();
 
-        const result = await usersRepository.updateUserEmailConfirmationCode(user._id.toString(), newConfirmationCode);
-
-        if (!result.acknowledged) {
-            return {
-                data: null,
-                status: ResultStatus.Failure,
-                errorsMessages: [{ field: '', message: 'Data update failed' }],
-            };
-        }
+        await usersRepository.updateUserEmailConfirmationCode(user._id.toString(), newConfirmationCode);
 
         emailManager.sendPasswordConfirmationEmail(email, newConfirmationCode);
-
-        return { data: null, status: ResultStatus.Success };
     },
 };

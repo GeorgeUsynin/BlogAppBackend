@@ -1,26 +1,21 @@
-import { Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { ErrorViewModel, RequestWithBody } from '../../shared/types';
 import { RegistrationInputModel } from '../models';
 import { registrationService } from '../domain';
-import { HTTP_STATUS_CODES, ResultStatus } from '../../../constants';
+import { HTTP_STATUS_CODES } from '../../../constants';
 
 export const registrationHandler = async (
     req: RequestWithBody<RegistrationInputModel>,
-    res: Response<ErrorViewModel>
+    res: Response<ErrorViewModel>,
+    next: NextFunction
 ) => {
-    const payload = req.body;
-    const { data, status, errorsMessages } = await registrationService.registerUser(payload);
+    try {
+        const payload = req.body;
 
-    if (status === ResultStatus.BadRequest && errorsMessages) {
-        res.status(HTTP_STATUS_CODES.BAD_REQUEST_400).send({ errorsMessages });
-        return;
-    } else if (status === ResultStatus.Failure && errorsMessages) {
-        res.status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500).send({ errorsMessages });
-        return;
-    } else if (status === ResultStatus.Success) {
+        await registrationService.registerUser(payload);
+
         res.sendStatus(HTTP_STATUS_CODES.NO_CONTENT_204);
-        return;
+    } catch (err) {
+        next(err);
     }
-
-    res.sendStatus(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
 };

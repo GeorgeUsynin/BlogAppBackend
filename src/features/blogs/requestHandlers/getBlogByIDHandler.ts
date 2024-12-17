@@ -1,17 +1,20 @@
-import { Request, Response } from 'express';
-import { HTTP_STATUS_CODES } from '../../../constants';
+import { NextFunction, Request, Response } from 'express';
 import type { URIParamsBlogIDModel, BlogItemViewModel } from '../models';
 import { queryBlogsRepository } from '../repository';
+import { HTTP_STATUS_CODES } from '../../../constants';
 
-export const getBlogByIDHandler = async (req: Request<URIParamsBlogIDModel>, res: Response<BlogItemViewModel>) => {
-    const blogId = req.params.id;
+export const getBlogByIDHandler = async (
+    req: Request<URIParamsBlogIDModel>,
+    res: Response<BlogItemViewModel>,
+    next: NextFunction
+) => {
+    try {
+        const blogId = req.params.id;
 
-    const foundBlog = await queryBlogsRepository.getBlogById(blogId);
+        const foundBlog = await queryBlogsRepository.getBlogById(blogId);
 
-    if (!foundBlog) {
-        res.sendStatus(HTTP_STATUS_CODES.NOT_FOUND_404);
-        return;
+        res.status(HTTP_STATUS_CODES.OK_200).send(foundBlog);
+    } catch (err) {
+        next(err);
     }
-
-    res.send(foundBlog);
 };

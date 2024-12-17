@@ -1,17 +1,16 @@
 import { blogsService } from '../domain';
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../../constants';
 import type { URIParamsBlogIDModel } from '../models';
 
-export const deleteBlogByIDHandler = async (req: Request<URIParamsBlogIDModel>, res: Response) => {
-    const blogId = req.params.id;
+export const deleteBlogByIDHandler = async (req: Request<URIParamsBlogIDModel>, res: Response, next: NextFunction) => {
+    try {
+        const blogId = req.params.id;
 
-    const foundBlog = await blogsService.deleteBlogById(blogId);
+        await blogsService.deleteBlogById(blogId);
 
-    if (!foundBlog) {
-        res.sendStatus(HTTP_STATUS_CODES.NOT_FOUND_404);
-        return;
+        res.sendStatus(HTTP_STATUS_CODES.NO_CONTENT_204);
+    } catch (err) {
+        next(err);
     }
-
-    res.sendStatus(HTTP_STATUS_CODES.NO_CONTENT_204);
 };

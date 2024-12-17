@@ -1,8 +1,6 @@
 import nodemailer from 'nodemailer';
+import { APIError } from '../helpers';
 import { ResultStatus } from '../../../constants';
-import { Result } from '../types';
-
-type TInfo = Awaited<ReturnType<typeof transporter.sendMail>>;
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -13,7 +11,7 @@ const transporter = nodemailer.createTransport({
 });
 
 export const emailAdapter = {
-    async sendEmail(email: string, subject: string, message: string) {
+    sendEmail(email: string, subject: string, message: string) {
         transporter
             .sendMail({
                 from: `Blog Platform <${process.env.EMAIL_BLOG_PLATFORM}>`,
@@ -21,8 +19,9 @@ export const emailAdapter = {
                 subject: subject,
                 html: message,
             })
-            .catch(error => {
-                console.error('Email adapter send error', error);
+            .catch(err => {
+                console.error(err);
+                throw new APIError({ status: ResultStatus.Failure, message: 'Email adapter send error' });
             });
     },
 };

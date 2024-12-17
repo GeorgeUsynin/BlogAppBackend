@@ -10,7 +10,7 @@ import { randomUUID } from 'crypto';
 import { add } from 'date-fns';
 
 const accessTokenExpirationTime = 10;
-const refreshTokenExpirationTime = 120;
+const refreshTokenExpirationTime = 20;
 
 export const usersService = {
     async login(

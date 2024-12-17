@@ -1,7 +1,6 @@
 import { Response, Request, NextFunction } from 'express';
-import { HTTP_STATUS_CODES } from '../../../constants';
+import { HTTP_STATUS_CODES, ResultStatus } from '../../../constants';
 import { authService } from '../services';
-import { ResultStatus } from '../../../constants';
 import { usersService } from '../../users/domain';
 import { ErrorViewModel } from '../types';
 

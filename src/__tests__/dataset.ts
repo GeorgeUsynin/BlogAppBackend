@@ -251,7 +251,7 @@ export const users: TDatabase.TUser[] = [
         emailConfirmation: {
             isConfirmed: false,
             confirmationCode: '111111',
-            expirationDate: add(new Date(), { seconds: 0.5 }),
+            expirationDate: new Date(),
         },
         revokedRefreshTokenList: [],
     },

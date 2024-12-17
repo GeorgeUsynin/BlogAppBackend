@@ -5,12 +5,13 @@ import type { CreateUserInputModel } from '../models';
 import type { TDatabase } from '../../../database/mongoDB';
 import { Result } from '../../shared/types';
 import { ResultStatus } from '../../../constants';
+import { SETTINGS } from '../../../app-settings';
 import { InsertOneResult, WithId } from 'mongodb';
 import { randomUUID } from 'crypto';
 import { add } from 'date-fns';
 
-const accessTokenExpirationTime = 10;
-const refreshTokenExpirationTime = 20;
+const accessTokenExpirationTime = SETTINGS.ACCESS_TOKEN_EXPIRATION_TIME;
+const refreshTokenExpirationTime = SETTINGS.REFRESH_TOKEN_EXPIRATION_TIME;
 
 export const usersService = {
     async login(

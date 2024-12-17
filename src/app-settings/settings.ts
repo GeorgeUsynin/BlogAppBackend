@@ -20,4 +20,6 @@ export const SETTINGS = {
         commentsCollection: 'comments',
         usersCollection: 'users',
     },
+    ACCESS_TOKEN_EXPIRATION_TIME: 10,
+    REFRESH_TOKEN_EXPIRATION_TIME: 20,
 };

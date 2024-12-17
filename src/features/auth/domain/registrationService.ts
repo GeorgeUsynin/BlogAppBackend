@@ -59,22 +59,9 @@ export const registrationService = {
         }
 
         // sent confirmation email
-        const { data, status, errorsMessages } = await emailManager.sendPasswordConfirmationEmail(
-            email,
-            newUser.emailConfirmation.confirmationCode
-        );
+        emailManager.sendPasswordConfirmationEmail(email, newUser.emailConfirmation.confirmationCode);
 
-        // check if email was sent
-        if (!data || data.accepted.length === 0) {
-            await usersRepository.deleteUserById(createdUser.insertedId.toString());
-            return {
-                data: null,
-                status,
-                errorsMessages,
-            };
-        }
-
-        return { data, status };
+        return { data: null, status: ResultStatus.Success };
     },
     async registrationConfirmation(code: string): Promise<Result<null>> {
         const user = await usersRepository.findUserByConfirmationCode(code);
@@ -146,15 +133,8 @@ export const registrationService = {
             };
         }
 
-        const { data, status, errorsMessages } = await emailManager.sendPasswordConfirmationEmail(
-            email,
-            newConfirmationCode
-        );
+        emailManager.sendPasswordConfirmationEmail(email, newConfirmationCode);
 
-        if (!data || data.accepted.length === 0) {
-            return { data: null, status, errorsMessages };
-        }
-
-        return { data, status: ResultStatus.Success };
+        return { data: null, status: ResultStatus.Success };
     },
 };

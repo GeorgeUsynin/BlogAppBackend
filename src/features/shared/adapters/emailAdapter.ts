@@ -13,22 +13,16 @@ const transporter = nodemailer.createTransport({
 });
 
 export const emailAdapter = {
-    async sendEmail(email: string, subject: string, message: string): Promise<Result<TInfo | null>> {
-        try {
-            const info = await transporter.sendMail({
+    async sendEmail(email: string, subject: string, message: string) {
+        transporter
+            .sendMail({
                 from: `Blog Platform <${process.env.EMAIL_BLOG_PLATFORM}>`,
                 to: email,
                 subject: subject,
                 html: message,
+            })
+            .catch(error => {
+                console.error('Email adapter send error', error);
             });
-            return { data: info, status: ResultStatus.Success };
-        } catch (error) {
-            console.error('Email adapter send error', error);
-            return {
-                status: ResultStatus.Failure,
-                data: null,
-                errorsMessages: [{ field: '', message: 'Email sending failed' }],
-            };
-        }
     },
 };

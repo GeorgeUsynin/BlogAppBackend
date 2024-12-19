@@ -1,7 +1,8 @@
-import { createFilter, normalizeQueryParams } from '../../shared/helpers';
+import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
 import { QueryParamsPostModel, PostsPaginatedViewModel, PostItemViewModel } from '../models';
 import { blogsCollection, postsCollection, TDatabase } from '../../../database/mongoDB';
 import { ObjectId, WithId } from 'mongodb';
+import { ResultStatus } from '../../../constants';
 
 type TFilter = ReturnType<typeof createFilter>;
 type TValues = {
@@ -30,14 +31,24 @@ export const queryPostsRepository = {
         const blog = await blogsCollection.findOne({ _id: new ObjectId(blogId) });
 
         if (!blog) {
-            return null;
+            throw new APIError({
+                status: ResultStatus.NotFound,
+                message: '',
+            });
         }
 
         return this.getAllPosts(queryParams, blogId);
     },
     async getPostById(postId: string) {
         const post = await postsCollection.findOne({ _id: new ObjectId(postId) });
-        if (!post) return null;
+
+        if (!post) {
+            throw new APIError({
+                status: ResultStatus.NotFound,
+                message: '',
+            });
+        }
+
         return this.mapMongoPostToViewModel(post);
     },
     async findTotalCountOfFilteredPosts(filter: TFilter) {

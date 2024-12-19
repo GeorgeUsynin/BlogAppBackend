@@ -1,15 +1,14 @@
 import { SETTINGS } from '../../../app-settings';
 import { JWTService } from './JWTService';
-import { Result } from '../types';
 import { ResultStatus } from '../../../constants';
 
 export const authService = {
-    verifyBasicAuthorization(authorizationHeader: string): Result<{ isMatched: boolean }> {
+    verifyBasicAuthorization(authorizationHeader: string) {
         const isMatched = authorizationHeader === `Basic ${SETTINGS.CODE_AUTH_BASE64}`;
 
         return { data: { isMatched }, status: isMatched ? ResultStatus.Success : ResultStatus.Unauthorized };
     },
-    async verifyBearerAuthorization(authorizationHeader: string): Promise<Result<{ userId: string } | null>> {
+    async verifyBearerAuthorization(authorizationHeader: string) {
         const [type, token] = authorizationHeader.split(' ');
 
         if (type !== 'Bearer') {

@@ -16,6 +16,16 @@ export const APIErrorMiddleware = (err: APIError, req: Request, res: Response, n
             return;
         }
 
+        if (status === ResultStatus.Unauthorized) {
+            res.status(HTTP_STATUS_CODES.UNAUTHORIZED_401).send({ errorsMessages });
+            return;
+        }
+
+        if (status === ResultStatus.Forbidden) {
+            res.status(HTTP_STATUS_CODES.FORBIDDEN_403).send({ errorsMessages });
+            return;
+        }
+
         if (status === ResultStatus.Failure) {
             res.status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500).send({ errorsMessages });
             return;

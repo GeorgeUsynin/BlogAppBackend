@@ -1,24 +1,22 @@
-import { Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { RequestWithParams } from '../../shared/types';
 import { URIParamsCommentIDModel } from '../models';
 import { commentsService } from '../domain';
-import { HTTP_STATUS_CODES, ResultStatus } from '../../../constants';
+import { HTTP_STATUS_CODES } from '../../../constants';
 
-export const deleteCommentByIDHandler = async (req: RequestWithParams<URIParamsCommentIDModel>, res: Response) => {
-    const commentId = req.params.id;
-    const userId = req.userId;
+export const deleteCommentByIDHandler = async (
+    req: RequestWithParams<URIParamsCommentIDModel>,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const commentId = req.params.id;
+        const userId = req.userId;
 
-    const { status } = await commentsService.deleteCommentById(commentId, userId as string);
+        await commentsService.deleteCommentById(commentId, userId as string);
 
-    if (status === ResultStatus.NotFound) {
-        res.sendStatus(HTTP_STATUS_CODES.NOT_FOUND_404);
-        return;
+        res.sendStatus(HTTP_STATUS_CODES.NO_CONTENT_204);
+    } catch (err) {
+        next(err);
     }
-
-    if (status === ResultStatus.Forbidden) {
-        res.sendStatus(HTTP_STATUS_CODES.FORBIDDEN_403);
-        return;
-    }
-
-    res.sendStatus(HTTP_STATUS_CODES.NO_CONTENT_204);
 };

@@ -3,36 +3,41 @@ import { usersRepository } from '../repository';
 import { JWTService } from '../../shared/services';
 import type { CreateUserInputModel } from '../models';
 import type { TDatabase } from '../../../database/mongoDB';
-import { Result } from '../../shared/types';
 import { ResultStatus } from '../../../constants';
 import { SETTINGS } from '../../../app-settings';
-import { InsertOneResult, WithId } from 'mongodb';
 import { randomUUID } from 'crypto';
 import { add } from 'date-fns';
+import { APIError } from '../../shared/helpers';
 
 const accessTokenExpirationTime = SETTINGS.ACCESS_TOKEN_EXPIRATION_TIME;
 const refreshTokenExpirationTime = SETTINGS.REFRESH_TOKEN_EXPIRATION_TIME;
 
 export const usersService = {
-    async login(
-        loginOrEmail: string,
-        password: string
-    ): Promise<Result<{ accessToken: string; refreshToken: string } | null>> {
+    async login(loginOrEmail: string, password: string) {
         const user = await usersRepository.findUserByLoginOrEmail(loginOrEmail, loginOrEmail);
 
         if (!user) {
-            return { data: null, status: ResultStatus.Unauthorized };
+            throw new APIError({
+                status: ResultStatus.Unauthorized,
+                message: 'Invalid credentials',
+            });
         }
 
         // check if user's email is confirmed
         if (!user.emailConfirmation.isConfirmed) {
-            return { data: null, status: ResultStatus.Unauthorized };
+            throw new APIError({
+                status: ResultStatus.Unauthorized,
+                message: 'Email is not confirmed',
+            });
         }
 
         const isValidPassword = await bcrypt.compare(password, user.passwordHash);
 
         if (!isValidPassword) {
-            return { data: null, status: ResultStatus.Unauthorized };
+            throw new APIError({
+                status: ResultStatus.Unauthorized,
+                message: 'Invalid credentials',
+            });
         }
 
         const accessToken = JWTService.createJWTToken(
@@ -44,39 +49,18 @@ export const usersService = {
             { expiresIn: refreshTokenExpirationTime }
         );
 
-        return { data: { accessToken, refreshToken }, status: ResultStatus.Success };
+        return { accessToken, refreshToken };
     },
-    async logout(userId: string, refreshToken: string): Promise<Result> {
-        const result = await usersRepository.updateUserRevokedRefreshTokenList(userId, refreshToken);
-
-        if (!result.acknowledged) {
-            return {
-                data: null,
-                status: ResultStatus.Failure,
-                errorsMessages: [{ field: '', message: 'Data update failed' }],
-            };
-        }
-
-        return { data: null, status: ResultStatus.Success };
+    async logout(userId: string, refreshToken: string) {
+        await usersRepository.updateUserRevokedRefreshTokenList(userId, refreshToken);
     },
-    async revokeRefreshToken(
-        userId: string,
-        refreshToken: string
-    ): Promise<Result<{ accessToken: string; newRefreshToken: string } | null>> {
-        const result = await usersRepository.updateUserRevokedRefreshTokenList(userId, refreshToken);
-
-        if (!result.acknowledged) {
-            return {
-                data: null,
-                status: ResultStatus.Failure,
-                errorsMessages: [{ field: '', message: 'Data update failed' }],
-            };
-        }
+    async revokeRefreshToken(userId: string, refreshToken: string) {
+        await usersRepository.updateUserRevokedRefreshTokenList(userId, refreshToken);
 
         const accessToken = JWTService.createJWTToken({ userId }, { expiresIn: accessTokenExpirationTime });
         const newRefreshToken = JWTService.createJWTToken({ userId }, { expiresIn: refreshTokenExpirationTime });
 
-        return { data: { accessToken, newRefreshToken }, status: ResultStatus.Success };
+        return { accessToken, newRefreshToken };
     },
     async checkRefreshTokenAlreadyBeenUsed(userId: string, refreshToken: string) {
         const user = await usersRepository.findUserById(userId);
@@ -85,20 +69,14 @@ export const usersService = {
 
         return isRefreshTokenAlreadyBeenUsed;
     },
-    async createUser(payload: CreateUserInputModel): Promise<Result<InsertOneResult<TDatabase.TUser> | null>> {
+    async createUser(payload: CreateUserInputModel) {
         const user = await usersRepository.findUserByLoginOrEmail(payload.login, payload.email);
 
         if (user) {
-            return {
-                data: null,
-                errorsMessages: [
-                    {
-                        message: 'User with this login or email already exists',
-                        field: '',
-                    },
-                ],
+            throw new APIError({
                 status: ResultStatus.BadRequest,
-            };
+                message: 'User with this login or email already exists',
+            });
         }
 
         const hash = await bcrypt.hash(payload.password, 10);
@@ -115,20 +93,16 @@ export const usersService = {
             revokedRefreshTokenList: [],
         };
 
-        const data = await usersRepository.createUser(newUser);
-
-        return { data, status: ResultStatus.Success };
+        return await usersRepository.createUser(newUser);
     },
     async findUserById(userId: string) {
         return await usersRepository.findUserById(userId);
     },
-    async deleteUserById(userId: string): Promise<Result<WithId<TDatabase.TUser> | null>> {
-        const data = await usersRepository.deleteUserById(userId);
+    async deleteUserById(userId: string) {
+        const foundUser = await usersRepository.deleteUserById(userId);
 
-        if (!data) {
-            return { data: null, status: ResultStatus.NotFound };
+        if (!foundUser) {
+            throw new APIError({ status: ResultStatus.NotFound, message: 'User not found' });
         }
-
-        return { data, status: ResultStatus.Success };
     },
 };

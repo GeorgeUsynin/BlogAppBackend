@@ -1,7 +1,7 @@
 import { NextFunction, Response } from 'express';
 import { ErrorViewModel, RequestWithBody } from '../../shared/types';
 import { RegistrationEmailResendingInputModel } from '../models';
-import { HTTP_STATUS_CODES, ResultStatus } from '../../../constants';
+import { HTTP_STATUS_CODES } from '../../../constants';
 import { registrationService } from '../domain';
 
 export const registrationEmailResendingHandler = async (

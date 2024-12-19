@@ -24,6 +24,7 @@ export const blogsService = {
                 message: 'Blog was not found',
             });
         }
+
         return updatedBlog;
     },
 
@@ -36,6 +37,5 @@ export const blogsService = {
                 message: 'Blog was not found',
             });
         }
-        return foundBlog;
     },
 };

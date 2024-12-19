@@ -1,5 +1,5 @@
 import { postsService } from '../domain';
-import { Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../../constants';
 import type { RequestWithBody } from '../../shared/types';
 import type { CreateUpdatePostInputModel, PostItemViewModel } from '../models';
@@ -7,17 +7,17 @@ import { queryPostsRepository } from '../repository';
 
 export const createPostHandler = async (
     req: RequestWithBody<CreateUpdatePostInputModel>,
-    res: Response<PostItemViewModel>
+    res: Response<PostItemViewModel>,
+    next: NextFunction
 ) => {
-    const payload = req.body;
+    try {
+        const payload = req.body;
 
-    const { insertedId } = await postsService.createPost(payload);
-    const newPost = await queryPostsRepository.getPostById(insertedId.toString());
+        const { insertedId } = await postsService.createPost(payload);
+        const newPost = await queryPostsRepository.getPostById(insertedId.toString());
 
-    if (!newPost) {
-        res.sendStatus(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
-        return;
+        res.status(HTTP_STATUS_CODES.CREATED_201).send(newPost);
+    } catch (err) {
+        next(err);
     }
-
-    res.status(HTTP_STATUS_CODES.CREATED_201).send(newPost);
 };

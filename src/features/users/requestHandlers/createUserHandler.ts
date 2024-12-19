@@ -1,35 +1,24 @@
 import { usersService } from '../domain';
-import { Response } from 'express';
-import { HTTP_STATUS_CODES, ResultStatus } from '../../../constants';
+import { NextFunction, Response } from 'express';
+import { HTTP_STATUS_CODES } from '../../../constants';
 import type { RequestWithBody, ErrorViewModel } from '../../shared/types';
 import type { CreateUserInputModel, UserItemViewModel } from '../models';
 import { queryUsersRepository } from '../repository';
 
 export const createUserHandler = async (
     req: RequestWithBody<CreateUserInputModel>,
-    res: Response<UserItemViewModel | ErrorViewModel>
+    res: Response<UserItemViewModel | ErrorViewModel>,
+    next: NextFunction
 ) => {
-    const payload = req.body;
+    try {
+        const payload = req.body;
 
-    const { data, status, errorsMessages } = await usersService.createUser(payload);
+        const { insertedId } = await usersService.createUser(payload);
 
-    if (!data) {
-        if (errorsMessages && errorsMessages.length > 0) {
-            if (status === ResultStatus.BadRequest) {
-                res.status(HTTP_STATUS_CODES.BAD_REQUEST_400).send({ errorsMessages });
-                return;
-            }
-        }
-        res.sendStatus(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
-        return;
+        const newUser = await queryUsersRepository.getUserById(insertedId.toString());
+
+        res.status(HTTP_STATUS_CODES.CREATED_201).send(newUser);
+    } catch (err) {
+        next(err);
     }
-
-    const newUser = await queryUsersRepository.getUserById(data.insertedId.toString());
-
-    if (!newUser) {
-        res.sendStatus(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
-        return;
-    }
-
-    res.status(HTTP_STATUS_CODES.CREATED_201).send(newUser);
 };

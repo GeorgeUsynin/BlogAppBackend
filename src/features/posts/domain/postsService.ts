@@ -2,6 +2,8 @@ import { postsRepository } from '../repository';
 import type { CreateUpdatePostInputModel } from '../models';
 import type { TDatabase } from '../../../database/mongoDB';
 import { blogsRepository } from '../../blogs/repository';
+import { APIError } from '../../shared/helpers';
+import { ResultStatus } from '../../../constants';
 
 export const postsService = {
     async createPost(payload: CreateUpdatePostInputModel) {
@@ -20,17 +22,36 @@ export const postsService = {
         const blog = await blogsRepository.getBlogById(blogId);
 
         if (!blog) {
-            return null;
+            throw new APIError({
+                status: ResultStatus.NotFound,
+                message: 'Blog was not found',
+            });
         }
 
         return this.createPost({ ...payload, blogId });
     },
 
     async updatePost(postId: string, payload: CreateUpdatePostInputModel) {
-        return postsRepository.updatePost(postId, payload);
+        const updatedPost = await postsRepository.updatePost(postId, payload);
+
+        if (!updatedPost) {
+            throw new APIError({
+                status: ResultStatus.NotFound,
+                message: 'Post was not found',
+            });
+        }
+
+        return updatedPost;
     },
 
     async deletePostById(postId: string) {
-        return postsRepository.deletePostById(postId);
+        const deletedPost = await postsRepository.deletePostById(postId);
+
+        if (!deletedPost) {
+            throw new APIError({
+                status: ResultStatus.NotFound,
+                message: 'Post was not found',
+            });
+        }
     },
 };

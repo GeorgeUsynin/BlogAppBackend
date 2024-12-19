@@ -1,22 +1,20 @@
-import { InsertOneResult } from 'mongodb';
 import { CreateUpdateCommentInputModel } from '../models';
-import { Result } from '../../shared/types';
 import { TDatabase } from '../../../database/mongoDB';
 import { postsRepository } from '../../posts/repository';
 import { usersRepository } from '../../users/repository';
 import { commentsRepository } from '../repository';
 import { ResultStatus } from '../../../constants';
+import { APIError } from '../../shared/helpers';
 
 export const commentsService = {
-    async createCommentByPostId(
-        payload: CreateUpdateCommentInputModel,
-        postId: string,
-        userId: string
-    ): Promise<Result<InsertOneResult<TDatabase.TComment> | null>> {
+    async createCommentByPostId(payload: CreateUpdateCommentInputModel, postId: string, userId: string) {
         const post = await postsRepository.findPostById(postId);
 
         if (!post) {
-            return { data: null, status: ResultStatus.NotFound };
+            throw new APIError({
+                status: ResultStatus.NotFound,
+                message: 'Post was not found',
+            });
         }
 
         const user = await usersRepository.findUserById(userId);
@@ -31,43 +29,46 @@ export const commentsService = {
             createdAt: new Date().toISOString(),
         };
 
-        const data = await commentsRepository.createComment(newComment);
-
-        return { data, status: ResultStatus.Success };
+        return await commentsRepository.createComment(newComment);
     },
 
-    async updateCommentById(
-        commentId: string,
-        userId: string,
-        payload: CreateUpdateCommentInputModel
-    ): Promise<Result<TDatabase.TComment | null>> {
+    async updateCommentById(commentId: string, userId: string, payload: CreateUpdateCommentInputModel) {
         const comment = await commentsRepository.findCommentById(commentId);
 
         if (!comment) {
-            return { data: null, status: ResultStatus.NotFound };
+            throw new APIError({
+                status: ResultStatus.NotFound,
+                message: 'Comment was not found',
+            });
         }
 
-        if (comment.commentatorInfo.userId === userId) {
-            const data = await commentsRepository.updateComment(commentId, payload);
-            const status = ResultStatus.Success;
-            return { data, status };
+        if (comment.commentatorInfo.userId !== userId) {
+            throw new APIError({
+                status: ResultStatus.Forbidden,
+                message: 'You are not allowed to update this comment',
+            });
         }
 
-        return { data: null, status: ResultStatus.Forbidden };
+        await commentsRepository.updateComment(commentId, payload);
     },
 
-    async deleteCommentById(commentId: string, userId: string): Promise<Result<TDatabase.TComment | null>> {
+    async deleteCommentById(commentId: string, userId: string) {
         const comment = await commentsRepository.findCommentById(commentId);
 
         if (!comment) {
-            return { data: null, status: ResultStatus.NotFound };
+            throw new APIError({
+                status: ResultStatus.NotFound,
+                message: 'Comment was not found',
+            });
         }
 
-        if (comment.commentatorInfo.userId === userId) {
-            const data = await commentsRepository.deleteCommentById(commentId);
-            return { data, status: ResultStatus.Success };
+        if (comment.commentatorInfo.userId !== userId) {
+            throw new APIError({
+                status: ResultStatus.Forbidden,
+                message: 'You are not allowed to delete this comment',
+            });
         }
 
-        return { data: null, status: ResultStatus.Forbidden };
+        await commentsRepository.deleteCommentById(commentId);
     },
 };

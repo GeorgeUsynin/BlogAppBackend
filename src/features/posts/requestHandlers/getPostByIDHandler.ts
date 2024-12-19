@@ -1,17 +1,19 @@
-import { Request, Response } from 'express';
-import { HTTP_STATUS_CODES } from '../../../constants';
+import { NextFunction, Request, Response } from 'express';
 import type { URIParamsPostIDModel, PostItemViewModel } from '../models';
 import { queryPostsRepository } from '../repository';
 
-export const getPostByIDHandler = async (req: Request<URIParamsPostIDModel>, res: Response<PostItemViewModel>) => {
-    const postId = req.params.id;
+export const getPostByIDHandler = async (
+    req: Request<URIParamsPostIDModel>,
+    res: Response<PostItemViewModel>,
+    next: NextFunction
+) => {
+    try {
+        const postId = req.params.id;
 
-    const foundPost = await queryPostsRepository.getPostById(postId);
+        const foundPost = await queryPostsRepository.getPostById(postId);
 
-    if (!foundPost) {
-        res.sendStatus(HTTP_STATUS_CODES.NOT_FOUND_404);
-        return;
+        res.send(foundPost);
+    } catch (err) {
+        next(err);
     }
-
-    res.send(foundPost);
 };

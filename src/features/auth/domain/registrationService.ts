@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt';
-import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 import { add } from 'date-fns/add';
 import { randomUUID } from 'crypto';
 import { usersRepository } from '../../users/repository';
@@ -7,7 +6,6 @@ import { RegistrationInputModel } from '../models';
 import { ResultStatus } from '../../../constants';
 import { TDatabase } from '../../../database/mongoDB';
 import { emailManager } from '../../shared/managers/emailManager';
-import { Result } from '../../shared/types';
 import { APIError } from '../../shared/helpers';
 
 export const registrationService = {

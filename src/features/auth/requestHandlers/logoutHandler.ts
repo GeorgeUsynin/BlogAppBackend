@@ -1,22 +1,18 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { usersService } from '../../users/domain';
-import { HTTP_STATUS_CODES, ResultStatus } from '../../../constants';
+import { HTTP_STATUS_CODES } from '../../../constants';
 import { ErrorViewModel } from '../../shared/types';
 
-export const logoutHandler = async (req: Request, res: Response<ErrorViewModel>) => {
-    const userId = req.userId as string;
+export const logoutHandler = async (req: Request, res: Response<ErrorViewModel>, next: NextFunction) => {
+    try {
+        const userId = req.userId as string;
 
-    const refreshToken = req.cookies.refreshToken;
+        const refreshToken = req.cookies.refreshToken;
 
-    const { errorsMessages, status } = await usersService.logout(userId, refreshToken);
+        await usersService.logout(userId, refreshToken);
 
-    if (status === ResultStatus.Failure && errorsMessages) {
-        res.status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500).send({ errorsMessages });
-        return;
-    } else if (status === ResultStatus.Success) {
         res.sendStatus(HTTP_STATUS_CODES.NO_CONTENT_204);
-        return;
+    } catch (err) {
+        next(err);
     }
-
-    res.sendStatus(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
 };

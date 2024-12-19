@@ -100,9 +100,3 @@ export type ErrorViewModel = {
      */
     errorsMessages: TError[] | null;
 };
-
-export type Result<T = null> = {
-    status: ResultStatus;
-    errorsMessages?: ErrorViewModel['errorsMessages'];
-    data: T;
-};

@@ -1,7 +1,8 @@
 import { ObjectId, WithId } from 'mongodb';
 import { QueryParamsCommentModel, CommentItemViewModel, CommentsPaginatedViewModel } from '../models';
 import { commentsCollection, postsCollection, TDatabase } from '../../../database/mongoDB';
-import { createFilter, normalizeQueryParams } from '../../shared/helpers';
+import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
+import { ResultStatus } from '../../../constants';
 
 type TFilter = ReturnType<typeof createFilter>;
 type TValues = {
@@ -16,7 +17,10 @@ export const queryCommentsRepository = {
         const post = await postsCollection.findOne({ _id: new ObjectId(postId) });
 
         if (!post) {
-            return null;
+            throw new APIError({
+                status: ResultStatus.NotFound,
+                message: '',
+            });
         }
 
         const params = normalizeQueryParams(queryParams);
@@ -35,7 +39,12 @@ export const queryCommentsRepository = {
     async getCommentById(commentId: string) {
         const comment = await commentsCollection.findOne({ _id: new ObjectId(commentId) });
 
-        if (!comment) return null;
+        if (!comment) {
+            throw new APIError({
+                status: ResultStatus.NotFound,
+                message: '',
+            });
+        }
 
         return this.mapMongoCommentToViewModel(comment);
     },

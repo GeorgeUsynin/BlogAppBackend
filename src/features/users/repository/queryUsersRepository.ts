@@ -1,7 +1,8 @@
-import { createFilter, normalizeQueryParams } from '../../shared/helpers';
+import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
 import { QueryParamsUserModel, UserItemViewModel, UsersPaginatedViewModel } from '../models';
 import { usersCollection, TDatabase } from '../../../database/mongoDB';
 import { WithId, ObjectId } from 'mongodb';
+import { ResultStatus } from '../../../constants';
 
 type TFilter = ReturnType<typeof createFilter>;
 type TValues = {
@@ -34,12 +35,23 @@ export const queryUsersRepository = {
     },
     async getUserById(userId: string) {
         const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
-        if (!user) return null;
+
+        if (!user) {
+            throw new APIError({ status: ResultStatus.NotFound, message: 'User not found' });
+        }
+
         return this.mapMongoUserToViewModel(user);
     },
     async getUserInfoById(userId: string) {
         const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
-        if (!user) return null;
+
+        if (!user) {
+            throw new APIError({
+                status: ResultStatus.Unauthorized,
+                message: 'User not found',
+            });
+        }
+
         return {
             email: user.email,
             login: user.login,

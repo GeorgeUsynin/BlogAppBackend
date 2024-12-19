@@ -14,11 +14,11 @@ export const refreshTokenHandler = async (
 
         const refreshToken = req.cookies.refreshToken;
 
-        const { accessToken, newRefreshToken } = await usersService.revokeRefreshToken(userId, refreshToken);
+        const { newAccessToken, newRefreshToken } = await usersService.revokeRefreshToken(userId, refreshToken);
 
         res.cookie('refreshToken', newRefreshToken, { httpOnly: true, secure: true });
 
-        res.status(HTTP_STATUS_CODES.OK_200).send({ accessToken });
+        res.status(HTTP_STATUS_CODES.OK_200).send({ accessToken: newAccessToken });
     } catch (err) {
         next(err);
     }

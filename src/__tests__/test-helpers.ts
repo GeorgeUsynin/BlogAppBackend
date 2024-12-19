@@ -411,12 +411,19 @@ export const createErrorMessages = (values: TValues) => {
 
 export const getAuthorization = () => ({ Authorization: `Basic ${SETTINGS.CODE_AUTH_BASE64}` });
 
+export const generateToken = (userId: string, expiresIn: string | number) => {
+    const token = jwt.sign({ userId }, process.env.JWT_SECRET as string, { expiresIn });
+    return token;
+};
+
 export const getBearerAuthorization = (userId: string) => {
-    const token = jwt.sign({ userId }, process.env.JWT_SECRET as string, { expiresIn: '7d' });
+    const token = generateToken(userId, '7d');
     return { Authorization: `Bearer ${token}` };
 };
 
-export const decryptPassword = async (password: string, salt: string) => await bcrypt.hash(password, salt);
+export const generateRefreshTokenCookie = (userId: string, expiresIn: string | number) => {
+    return { Cookie: [`refreshToken=${generateToken(userId, expiresIn)}; Path=/; HttpOnly; Secure`] };
+};
 
 type TDataset = {
     blogs?: TDatabase.TBlog[];

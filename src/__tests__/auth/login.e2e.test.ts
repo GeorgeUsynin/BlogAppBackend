@@ -47,6 +47,34 @@ describe('login', () => {
         expect(body1.accessToken).toEqual(expect.any(String));
     });
 
+    it('returns refresh token if login/email and password are correct', async () => {
+        const credentialsWithLogin: LoginInputModel = {
+            loginOrEmail: 'george',
+            password: '12345678',
+        };
+
+        const response = await request
+            .post(`${ROUTES.AUTH}${ROUTES.LOGIN}`)
+            .send(credentialsWithLogin)
+            .expect(HTTP_STATUS_CODES.OK_200);
+
+        expect(response.headers['set-cookie']).toBeDefined();
+        expect(response.headers['set-cookie'][0]).toContain('refreshToken');
+
+        const credentialsWithEmail: LoginInputModel = {
+            loginOrEmail: 'user1george@example.com',
+            password: '12345678',
+        };
+
+        const response2 = await request
+            .post(`${ROUTES.AUTH}${ROUTES.LOGIN}`)
+            .send(credentialsWithEmail)
+            .expect(HTTP_STATUS_CODES.OK_200);
+
+        expect(response2.headers['set-cookie']).toBeDefined();
+        expect(response2.headers['set-cookie'][0]).toContain('refreshToken');
+    });
+
     describe('login payload validation', () => {
         describe('loginOrEmail', () => {
             it('returns 400 status code and proper error object if `loginOrEmail` is missing', async () => {

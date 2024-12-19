@@ -1,7 +1,14 @@
+import nodemailer from 'nodemailer';
 import { createErrorMessages, dbHelper, request } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 import { RegistrationEmailResendingInputModel } from '../../features/auth/models';
 import { users } from '../dataset';
+
+jest.mock('nodemailer', () => ({
+    createTransport: jest.fn().mockReturnValue({
+        sendMail: jest.fn().mockImplementation((email, subject, message) => Promise.resolve()),
+    }),
+}));
 
 describe('registration email resending', () => {
     beforeAll(async () => {
@@ -30,6 +37,24 @@ describe('registration email resending', () => {
             .post(`${ROUTES.AUTH}${ROUTES.REGISTRATION_EMAIL_RESENDING}`)
             .send(email)
             .expect(HTTP_STATUS_CODES.NO_CONTENT_204);
+
+        expect(nodemailer.createTransport).toHaveBeenCalledWith({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_BLOG_PLATFORM,
+                pass: process.env.EMAIL_BLOG_PLATFORM_PASSWORD,
+            },
+        });
+
+        expect(nodemailer.createTransport().sendMail).toHaveBeenCalledTimes(1);
+        expect(nodemailer.createTransport().sendMail).toHaveBeenCalledWith(
+            expect.objectContaining({
+                from: `Blog Platform <${process.env.EMAIL_BLOG_PLATFORM}>`,
+                to: email.email,
+                subject: 'Password Confirmation',
+                html: expect.stringContaining('code'),
+            })
+        );
     });
 
     describe('registration email resending payload validation', () => {

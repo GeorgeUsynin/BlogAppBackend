@@ -57,10 +57,10 @@ export const usersService = {
     async revokeRefreshToken(userId: string, refreshToken: string) {
         await usersRepository.updateUserRevokedRefreshTokenList(userId, refreshToken);
 
-        const accessToken = JWTService.createJWTToken({ userId }, { expiresIn: accessTokenExpirationTime });
+        const newAccessToken = JWTService.createJWTToken({ userId }, { expiresIn: accessTokenExpirationTime });
         const newRefreshToken = JWTService.createJWTToken({ userId }, { expiresIn: refreshTokenExpirationTime });
 
-        return { accessToken, newRefreshToken };
+        return { newAccessToken, newRefreshToken };
     },
     async checkRefreshTokenAlreadyBeenUsed(userId: string, refreshToken: string) {
         const user = await usersRepository.findUserById(userId);

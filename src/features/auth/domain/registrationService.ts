@@ -7,6 +7,7 @@ import { ResultStatus } from '../../../constants';
 import { TDatabase } from '../../../database/mongoDB';
 import { emailManager } from '../../shared/managers/emailManager';
 import { APIError } from '../../shared/helpers';
+import { SETTINGS } from '../../../app-settings';
 
 export const registrationService = {
     async registerUser(payload: RegistrationInputModel) {
@@ -36,7 +37,7 @@ export const registrationService = {
             emailConfirmation: {
                 isConfirmed: false,
                 confirmationCode: randomUUID(),
-                expirationDate: add(new Date(), { hours: 1 }),
+                expirationDate: add(new Date(), { hours: SETTINGS.CONFIRMATION_CODE_EXPIRATION_TIME_IN_HOURS }),
             },
             revokedRefreshTokenList: [],
         };
@@ -95,8 +96,13 @@ export const registrationService = {
         }
 
         const newConfirmationCode = randomUUID();
+        const newExpirationDate = add(new Date(), { hours: SETTINGS.CONFIRMATION_CODE_EXPIRATION_TIME_IN_HOURS });
 
-        await usersRepository.updateUserEmailConfirmationCode(user._id.toString(), newConfirmationCode);
+        await usersRepository.updateUserEmailConfirmationCode(
+            user._id.toString(),
+            newConfirmationCode,
+            newExpirationDate
+        );
 
         emailManager.sendPasswordConfirmationEmail(email, newConfirmationCode);
     },

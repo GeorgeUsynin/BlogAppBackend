@@ -23,10 +23,10 @@ export const usersRepository = {
             { $set: { 'emailConfirmation.isConfirmed': isConfirmed } }
         );
     },
-    async updateUserEmailConfirmationCode(id: string, code: string) {
+    async updateUserEmailConfirmationCode(id: string, code: string, expirationDate: Date) {
         return usersCollection.updateOne(
             { _id: new ObjectId(id) },
-            { $set: { 'emailConfirmation.confirmationCode': code } }
+            { $set: { 'emailConfirmation.confirmationCode': code, 'emailConfirmation.expirationDate': expirationDate } }
         );
     },
     async updateUserRevokedRefreshTokenList(id: string, refreshToken: string) {

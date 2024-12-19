@@ -20,6 +20,7 @@ export const SETTINGS = {
         commentsCollection: 'comments',
         usersCollection: 'users',
     },
+    CONFIRMATION_CODE_EXPIRATION_TIME_IN_HOURS: 1,
     ACCESS_TOKEN_EXPIRATION_TIME: 10,
     REFRESH_TOKEN_EXPIRATION_TIME: 20,
 };

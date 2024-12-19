@@ -46,14 +46,13 @@ describe('logout', () => {
     });
 
     it('returns 401 status code if refresh token already been used', async () => {
-        await request
-            .post(`${ROUTES.AUTH}${ROUTES.LOGOUT}`)
-            .set(generateRefreshTokenCookie(users[0]._id.toString(), '7d'))
-            .expect(HTTP_STATUS_CODES.NO_CONTENT_204);
+        const cookie = generateRefreshTokenCookie(users[0]._id.toString(), '7d');
+
+        await request.post(`${ROUTES.AUTH}${ROUTES.LOGOUT}`).set(cookie).expect(HTTP_STATUS_CODES.NO_CONTENT_204);
 
         const { body } = await request
             .post(`${ROUTES.AUTH}${ROUTES.LOGOUT}`)
-            .set(generateRefreshTokenCookie(users[0]._id.toString(), '7d'))
+            .set(cookie)
             .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
 
         expect(body.errorsMessages).toEqual([{ field: '', message: 'Token already been used' }]);

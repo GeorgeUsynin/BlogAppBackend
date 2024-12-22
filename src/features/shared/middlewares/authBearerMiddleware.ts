@@ -1,6 +1,6 @@
 import { Response, Request, NextFunction } from 'express';
 import { HTTP_STATUS_CODES, ResultStatus } from '../../../constants';
-import { authService } from '../services';
+import { authService } from '../../auth/domain';
 import { usersService } from '../../users/domain';
 
 export const authBearerMiddleware = async (req: Request, res: Response, next: NextFunction) => {

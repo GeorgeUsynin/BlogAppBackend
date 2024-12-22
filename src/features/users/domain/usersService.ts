@@ -1,74 +1,14 @@
 import bcrypt from 'bcrypt';
 import { usersRepository } from '../repository';
-import { JWTService } from '../../shared/services';
-import type { CreateUserInputModel } from '../models';
-import type { TDatabase } from '../../../database/mongoDB';
 import { ResultStatus } from '../../../constants';
 import { SETTINGS } from '../../../app-settings';
 import { randomUUID } from 'crypto';
 import { add } from 'date-fns';
 import { APIError } from '../../shared/helpers';
-
-const accessTokenExpirationTime = SETTINGS.ACCESS_TOKEN_EXPIRATION_TIME;
-const refreshTokenExpirationTime = SETTINGS.REFRESH_TOKEN_EXPIRATION_TIME;
+import type { CreateUserInputModel } from '../models';
+import type { TDatabase } from '../../../database/mongoDB';
 
 export const usersService = {
-    async login(loginOrEmail: string, password: string) {
-        const user = await usersRepository.findUserByLoginOrEmail(loginOrEmail, loginOrEmail);
-
-        if (!user) {
-            throw new APIError({
-                status: ResultStatus.Unauthorized,
-                message: 'Invalid credentials',
-            });
-        }
-
-        // check if user's email is confirmed
-        if (!user.emailConfirmation.isConfirmed) {
-            throw new APIError({
-                status: ResultStatus.Unauthorized,
-                message: 'Email is not confirmed',
-            });
-        }
-
-        const isValidPassword = await bcrypt.compare(password, user.passwordHash);
-
-        if (!isValidPassword) {
-            throw new APIError({
-                status: ResultStatus.Unauthorized,
-                message: 'Invalid credentials',
-            });
-        }
-
-        const accessToken = JWTService.createJWTToken(
-            { userId: user._id.toString() },
-            { expiresIn: accessTokenExpirationTime }
-        );
-        const refreshToken = JWTService.createJWTToken(
-            { userId: user._id.toString() },
-            { expiresIn: refreshTokenExpirationTime }
-        );
-
-        return { accessToken, refreshToken };
-    },
-    async logout(userId: string, refreshToken: string) {
-        await usersRepository.updateUserRevokedRefreshTokenList(userId, refreshToken);
-    },
-    async revokeRefreshToken(userId: string, refreshToken: string) {
-        await usersRepository.updateUserRevokedRefreshTokenList(userId, refreshToken);
-
-        const newAccessToken = JWTService.createJWTToken({ userId }, { expiresIn: accessTokenExpirationTime });
-        const newRefreshToken = JWTService.createJWTToken({ userId }, { expiresIn: refreshTokenExpirationTime });
-
-        return { newAccessToken, newRefreshToken };
-    },
-    async checkRefreshTokenAlreadyBeenUsed(userId: string, refreshToken: string) {
-        const user = await usersRepository.findUserById(userId);
-
-        const isRefreshTokenAlreadyBeenUsed = user!.revokedRefreshTokenList.some(token => token === refreshToken);
-
-        return isRefreshTokenAlreadyBeenUsed;
-    },
     async createUser(payload: CreateUserInputModel) {
         const user = await usersRepository.findUserByLoginOrEmail(payload.login, payload.email);
 

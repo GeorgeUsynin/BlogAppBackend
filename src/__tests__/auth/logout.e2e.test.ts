@@ -45,6 +45,7 @@ describe('logout', () => {
             .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
     });
 
+    //TODO: refactor test
     it('returns 401 status code if refresh token already been used', async () => {
         const cookie = generateRefreshTokenCookie(users[0]._id.toString(), '7d');
 

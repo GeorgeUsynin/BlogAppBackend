@@ -13,6 +13,7 @@ export enum ROUTES {
     AUTH = '/auth',
     BLOGS = '/blogs',
     COMMENTS = '/comments',
+    DEVICES = '/devices',
     LOGIN = '/login',
     LOGOUT = '/logout',
     ME = '/me',
@@ -21,6 +22,7 @@ export enum ROUTES {
     REGISTRATION = '/registration',
     REGISTRATION_CONFIRMATION = '/registration-confirmation',
     REGISTRATION_EMAIL_RESENDING = '/registration-email-resending',
+    SECURITY = '/security',
     TESTING = '/testing/all-data',
     USERS = '/users',
 }

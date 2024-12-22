@@ -15,6 +15,7 @@ export const SETTINGS = {
     MONGO_URL: process.env.MONGO_URL || DEFAULT_MONGO_URL,
     DB_NAME: process.env.DB_NAME_PROD || DEFAULT_DB_NAME,
     DB_COLLECTIONS: {
+        authDeviceSessionsCollection: 'authDeviceSessions',
         blogsCollection: 'blogs',
         postsCollection: 'posts',
         commentsCollection: 'comments',

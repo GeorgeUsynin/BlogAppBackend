@@ -7,6 +7,7 @@ import { UsersRouter } from './features/users/router';
 import { BlogsRouter } from './features/blogs/router';
 import { PostsRouter } from './features/posts/router';
 import { CommentsRouter } from './features/comments/router';
+import { SecurityRouter } from './features/security/router';
 import { TestRouter } from './features/tests/router';
 import { APIErrorMiddleware, databaseConnectionMiddleware } from './features/shared/middlewares';
 
@@ -18,8 +19,10 @@ process.env.VERCEL === '1' && app.use(databaseConnectionMiddleware);
 app.use(cookieParser());
 app.use(express.json()); // adding body parse middleware
 app.use(cors()); // allow all clients to use our backend endpoints
+app.set('trust proxy', true); // allows to get correct IP address from req.ip
 
 app.use(ROUTES.AUTH, AuthRouter);
+app.use(ROUTES.SECURITY, SecurityRouter);
 app.use(ROUTES.USERS, UsersRouter);
 app.use(ROUTES.BLOGS, BlogsRouter);
 app.use(ROUTES.POSTS, PostsRouter);

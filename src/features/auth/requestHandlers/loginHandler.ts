@@ -1,8 +1,8 @@
 import { NextFunction, Response } from 'express';
 import { RequestWithBody } from '../../shared/types';
 import { LoginInputModel, LoginViewModel } from '../models';
-import { usersService } from '../../users/domain';
 import { HTTP_STATUS_CODES } from '../../../constants';
+import { authService } from '../domain';
 
 export const loginHandler = async (
     req: RequestWithBody<LoginInputModel>,
@@ -10,9 +10,11 @@ export const loginHandler = async (
     next: NextFunction
 ) => {
     try {
+        const userAgent = req.header('user-agent');
+        const clientIp = req.ip || '';
         const { loginOrEmail, password } = req.body;
 
-        const { accessToken, refreshToken } = await usersService.login(loginOrEmail, password);
+        const { accessToken, refreshToken } = await authService.login({ clientIp, loginOrEmail, password, userAgent });
 
         res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true });
 

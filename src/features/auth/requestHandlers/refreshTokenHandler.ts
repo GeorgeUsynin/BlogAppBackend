@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { RefreshTokenViewModel } from '../models';
-import { usersService } from '../../users/domain';
+import { authService } from '../../auth/domain';
 import { HTTP_STATUS_CODES } from '../../../constants';
 import { ErrorViewModel } from '../../shared/types';
 
@@ -11,10 +11,9 @@ export const refreshTokenHandler = async (
 ) => {
     try {
         const userId = req.userId as string;
+        const deviceId = req.deviceId as string;
 
-        const refreshToken = req.cookies.refreshToken;
-
-        const { newAccessToken, newRefreshToken } = await usersService.revokeRefreshToken(userId, refreshToken);
+        const { newAccessToken, newRefreshToken } = await authService.updateTokens(userId, deviceId);
 
         res.cookie('refreshToken', newRefreshToken, { httpOnly: true, secure: true });
 

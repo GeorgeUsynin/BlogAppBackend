@@ -1,7 +1,8 @@
 import { Response, Request, NextFunction } from 'express';
 import { HTTP_STATUS_CODES } from '../../../constants';
-import { JWTService } from '../services';
+import { JWTService } from '../../shared/services';
 import { usersService } from '../../users/domain';
+import { authDeviceSessionsService } from '../../security/domain';
 import { ErrorViewModel } from '../types';
 
 export const authRefreshTokenMiddleware = async (req: Request, res: Response<ErrorViewModel>, next: NextFunction) => {
@@ -26,19 +27,15 @@ export const authRefreshTokenMiddleware = async (req: Request, res: Response<Err
         return;
     }
 
-    const isRefreshTokenAlreadyBeenUsed = await usersService.checkRefreshTokenAlreadyBeenUsed(
-        decoded.userId,
-        refreshToken
-    );
+    const isAuthDeviceSessionExists = Boolean(await authDeviceSessionsService.findDeviceById(decoded.userId));
 
-    if (isRefreshTokenAlreadyBeenUsed) {
-        res.status(HTTP_STATUS_CODES.UNAUTHORIZED_401).send({
-            errorsMessages: [{ field: '', message: 'Token already been used' }],
-        });
+    if (!isAuthDeviceSessionExists) {
+        res.sendStatus(HTTP_STATUS_CODES.UNAUTHORIZED_401);
         return;
     }
 
     req.userId = decoded.userId;
+    req.deviceId = decoded.deviceId;
 
     next();
 };

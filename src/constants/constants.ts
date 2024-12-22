@@ -7,6 +7,7 @@ export enum HTTP_STATUS_CODES {
     FORBIDDEN_403 = 403,
     NOT_FOUND_404 = 404,
     INTERNAL_SERVER_ERROR_500 = 500,
+    TOO_MANY_REQUEST = 429,
 }
 
 export enum ROUTES {
@@ -34,4 +35,5 @@ export enum ResultStatus {
     NotFound = 'NotFound',
     Success = 'Success',
     Unauthorized = 'Unauthorized',
+    RateLimit = 'RateLimit',
 }

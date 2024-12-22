@@ -15,6 +15,7 @@ export const SETTINGS = {
     MONGO_URL: process.env.MONGO_URL || DEFAULT_MONGO_URL,
     DB_NAME: process.env.DB_NAME_PROD || DEFAULT_DB_NAME,
     DB_COLLECTIONS: {
+        apiRateLimitCollection: 'apiRateLimit',
         authDeviceSessionsCollection: 'authDeviceSessions',
         blogsCollection: 'blogs',
         postsCollection: 'posts',
@@ -24,4 +25,5 @@ export const SETTINGS = {
     CONFIRMATION_CODE_EXPIRATION_TIME_IN_HOURS: 1,
     ACCESS_TOKEN_EXPIRATION_TIME: 10,
     REFRESH_TOKEN_EXPIRATION_TIME: 20,
+    API_RATE_LIMIT_TIME_GAP_IN_MILLISECONDS: 10000,
 };

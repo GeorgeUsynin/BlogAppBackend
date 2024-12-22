@@ -6,8 +6,8 @@ export const authDeviceSessionsService = {
     async findDeviceById(deviceId: string) {
         return authDeviceSessionsRepository.findDeviceById(deviceId);
     },
-    async terminateAllUserDeviceSessions(userId: string) {
-        return authDeviceSessionsRepository.terminateAllUserDeviceSessions(userId);
+    async terminateAllOtherUserDeviceSessions(userId: string, deviceId: string) {
+        return authDeviceSessionsRepository.terminateAllOtherUserDeviceSessions(userId, deviceId);
     },
     async terminateDeviceSessionByIDHandler(userId: string, deviceId: string) {
         const foundDevice = await authDeviceSessionsRepository.findDeviceById(deviceId);
@@ -25,5 +25,7 @@ export const authDeviceSessionsService = {
                 message: '',
             });
         }
+
+        await authDeviceSessionsRepository.deleteDeviceSessionById(deviceId);
     },
 };

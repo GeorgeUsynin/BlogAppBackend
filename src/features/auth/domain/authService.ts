@@ -6,6 +6,7 @@ import { JWTService } from '../../shared/services/JWTService';
 import { authDeviceSessionsRepository } from '../../security/repository';
 import { APIError, getDeviceName } from '../../shared/helpers';
 import { usersRepository } from '../../users/repository';
+import { authDeviceSessionsService } from '../../security/domain';
 
 type TLoginPayload = {
     loginOrEmail: string;
@@ -93,8 +94,8 @@ export const authService = {
 
         return { accessToken, refreshToken };
     },
-    async logout(userId: string, refreshToken: string) {
-        await usersRepository.updateUserRevokedRefreshTokenList(userId, refreshToken);
+    async logout(userId: string, deviceId: string) {
+        await authDeviceSessionsService.terminateDeviceSessionByIDHandler(userId, deviceId);
     },
     async updateTokens(userId: string, deviceId: string) {
         const accessToken = JWTService.createJWTToken({ userId }, { expiresIn: accessTokenExpirationTime });

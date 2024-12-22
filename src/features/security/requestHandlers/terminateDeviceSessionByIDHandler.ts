@@ -1,11 +1,17 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../../constants';
 import { authDeviceSessionsService } from '../domain';
+import { URIParamsDeviceIDModel } from '../models';
+import { RequestWithParams } from '../../shared/types';
 
-export const terminateDeviceSessionByIDHandler = async (req: Request, res: Response, next: NextFunction) => {
+export const terminateDeviceSessionByIDHandler = async (
+    req: RequestWithParams<URIParamsDeviceIDModel>,
+    res: Response,
+    next: NextFunction
+) => {
     try {
+        const deviceId = req.params.id;
         const userId = req.userId as string;
-        const deviceId = req.deviceId as string;
 
         await authDeviceSessionsService.terminateDeviceSessionByIDHandler(userId, deviceId);
 

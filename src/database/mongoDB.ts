@@ -55,6 +55,12 @@ export namespace TDatabase {
         clientIp: string;
         expirationDateOfRefreshToken: string;
     };
+
+    export type TAPIRateLimit = {
+        IP: string;
+        URL: string;
+        date: Date;
+    };
 }
 
 export let client: MongoClient;
@@ -64,6 +70,7 @@ export let postsCollection: Collection<TDatabase.TPost>;
 export let commentsCollection: Collection<TDatabase.TComment>;
 export let usersCollection: Collection<TDatabase.TUser>;
 export let authDeviceSessionsCollection: Collection<TDatabase.TDevice>;
+export let apiRateLimitCollection: Collection<TDatabase.TAPIRateLimit>;
 
 export const connectToDatabase = async (url: string, dbName: string) => {
     if (db) {
@@ -83,6 +90,7 @@ export const connectToDatabase = async (url: string, dbName: string) => {
         commentsCollection = db.collection(SETTINGS.DB_COLLECTIONS.commentsCollection);
         usersCollection = db.collection(SETTINGS.DB_COLLECTIONS.usersCollection);
         authDeviceSessionsCollection = db.collection(SETTINGS.DB_COLLECTIONS.authDeviceSessionsCollection);
+        apiRateLimitCollection = db.collection(SETTINGS.DB_COLLECTIONS.apiRateLimitCollection);
 
         await db.command({ ping: 1 });
         console.log('Pinged your deployment. You successfully connected to MongoDB!');

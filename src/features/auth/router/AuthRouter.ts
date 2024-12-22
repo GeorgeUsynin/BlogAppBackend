@@ -1,7 +1,12 @@
 import { Router } from 'express';
 import { checkSchema } from 'express-validator';
 import * as RequestHandler from '../requestHandlers';
-import { authBearerMiddleware, authRefreshTokenMiddleware, errorMiddleware } from '../../shared/middlewares';
+import {
+    authBearerMiddleware,
+    authRefreshTokenMiddleware,
+    apiRateLimitMiddleware,
+    errorMiddleware,
+} from '../../shared/middlewares';
 import {
     loginValidationSchema,
     registrationValidationSchema,
@@ -12,13 +17,19 @@ import { ROUTES } from '../../../constants';
 
 export const AuthRouter = Router();
 
-const loginValidators = [checkSchema(loginValidationSchema, ['body']), errorMiddleware];
-const registrationValidators = [checkSchema(registrationValidationSchema, ['body']), errorMiddleware];
+const loginValidators = [apiRateLimitMiddleware, checkSchema(loginValidationSchema, ['body']), errorMiddleware];
+const registrationValidators = [
+    apiRateLimitMiddleware,
+    checkSchema(registrationValidationSchema, ['body']),
+    errorMiddleware,
+];
 const registrationConfirmationValidators = [
+    apiRateLimitMiddleware,
     checkSchema(registrationConfirmationValidationSchema, ['body']),
     errorMiddleware,
 ];
 const registrationEmailResendingValidators = [
+    apiRateLimitMiddleware,
     checkSchema(registrationEmailResendingValidationSchema, ['body']),
     errorMiddleware,
 ];

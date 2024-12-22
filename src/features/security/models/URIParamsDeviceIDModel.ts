@@ -8,5 +8,5 @@ export type URIParamsDeviceIDModel = {
      * @type {string}
      * @required
      */
-    deviceId: string;
+    id: string;
 };

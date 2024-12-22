@@ -27,7 +27,7 @@ export const authRefreshTokenMiddleware = async (req: Request, res: Response<Err
         return;
     }
 
-    const isAuthDeviceSessionExists = Boolean(await authDeviceSessionsService.findDeviceById(decoded.userId));
+    const isAuthDeviceSessionExists = Boolean(await authDeviceSessionsService.findDeviceById(decoded.deviceId));
 
     if (!isAuthDeviceSessionExists) {
         res.sendStatus(HTTP_STATUS_CODES.UNAUTHORIZED_401);

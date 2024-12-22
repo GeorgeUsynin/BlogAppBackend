@@ -22,7 +22,10 @@ export const authDeviceSessionsRepository = {
             { $set: { issuedAt, expirationDateOfRefreshToken } }
         );
     },
-    async terminateAllUserDeviceSessions(userId: string) {
-        return authDeviceSessionsCollection.deleteMany({ userId });
+    async terminateAllOtherUserDeviceSessions(userId: string, deviceId: string) {
+        return authDeviceSessionsCollection.deleteMany({ $and: [{ userId }, { deviceId: { $ne: deviceId } }] });
+    },
+    async deleteDeviceSessionById(deviceId: string) {
+        return authDeviceSessionsCollection.deleteOne({ deviceId });
     },
 };

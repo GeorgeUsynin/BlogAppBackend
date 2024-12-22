@@ -6,10 +6,9 @@ import { authService } from '../domain';
 export const logoutHandler = async (req: Request, res: Response<ErrorViewModel>, next: NextFunction) => {
     try {
         const userId = req.userId as string;
+        const deviceId = req.deviceId as string;
 
-        const refreshToken = req.cookies.refreshToken;
-
-        await authService.logout(userId, refreshToken);
+        await authService.logout(userId, deviceId);
 
         res.sendStatus(HTTP_STATUS_CODES.NO_CONTENT_204);
     } catch (err) {

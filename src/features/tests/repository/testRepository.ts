@@ -1,4 +1,11 @@
-import { blogsCollection, postsCollection, usersCollection, commentsCollection } from '../../../database/mongoDB';
+import {
+    blogsCollection,
+    postsCollection,
+    usersCollection,
+    commentsCollection,
+    apiRateLimitCollection,
+    authDeviceSessionsCollection,
+} from '../../../database/mongoDB';
 
 export const testRepository = {
     async deleteAllData() {
@@ -6,5 +13,7 @@ export const testRepository = {
         await postsCollection.deleteMany({});
         await commentsCollection.deleteMany({});
         await usersCollection.deleteMany({});
+        await apiRateLimitCollection.deleteMany({});
+        await authDeviceSessionsCollection.deleteMany({});
     },
 };

@@ -1,3 +1,4 @@
 import { JWTService } from './JWTService';
+import { APIRateLimitService } from './APIRateLimitService';
 
-export { JWTService };
+export { APIRateLimitService, JWTService };

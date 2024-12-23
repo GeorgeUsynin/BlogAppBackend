@@ -27,9 +27,17 @@ export const authRefreshTokenMiddleware = async (req: Request, res: Response<Err
         return;
     }
 
-    const isAuthDeviceSessionExists = Boolean(await authDeviceSessionsService.findDeviceById(decoded.deviceId));
+    const authDeviceSession = await authDeviceSessionsService.findDeviceById(decoded.deviceId);
 
-    if (!isAuthDeviceSessionExists) {
+    if (!authDeviceSession) {
+        res.sendStatus(HTTP_STATUS_CODES.UNAUTHORIZED_401);
+        return;
+    }
+
+    const isRefreshTokenVersionValid =
+        new Date(Number(decoded.iat) * 1000).toISOString() === authDeviceSession.issuedAt;
+
+    if (!isRefreshTokenVersionValid) {
         res.sendStatus(HTTP_STATUS_CODES.UNAUTHORIZED_401);
         return;
     }

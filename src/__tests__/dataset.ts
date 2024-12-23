@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb';
 import type { TDatabase } from '../database/mongoDB';
 import { add } from 'date-fns/add';
+import { generateUUID } from './test-helpers';
 
 const firstId = new ObjectId();
 const secondId = new ObjectId();
@@ -10,6 +11,11 @@ const fifthId = new ObjectId();
 const sixthId = new ObjectId();
 const seventhId = new ObjectId();
 const eighthId = new ObjectId();
+
+const firstDeviceId = generateUUID();
+const secondDeviceId = generateUUID();
+const thirdDeviceId = generateUUID();
+const fourthDeviceId = generateUUID();
 
 export const blogs: TDatabase.TBlog[] = [
     {
@@ -254,6 +260,45 @@ export const users: TDatabase.TUser[] = [
             expirationDate: new Date(),
         },
         revokedRefreshTokenList: [],
+    },
+];
+
+export const authDeviceSessions: TDatabase.TDevice[] = [
+    {
+        _id: firstId,
+        userId: firstId.toString(),
+        deviceId: firstDeviceId,
+        issuedAt: new Date().toISOString(),
+        deviceName: 'Chrome',
+        clientIp: '127.0.0.1',
+        expirationDateOfRefreshToken: add(new Date(), { hours: 7 }).toISOString(),
+    },
+    {
+        _id: secondId,
+        userId: firstId.toString(),
+        deviceId: secondDeviceId,
+        issuedAt: add(new Date(), { seconds: 20 }).toISOString(),
+        deviceName: 'Opera',
+        clientIp: '127.0.0.1',
+        expirationDateOfRefreshToken: add(new Date(), { hours: 7 }).toISOString(),
+    },
+    {
+        _id: thirdId,
+        userId: firstId.toString(),
+        deviceId: thirdDeviceId,
+        issuedAt: add(new Date(), { seconds: 30 }).toISOString(),
+        deviceName: 'Firefox',
+        clientIp: '127.0.0.1',
+        expirationDateOfRefreshToken: add(new Date(), { hours: 7 }).toISOString(),
+    },
+    {
+        _id: fourthId,
+        userId: firstId.toString(),
+        deviceId: fourthDeviceId,
+        issuedAt: add(new Date(), { seconds: 40 }).toISOString(),
+        deviceName: 'Safari',
+        clientIp: '127.0.0.1',
+        expirationDateOfRefreshToken: add(new Date(), { hours: 7 }).toISOString(),
     },
 ];
 

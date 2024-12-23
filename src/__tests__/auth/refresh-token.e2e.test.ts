@@ -1,18 +1,37 @@
 import { dbHelper, request, generateRefreshTokenCookie } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
-import { users, fakeRequestedObjectId } from '../dataset';
+import { users, fakeRequestedObjectId, authDeviceSessions } from '../dataset';
+import { LoginInputModel } from '../../features/auth/models/LoginInputModel';
 
 describe('refresh token', () => {
+    let loginRefreshTokenCookie: { Cookie: string[] };
+
     beforeAll(async () => {
         await dbHelper.connectToDb();
     });
 
     beforeEach(async () => {
-        await dbHelper.setDb({ users });
+        await dbHelper.setDb({ authDeviceSessions, users });
+
+        // create login refresh token using login credentials
+        const credentialsWithLogin: LoginInputModel = {
+            loginOrEmail: 'george',
+            password: '12345678',
+        };
+
+        const loginResponse = await request
+            .post(`${ROUTES.AUTH}${ROUTES.LOGIN}`)
+            .send(credentialsWithLogin)
+            .expect(HTTP_STATUS_CODES.OK_200);
+
+        const loginRefreshTokenMatch = loginResponse.headers['set-cookie'][0].match(/refreshToken=([^;]+)/);
+        const loginRefreshToken = loginRefreshTokenMatch?.[1] as string;
+
+        loginRefreshTokenCookie = { Cookie: [`refreshToken=${loginRefreshToken}; Path=/; HttpOnly; Secure`] };
     });
 
     afterEach(async () => {
-        await dbHelper.resetCollections(['users']);
+        await dbHelper.resetCollections(['users', 'apiRateLimit', 'authDeviceSessions']);
     });
 
     afterAll(async () => {
@@ -23,7 +42,7 @@ describe('refresh token', () => {
     it('returns access token and refresh token if refresh token is valid', async () => {
         const response = await request
             .post(`${ROUTES.AUTH}${ROUTES.REFRESH_TOKEN}`)
-            .set(generateRefreshTokenCookie(users[0]._id.toString(), '7d'))
+            .set(loginRefreshTokenCookie)
             .expect(HTTP_STATUS_CODES.OK_200);
 
         expect(response.body.accessToken).toEqual(expect.any(String));
@@ -40,27 +59,55 @@ describe('refresh token', () => {
     it('returns 401 status code if refresh token is expired', async () => {
         await request
             .post(`${ROUTES.AUTH}${ROUTES.REFRESH_TOKEN}`)
-            .set(generateRefreshTokenCookie(users[0]._id.toString(), 0))
+            .set(
+                generateRefreshTokenCookie(
+                    { userId: users[0]._id.toString(), deviceId: authDeviceSessions[0].deviceId },
+                    0
+                )
+            )
             .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
     });
 
     it('returns 401 status code if there is no user with id from refresh token', async () => {
         await request
             .post(`${ROUTES.AUTH}${ROUTES.REFRESH_TOKEN}`)
-            .set(generateRefreshTokenCookie(fakeRequestedObjectId, '7d'))
+            .set(
+                generateRefreshTokenCookie(
+                    { userId: fakeRequestedObjectId, deviceId: authDeviceSessions[0].deviceId },
+                    '7d'
+                )
+            )
             .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
     });
 
     it('returns 401 status code if refresh token already been used', async () => {
-        const cookie = generateRefreshTokenCookie(users[0]._id.toString(), '7d');
+        const credentialsWithLogin: LoginInputModel = {
+            loginOrEmail: 'george',
+            password: '12345678',
+        };
 
-        await request.post(`${ROUTES.AUTH}${ROUTES.REFRESH_TOKEN}`).set(cookie).expect(HTTP_STATUS_CODES.OK_200);
+        const loginResponse = await request
+            .post(`${ROUTES.AUTH}${ROUTES.LOGIN}`)
+            .send(credentialsWithLogin)
+            .expect(HTTP_STATUS_CODES.OK_200);
 
-        const { body } = await request
+        const loginRefreshTokenMatch = loginResponse.headers['set-cookie'][0].match(/refreshToken=([^;]+)/);
+        const loginRefreshToken = loginRefreshTokenMatch?.[1];
+
+        await new Promise((res, rej) => {
+            setTimeout(() => {
+                res({});
+            }, 1000);
+        });
+
+        await request
             .post(`${ROUTES.AUTH}${ROUTES.REFRESH_TOKEN}`)
-            .set(cookie)
-            .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
+            .set({ Cookie: [`refreshToken=${loginRefreshToken}; Path=/; HttpOnly; Secure`] })
+            .expect(HTTP_STATUS_CODES.OK_200);
 
-        expect(body.errorsMessages).toEqual([{ field: '', message: 'Token already been used' }]);
+        await request
+            .post(`${ROUTES.AUTH}${ROUTES.REFRESH_TOKEN}`)
+            .set({ Cookie: [`refreshToken=${loginRefreshToken}; Path=/; HttpOnly; Secure`] })
+            .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
     });
 });

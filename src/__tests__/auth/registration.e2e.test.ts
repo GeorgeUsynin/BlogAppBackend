@@ -20,7 +20,7 @@ describe('registration', () => {
     });
 
     afterEach(async () => {
-        await dbHelper.resetCollections(['users']);
+        await dbHelper.resetCollections(['users', 'apiRateLimit']);
     });
 
     afterAll(async () => {

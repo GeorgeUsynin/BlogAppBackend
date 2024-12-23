@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import { randomUUID } from 'crypto';
 import jwt from 'jsonwebtoken';
 import { app } from '../app';
 import { agent } from 'supertest';
@@ -14,6 +14,8 @@ import {
     db,
     usersCollection,
     commentsCollection,
+    apiRateLimitCollection,
+    authDeviceSessionsCollection,
 } from '../database/mongoDB';
 
 export const request = agent(app);
@@ -411,18 +413,23 @@ export const createErrorMessages = (values: TValues) => {
 
 export const getAuthorization = () => ({ Authorization: `Basic ${SETTINGS.CODE_AUTH_BASE64}` });
 
-export const generateToken = (userId: string, expiresIn: string | number) => {
-    const token = jwt.sign({ userId }, process.env.JWT_SECRET as string, { expiresIn });
+export const generateToken = (payload: TPayload, expiresIn: string | number) => {
+    const token = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn });
     return token;
 };
 
 export const getBearerAuthorization = (userId: string) => {
-    const token = generateToken(userId, '7d');
+    const token = generateToken({ userId }, '7d');
     return { Authorization: `Bearer ${token}` };
 };
 
-export const generateRefreshTokenCookie = (userId: string, expiresIn: string | number) => {
-    return { Cookie: [`refreshToken=${generateToken(userId, expiresIn)}; Path=/; HttpOnly; Secure`] };
+type TPayload = {
+    userId?: string;
+    deviceId?: string;
+};
+
+export const generateRefreshTokenCookie = (payload: TPayload, expiresIn: string | number) => {
+    return { Cookie: [`refreshToken=${generateToken(payload, expiresIn)}; Path=/; HttpOnly; Secure`] };
 };
 
 type TDataset = {
@@ -430,6 +437,8 @@ type TDataset = {
     posts?: TDatabase.TPost[];
     users?: TDatabase.TUser[];
     comments?: TDatabase.TComment[];
+    apiRateLimit?: TDatabase.TAPIRateLimit[];
+    authDeviceSessions?: TDatabase.TDevice[];
 };
 
 export const dbHelper = {
@@ -452,6 +461,12 @@ export const dbHelper = {
         if (collectionNames.includes('users')) {
             await usersCollection.deleteMany({});
         }
+        if (collectionNames.includes('apiRateLimit')) {
+            await apiRateLimitCollection.deleteMany({});
+        }
+        if (collectionNames.includes('authDeviceSessions')) {
+            await authDeviceSessionsCollection.deleteMany({});
+        }
     },
     setDb: async (dataset: TDataset) => {
         if (dataset.users?.length) {
@@ -468,6 +483,10 @@ export const dbHelper = {
 
         if (dataset.comments?.length) {
             await commentsCollection.insertMany(dataset.comments);
+        }
+
+        if (dataset.authDeviceSessions?.length) {
+            await authDeviceSessionsCollection.insertMany(dataset.authDeviceSessions);
         }
     },
     dropDb: async () => {
@@ -490,3 +509,5 @@ export const dbHelper = {
         return allComments[arrayIndex];
     },
 };
+
+export const generateUUID = () => randomUUID();

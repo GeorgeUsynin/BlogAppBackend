@@ -62,7 +62,14 @@ describe('logout', () => {
             .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
     });
 
-    it('returns 401 status code if there is no user with id from refresh token', async () => {
+    it('returns 401 status code if there is no userId in payload from refresh token', async () => {
+        await request
+            .post(`${ROUTES.AUTH}${ROUTES.LOGOUT}`)
+            .set(generateRefreshTokenCookie({ deviceId: authDeviceSessions[0].deviceId }, '7d'))
+            .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
+    });
+
+    it('returns 401 status code if there is no user with id from refresh token in collection', async () => {
         await request
             .post(`${ROUTES.AUTH}${ROUTES.LOGOUT}`)
             .set(
@@ -74,20 +81,21 @@ describe('logout', () => {
             .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
     });
 
+    it('returns 401 status code if there is no deviceId in payload from refresh token', async () => {
+        await request
+            .post(`${ROUTES.AUTH}${ROUTES.LOGOUT}`)
+            .set(generateRefreshTokenCookie({ userId: users[0]._id.toString() }, '7d'))
+            .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
+    });
+
+    it('returns 401 status code if there is no device with id from refresh token in collection', async () => {
+        await request
+            .post(`${ROUTES.AUTH}${ROUTES.LOGOUT}`)
+            .set(generateRefreshTokenCookie({ userId: users[0]._id.toString(), deviceId: fakeRequestedObjectId }, '7d'))
+            .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
+    });
+
     it('returns 401 status code if refresh token already been used', async () => {
-        const credentialsWithLogin: LoginInputModel = {
-            loginOrEmail: 'george',
-            password: '12345678',
-        };
-
-        const loginResponse = await request
-            .post(`${ROUTES.AUTH}${ROUTES.LOGIN}`)
-            .send(credentialsWithLogin)
-            .expect(HTTP_STATUS_CODES.OK_200);
-
-        const loginRefreshTokenMatch = loginResponse.headers['set-cookie'][0].match(/refreshToken=([^;]+)/);
-        const loginRefreshToken = loginRefreshTokenMatch?.[1];
-
         await new Promise((res, rej) => {
             setTimeout(() => {
                 res({});
@@ -96,12 +104,12 @@ describe('logout', () => {
 
         await request
             .post(`${ROUTES.AUTH}${ROUTES.REFRESH_TOKEN}`)
-            .set({ Cookie: [`refreshToken=${loginRefreshToken}; Path=/; HttpOnly; Secure`] })
+            .set(loginRefreshTokenCookie)
             .expect(HTTP_STATUS_CODES.OK_200);
 
         await request
             .post(`${ROUTES.AUTH}${ROUTES.LOGOUT}`)
-            .set({ Cookie: [`refreshToken=${loginRefreshToken}; Path=/; HttpOnly; Secure`] })
+            .set(loginRefreshTokenCookie)
             .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
     });
 });

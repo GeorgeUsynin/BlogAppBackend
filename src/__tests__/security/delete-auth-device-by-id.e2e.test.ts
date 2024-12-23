@@ -1,9 +1,10 @@
-import { dbHelper, request, generateRefreshTokenCookie } from '../test-helpers';
+import { dbHelper, generateRefreshTokenCookie, request } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
-import { users, fakeRequestedObjectId, authDeviceSessions } from '../dataset';
+import { users, authDeviceSessions, fakeRequestedObjectId } from '../dataset';
 import { LoginInputModel } from '../../features/auth/models/LoginInputModel';
+import { AuthDeviceViewModel } from '../../features/security/models';
 
-describe('refresh token', () => {
+describe('delete auth device by id', () => {
     let loginRefreshTokenCookie: { Cookie: string[] };
 
     beforeAll(async () => {
@@ -39,45 +40,40 @@ describe('refresh token', () => {
         await dbHelper.closeConnection();
     });
 
-    it('returns access token and refresh token if refresh token is valid', async () => {
-        const response = await request
-            .post(`${ROUTES.AUTH}${ROUTES.REFRESH_TOKEN}`)
+    it('deletes auth device by id', async () => {
+        const { body }: { body: AuthDeviceViewModel[] } = await request
+            .get(`${ROUTES.SECURITY}${ROUTES.DEVICES}`)
             .set(loginRefreshTokenCookie)
             .expect(HTTP_STATUS_CODES.OK_200);
 
-        expect(response.body.accessToken).toEqual(expect.any(String));
-        expect(response.headers['set-cookie']).toBeDefined();
-        expect(response.headers['set-cookie'][0]).toContain('refreshToken');
-        expect(response.headers['set-cookie'][0]).toContain('HttpOnly');
-        expect(response.headers['set-cookie'][0]).toContain('Secure');
-    });
+        const deviceIdToDelete = body[0].deviceId;
 
-    it('returns 401 status code if refresh token is not set', async () => {
-        await request.post(`${ROUTES.AUTH}${ROUTES.REFRESH_TOKEN}`).expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
-    });
-
-    it('returns 401 status code if refresh token is expired', async () => {
         await request
-            .post(`${ROUTES.AUTH}${ROUTES.REFRESH_TOKEN}`)
-            .set(
-                generateRefreshTokenCookie(
-                    { userId: users[0]._id.toString(), deviceId: authDeviceSessions[0].deviceId },
-                    0
-                )
-            )
-            .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
+            .delete(`${ROUTES.SECURITY}${ROUTES.DEVICES}/${deviceIdToDelete}`)
+            .set(loginRefreshTokenCookie)
+            .expect(HTTP_STATUS_CODES.NO_CONTENT_204);
+
+        const { body: devices }: { body: AuthDeviceViewModel[] } = await request
+            .get(`${ROUTES.SECURITY}${ROUTES.DEVICES}`)
+            .set(loginRefreshTokenCookie)
+            .expect(HTTP_STATUS_CODES.OK_200);
+
+        expect(devices.length).toBe(4);
+        devices.forEach(device => {
+            expect(device.deviceId).not.toBe(deviceIdToDelete);
+        });
     });
 
     it('returns 401 status code if there is no userId in payload from refresh token', async () => {
         await request
-            .post(`${ROUTES.AUTH}${ROUTES.REFRESH_TOKEN}`)
+            .delete(`${ROUTES.SECURITY}${ROUTES.DEVICES}/${authDeviceSessions[0].deviceId}`)
             .set(generateRefreshTokenCookie({ deviceId: authDeviceSessions[0].deviceId }, '7d'))
             .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
     });
 
     it('returns 401 status code if there is no user with id from refresh token in collection', async () => {
         await request
-            .post(`${ROUTES.AUTH}${ROUTES.REFRESH_TOKEN}`)
+            .delete(`${ROUTES.SECURITY}${ROUTES.DEVICES}/${authDeviceSessions[0].deviceId}`)
             .set(
                 generateRefreshTokenCookie(
                     { userId: fakeRequestedObjectId, deviceId: authDeviceSessions[0].deviceId },
@@ -89,14 +85,14 @@ describe('refresh token', () => {
 
     it('returns 401 status code if there is no deviceId in payload from refresh token', async () => {
         await request
-            .post(`${ROUTES.AUTH}${ROUTES.REFRESH_TOKEN}`)
+            .delete(`${ROUTES.SECURITY}${ROUTES.DEVICES}/${authDeviceSessions[0].deviceId}`)
             .set(generateRefreshTokenCookie({ userId: users[0]._id.toString() }, '7d'))
             .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
     });
 
     it('returns 401 status code if there is no device with id from refresh token in collection', async () => {
         await request
-            .post(`${ROUTES.AUTH}${ROUTES.REFRESH_TOKEN}`)
+            .delete(`${ROUTES.SECURITY}${ROUTES.DEVICES}/${authDeviceSessions[0].deviceId}`)
             .set(generateRefreshTokenCookie({ userId: users[0]._id.toString(), deviceId: fakeRequestedObjectId }, '7d'))
             .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
     });
@@ -114,8 +110,40 @@ describe('refresh token', () => {
             .expect(HTTP_STATUS_CODES.OK_200);
 
         await request
-            .post(`${ROUTES.AUTH}${ROUTES.REFRESH_TOKEN}`)
+            .delete(`${ROUTES.SECURITY}${ROUTES.DEVICES}/${authDeviceSessions[0].deviceId}`)
             .set(loginRefreshTokenCookie)
             .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
+    });
+
+    it('returns 404 status code if device not found', async () => {
+        await request
+            .delete(`${ROUTES.SECURITY}${ROUTES.DEVICES}/${fakeRequestedObjectId}`)
+            .set(loginRefreshTokenCookie)
+            .expect(HTTP_STATUS_CODES.NOT_FOUND_404);
+    });
+
+    it('returns 403 status code if try to delete the deviceId of other user', async () => {
+        const credentialsWithLogin: LoginInputModel = {
+            loginOrEmail: 'natasha',
+            password: '12345678',
+        };
+
+        const natashaLoginResponse = await request
+            .post(`${ROUTES.AUTH}${ROUTES.LOGIN}`)
+            .send(credentialsWithLogin)
+            .expect(HTTP_STATUS_CODES.OK_200);
+
+        const natashaLoginRefreshTokenMatch =
+            natashaLoginResponse.headers['set-cookie'][0].match(/refreshToken=([^;]+)/);
+        const natashaLoginRefreshToken = natashaLoginRefreshTokenMatch?.[1] as string;
+
+        const natashaLoginRefreshTokenCookie = {
+            Cookie: [`refreshToken=${natashaLoginRefreshToken}; Path=/; HttpOnly; Secure`],
+        };
+
+        await request
+            .delete(`${ROUTES.SECURITY}${ROUTES.DEVICES}/${authDeviceSessions[0].deviceId}`)
+            .set(natashaLoginRefreshTokenCookie)
+            .expect(HTTP_STATUS_CODES.FORBIDDEN_403);
     });
 });

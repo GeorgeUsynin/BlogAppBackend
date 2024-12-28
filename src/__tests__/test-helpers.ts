@@ -16,7 +16,7 @@ import {
     commentsCollection,
     apiRateLimitCollection,
     authDeviceSessionsCollection,
-} from '../database/mongoDB';
+} from '../database';
 
 export const request = agent(app);
 

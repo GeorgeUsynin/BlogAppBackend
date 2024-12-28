@@ -1,6 +1,6 @@
 import { postsRepository } from '../repository';
 import type { CreateUpdatePostInputModel } from '../models';
-import type { TDatabase } from '../../../database/mongoDB';
+import type { TDatabase } from '../../../database';
 import { blogsRepository } from '../../blogs/repository';
 import { APIError } from '../../shared/helpers';
 import { ResultStatus } from '../../../constants';

@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { commentsCollection, TDatabase } from '../../../database/mongoDB';
+import { commentsCollection, TDatabase } from '../../../database';
 import { CreateUpdateCommentInputModel } from '../models';
 
 export const commentsRepository = {

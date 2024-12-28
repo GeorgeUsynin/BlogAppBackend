@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { blogsCollection, TDatabase } from '../../../database/mongoDB';
+import { blogsCollection, TDatabase } from '../../../database';
 import type { CreateUpdateBlogInputModel } from '../models';
 
 export const blogsRepository = {

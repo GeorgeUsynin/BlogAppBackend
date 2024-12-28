@@ -1,4 +1,4 @@
-import { TDatabase } from '../../../database/mongoDB';
+import { TDatabase } from '../../../database';
 import { APIError } from '../helpers';
 import { ResultStatus } from '../../../constants';
 import { APIRateLimitRepository } from '../repository';

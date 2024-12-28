@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { usersCollection, TDatabase } from '../../../database/mongoDB';
+import { usersCollection, TDatabase } from '../../../database';
 
 export const usersRepository = {
     async findUserByLoginOrEmail(login: string, email: string) {

@@ -1,5 +1,5 @@
 import { AuthDeviceViewModel } from '../models';
-import { authDeviceSessionsCollection, TDatabase } from '../../../database/mongoDB';
+import { authDeviceSessionsCollection, TDatabase } from '../../../database';
 
 export const authDeviceSessionsQueryRepository = {
     async getAllUserAuthDeviceSessions(userId: string) {

@@ -1,5 +1,5 @@
 import { CreateUpdateCommentInputModel } from '../models';
-import { TDatabase } from '../../../database/mongoDB';
+import { TDatabase } from '../../../database';
 import { postsRepository } from '../../posts/repository';
 import { usersRepository } from '../../users/repository';
 import { commentsRepository } from '../repository';

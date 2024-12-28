@@ -4,7 +4,7 @@ import { randomUUID } from 'crypto';
 import { usersRepository } from '../../users/repository';
 import { RegistrationInputModel } from '../models';
 import { ResultStatus } from '../../../constants';
-import { TDatabase } from '../../../database/mongoDB';
+import { TDatabase } from '../../../database';
 import { emailManager } from '../../shared/managers/emailManager';
 import { APIError } from '../../shared/helpers';
 import { SETTINGS } from '../../../app-settings';

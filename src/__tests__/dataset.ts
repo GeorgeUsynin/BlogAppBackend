@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import type { TDatabase } from '../database/mongoDB';
+import type { TDatabase } from '../database';
 import { add } from 'date-fns/add';
 import { generateUUID } from './test-helpers';
 

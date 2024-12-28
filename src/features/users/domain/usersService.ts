@@ -6,7 +6,7 @@ import { randomUUID } from 'crypto';
 import { add } from 'date-fns';
 import { APIError } from '../../shared/helpers';
 import type { CreateUserInputModel } from '../models';
-import type { TDatabase } from '../../../database/mongoDB';
+import type { TDatabase } from '../../../database';
 
 export const usersService = {
     async createUser(payload: CreateUserInputModel) {

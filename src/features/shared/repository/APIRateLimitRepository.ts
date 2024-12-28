@@ -1,5 +1,5 @@
 import { SETTINGS } from '../../../app-settings';
-import { apiRateLimitCollection, TDatabase } from '../../../database/mongoDB';
+import { apiRateLimitCollection, TDatabase } from '../../../database';
 
 export const APIRateLimitRepository = {
     async addAPIRequest(payload: TDatabase.TAPIRateLimit) {

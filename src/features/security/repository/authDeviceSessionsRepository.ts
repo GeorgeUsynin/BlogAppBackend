@@ -1,4 +1,4 @@
-import { TDatabase, authDeviceSessionsCollection } from '../../../database/mongoDB';
+import { TDatabase, authDeviceSessionsCollection } from '../../../database';
 
 type TUpdateAuthDeviceSessionParams = {
     deviceId: string;

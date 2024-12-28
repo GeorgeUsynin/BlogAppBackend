@@ -1,7 +1,8 @@
 import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
 import { QueryParamsBlogModel, BlogsPaginatedViewModel, BlogItemViewModel } from '../models';
-import { blogsCollection, TDatabase } from '../../../database';
-import { WithId, ObjectId } from 'mongodb';
+import { BlogModel } from '../domain';
+import { TDatabase } from '../../../database';
+import { WithId } from 'mongodb';
 import { ResultStatus } from '../../../constants';
 
 type TFilter = ReturnType<typeof createFilter>;
@@ -28,7 +29,7 @@ export const queryBlogsRepository = {
         });
     },
     async getBlogById(blogId: string) {
-        const blog = await blogsCollection.findOne({ _id: new ObjectId(blogId) });
+        const blog = await BlogModel.findById(blogId).lean();
 
         if (!blog) {
             throw new APIError({
@@ -40,19 +41,18 @@ export const queryBlogsRepository = {
         return this.mapMongoBlogToViewModel(blog);
     },
     async getTotalCountOfFilteredBlogs(filter: TFilter) {
-        return blogsCollection.countDocuments(filter);
+        return BlogModel.countDocuments(filter);
     },
     async findBlogItemsByParamsAndFilter(
         params: ReturnType<typeof normalizeQueryParams>,
         filter: ReturnType<typeof createFilter>
     ) {
         const { sortBy, sortDirection, pageNumber, pageSize } = params;
-        return blogsCollection
-            .find(filter)
+        return BlogModel.find(filter)
             .sort({ [sortBy]: sortDirection === 'desc' ? -1 : 1 })
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
-            .toArray();
+            .lean();
     },
     mapMongoBlogToViewModel(blog: WithId<TDatabase.TBlog>): BlogItemViewModel {
         return {

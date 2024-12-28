@@ -7,7 +7,6 @@ import { capitalizeFirstLetter } from '../helpers';
 import { SETTINGS } from '../app-settings';
 import {
     TDatabase,
-    blogsCollection,
     postsCollection,
     connectToDatabase,
     client,
@@ -17,6 +16,8 @@ import {
     apiRateLimitCollection,
     authDeviceSessionsCollection,
 } from '../database';
+import { BlogModel } from '../features/blogs/domain';
+import mongoose from 'mongoose';
 
 export const request = agent(app);
 
@@ -447,10 +448,11 @@ export const dbHelper = {
     },
     closeConnection: async () => {
         await client.close();
+        await mongoose.disconnect();
     },
     resetCollections: async (collectionNames: (keyof TDataset)[]) => {
         if (collectionNames.includes('blogs')) {
-            await blogsCollection.deleteMany({});
+            await BlogModel.deleteMany({});
         }
         if (collectionNames.includes('posts')) {
             await postsCollection.deleteMany({});
@@ -474,7 +476,7 @@ export const dbHelper = {
         }
 
         if (dataset.blogs?.length) {
-            await blogsCollection.insertMany(dataset.blogs);
+            await BlogModel.insertMany(dataset.blogs);
         }
 
         if (dataset.posts?.length) {
@@ -493,7 +495,7 @@ export const dbHelper = {
         await db.dropDatabase();
     },
     getBlog: async (arrayIndex: number) => {
-        const allBlogs = await blogsCollection.find({}).toArray();
+        const allBlogs = await BlogModel.find({}).lean();
         return allBlogs[arrayIndex];
     },
     getPost: async (arrayIndex: number) => {

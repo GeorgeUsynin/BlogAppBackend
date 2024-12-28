@@ -13,9 +13,9 @@ export const createBlogHandler = async (
     try {
         const payload = req.body;
 
-        const { insertedId } = await blogsService.createBlog(payload);
+        const { id } = await blogsService.createBlog(payload);
 
-        const newBlog = await queryBlogsRepository.getBlogById(insertedId.toString());
+        const newBlog = await queryBlogsRepository.getBlogById(id);
 
         res.status(HTTP_STATUS_CODES.CREATED_201).send(newBlog);
     } catch (err) {

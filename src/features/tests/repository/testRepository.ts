@@ -1,15 +1,15 @@
 import {
-    blogsCollection,
     postsCollection,
     usersCollection,
     commentsCollection,
     apiRateLimitCollection,
     authDeviceSessionsCollection,
 } from '../../../database/mongoDB';
+import { BlogModel } from '../../blogs/domain';
 
 export const testRepository = {
     async deleteAllData() {
-        await blogsCollection.deleteMany({});
+        await BlogModel.deleteMany({});
         await postsCollection.deleteMany({});
         await commentsCollection.deleteMany({});
         await usersCollection.deleteMany({});

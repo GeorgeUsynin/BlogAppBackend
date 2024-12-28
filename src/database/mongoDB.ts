@@ -1,10 +1,10 @@
+import mongoose, { mongo } from 'mongoose';
 import { MongoClient, Db, Collection } from 'mongodb';
 import { SETTINGS } from '../app-settings';
 import { TDatabase } from './types';
 
 export let client: MongoClient;
 export let db: Db;
-export let blogsCollection: Collection<TDatabase.TBlog>;
 export let postsCollection: Collection<TDatabase.TPost>;
 export let commentsCollection: Collection<TDatabase.TComment>;
 export let usersCollection: Collection<TDatabase.TUser>;
@@ -21,10 +21,10 @@ export const connectToDatabase = async (url: string, dbName: string) => {
 
     try {
         await client.connect();
+        await mongoose.connect(url, { dbName });
 
         //Db and collections creation
         db = client.db(dbName);
-        blogsCollection = db.collection(SETTINGS.DB_COLLECTIONS.blogsCollection);
         postsCollection = db.collection(SETTINGS.DB_COLLECTIONS.postsCollection);
         commentsCollection = db.collection(SETTINGS.DB_COLLECTIONS.commentsCollection);
         usersCollection = db.collection(SETTINGS.DB_COLLECTIONS.usersCollection);
@@ -36,6 +36,7 @@ export const connectToDatabase = async (url: string, dbName: string) => {
         return true;
     } catch (err) {
         await client.close();
+        await mongoose.disconnect();
         console.dir(err);
         return false;
     }

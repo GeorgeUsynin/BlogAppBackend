@@ -1,19 +1,17 @@
-import { ObjectId } from 'mongodb';
-import { blogsCollection, TDatabase } from '../../../database';
+import { BlogModel, TBlog } from '../domain';
 import type { CreateUpdateBlogInputModel } from '../models';
 
 export const blogsRepository = {
     async getBlogById(id: string) {
-        return blogsCollection.findOne({ _id: new ObjectId(id) });
+        return BlogModel.findById(id).lean();
     },
-    async createBlog(newBlog: Omit<TDatabase.TBlog, '_id'>) {
-        //@ts-expect-error since ObjectId will be created by MongoDB we don't need to pass it
-        return blogsCollection.insertOne(newBlog);
+    async createBlog(newBlog: TBlog) {
+        return BlogModel.create(newBlog);
     },
     async updateBlog(id: string, payload: CreateUpdateBlogInputModel) {
-        return blogsCollection.findOneAndUpdate({ _id: new ObjectId(id) }, { $set: { ...payload } });
+        return BlogModel.findByIdAndUpdate(id, payload, { lean: true, new: true });
     },
     async deleteBlogById(id: string) {
-        return blogsCollection.findOneAndDelete({ _id: new ObjectId(id) });
+        return BlogModel.findByIdAndDelete(id).lean();
     },
 };

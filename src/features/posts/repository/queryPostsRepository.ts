@@ -1,8 +1,9 @@
+import { ObjectId, WithId } from 'mongodb';
 import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
 import { QueryParamsPostModel, PostsPaginatedViewModel, PostItemViewModel } from '../models';
-import { blogsCollection, postsCollection, TDatabase } from '../../../database';
-import { ObjectId, WithId } from 'mongodb';
+import { postsCollection, TDatabase } from '../../../database';
 import { ResultStatus } from '../../../constants';
+import { BlogModel } from '../../blogs/domain';
 
 type TFilter = ReturnType<typeof createFilter>;
 type TValues = {
@@ -28,7 +29,7 @@ export const queryPostsRepository = {
         });
     },
     async getAllPostsByBlogId(queryParams: QueryParamsPostModel, blogId: string) {
-        const blog = await blogsCollection.findOne({ _id: new ObjectId(blogId) });
+        const blog = await BlogModel.findById(blogId).lean();
 
         if (!blog) {
             throw new APIError({

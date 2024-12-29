@@ -1,12 +1,12 @@
 import { blogsRepository } from '../repository';
 import type { CreateUpdateBlogInputModel } from '../models';
-import type { TDatabase } from '../../../database';
 import { APIError } from '../../shared/helpers';
 import { ResultStatus } from '../../../constants';
+import { TBlog } from './blogEntity';
 
 export const blogsService = {
     async createBlog(payload: CreateUpdateBlogInputModel) {
-        const newBlog: Omit<TDatabase.TBlog, '_id'> = {
+        const newBlog: TBlog = {
             ...payload,
             createdAt: new Date().toISOString(),
             isMembership: false,

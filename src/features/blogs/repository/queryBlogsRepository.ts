@@ -1,13 +1,13 @@
 import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
 import { QueryParamsBlogModel, BlogsPaginatedViewModel, BlogItemViewModel } from '../models';
-import { BlogModel } from '../domain';
+import { BlogModel, TBlog } from '../domain';
 import { TDatabase } from '../../../database';
 import { WithId } from 'mongodb';
 import { ResultStatus } from '../../../constants';
 
 type TFilter = ReturnType<typeof createFilter>;
 type TValues = {
-    items: WithId<TDatabase.TBlog>[];
+    items: WithId<TBlog>[];
     totalCount: number;
     pageNumber: number;
     pageSize: number;
@@ -54,7 +54,7 @@ export const queryBlogsRepository = {
             .limit(pageSize)
             .lean();
     },
-    mapMongoBlogToViewModel(blog: WithId<TDatabase.TBlog>): BlogItemViewModel {
+    mapMongoBlogToViewModel(blog: WithId<TBlog>): BlogItemViewModel {
         return {
             id: blog._id.toString(),
             description: blog.description,

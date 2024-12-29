@@ -1,8 +1,9 @@
 import { ObjectId, WithId } from 'mongodb';
 import { QueryParamsCommentModel, CommentItemViewModel, CommentsPaginatedViewModel } from '../models';
-import { commentsCollection, postsCollection, TDatabase } from '../../../database';
+import { commentsCollection, TDatabase } from '../../../database';
 import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
 import { ResultStatus } from '../../../constants';
+import { PostModel } from '../../posts/domain';
 
 type TFilter = ReturnType<typeof createFilter>;
 type TValues = {
@@ -14,7 +15,7 @@ type TValues = {
 
 export const queryCommentsRepository = {
     async getAllCommentsByPostId(queryParams: QueryParamsCommentModel, postId: string) {
-        const post = await postsCollection.findOne({ _id: new ObjectId(postId) });
+        const post = await PostModel.findById(postId);
 
         if (!post) {
             throw new APIError({

@@ -1,13 +1,14 @@
 import { ObjectId, WithId } from 'mongodb';
 import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
 import { QueryParamsPostModel, PostsPaginatedViewModel, PostItemViewModel } from '../models';
-import { postsCollection, TDatabase } from '../../../database';
+import { TDatabase } from '../../../database';
 import { ResultStatus } from '../../../constants';
 import { BlogModel } from '../../blogs/domain';
+import { PostModel, TPost } from '../domain';
 
 type TFilter = ReturnType<typeof createFilter>;
 type TValues = {
-    items: WithId<TDatabase.TPost>[];
+    items: WithId<TPost>[];
     totalCount: number;
     pageNumber: number;
     pageSize: number;
@@ -41,7 +42,7 @@ export const queryPostsRepository = {
         return this.getAllPosts(queryParams, blogId);
     },
     async getPostById(postId: string) {
-        const post = await postsCollection.findOne({ _id: new ObjectId(postId) });
+        const post = await PostModel.findById(postId);
 
         if (!post) {
             throw new APIError({
@@ -53,21 +54,20 @@ export const queryPostsRepository = {
         return this.mapMongoPostToViewModel(post);
     },
     async findTotalCountOfFilteredPosts(filter: TFilter) {
-        return postsCollection.countDocuments(filter);
+        return PostModel.countDocuments(filter);
     },
     async findPostItemsByParamsAndFilter(
         params: ReturnType<typeof normalizeQueryParams>,
         filter: ReturnType<typeof createFilter>
     ) {
         const { sortBy, sortDirection, pageNumber, pageSize } = params;
-        return postsCollection
-            .find(filter)
+        return PostModel.find(filter)
             .sort({ [sortBy]: sortDirection === 'desc' ? -1 : 1 })
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
-            .toArray();
+            .lean();
     },
-    mapMongoPostToViewModel(post: WithId<TDatabase.TPost>): PostItemViewModel {
+    mapMongoPostToViewModel(post: WithId<TPost>): PostItemViewModel {
         return {
             id: post._id.toString(),
             title: post.title,

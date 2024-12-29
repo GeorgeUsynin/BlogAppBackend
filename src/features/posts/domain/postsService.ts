@@ -1,15 +1,15 @@
 import { postsRepository } from '../repository';
 import type { CreateUpdatePostInputModel } from '../models';
-import type { TDatabase } from '../../../database';
 import { blogsRepository } from '../../blogs/repository';
 import { APIError } from '../../shared/helpers';
 import { ResultStatus } from '../../../constants';
+import { TPost } from './postEntity';
 
 export const postsService = {
     async createPost(payload: CreateUpdatePostInputModel) {
         const blogId = payload.blogId;
         const linkedBlogName = (await blogsRepository.getBlogById(blogId))?.name as string;
-        const newPost: Omit<TDatabase.TPost, '_id'> = {
+        const newPost: TPost = {
             ...payload,
             blogName: linkedBlogName,
             createdAt: new Date().toISOString(),

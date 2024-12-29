@@ -1,5 +1,6 @@
-import { randomUUID } from 'crypto';
+import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
+import { randomUUID } from 'crypto';
 import { app } from '../app';
 import { agent } from 'supertest';
 import { ErrorViewModel } from '../features/shared/types';
@@ -7,7 +8,6 @@ import { capitalizeFirstLetter } from '../helpers';
 import { SETTINGS } from '../app-settings';
 import {
     TDatabase,
-    postsCollection,
     connectToDatabase,
     client,
     db,
@@ -16,8 +16,8 @@ import {
     apiRateLimitCollection,
     authDeviceSessionsCollection,
 } from '../database';
-import { BlogModel } from '../features/blogs/domain';
-import mongoose from 'mongoose';
+import { BlogModel, TBlog } from '../features/blogs/domain';
+import { PostModel, TPost } from '../features/posts/domain';
 
 export const request = agent(app);
 
@@ -434,8 +434,8 @@ export const generateRefreshTokenCookie = (payload: TPayload, expiresIn: string 
 };
 
 type TDataset = {
-    blogs?: TDatabase.TBlog[];
-    posts?: TDatabase.TPost[];
+    blogs?: TBlog[];
+    posts?: TPost[];
     users?: TDatabase.TUser[];
     comments?: TDatabase.TComment[];
     apiRateLimit?: TDatabase.TAPIRateLimit[];
@@ -455,7 +455,7 @@ export const dbHelper = {
             await BlogModel.deleteMany({});
         }
         if (collectionNames.includes('posts')) {
-            await postsCollection.deleteMany({});
+            await PostModel.deleteMany({});
         }
         if (collectionNames.includes('comments')) {
             await commentsCollection.deleteMany({});
@@ -480,7 +480,7 @@ export const dbHelper = {
         }
 
         if (dataset.posts?.length) {
-            await postsCollection.insertMany(dataset.posts);
+            await PostModel.insertMany(dataset.posts);
         }
 
         if (dataset.comments?.length) {
@@ -499,7 +499,7 @@ export const dbHelper = {
         return allBlogs[arrayIndex];
     },
     getPost: async (arrayIndex: number) => {
-        const allPosts = await postsCollection.find({}).toArray();
+        const allPosts = await PostModel.find({}).lean();
         return allPosts[arrayIndex];
     },
     getUser: async (arrayIndex: number) => {

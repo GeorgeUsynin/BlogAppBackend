@@ -13,8 +13,8 @@ export const createPostHandler = async (
     try {
         const payload = req.body;
 
-        const { insertedId } = await postsService.createPost(payload);
-        const newPost = await queryPostsRepository.getPostById(insertedId.toString());
+        const { id } = await postsService.createPost(payload);
+        const newPost = await queryPostsRepository.getPostById(id);
 
         res.status(HTTP_STATUS_CODES.CREATED_201).send(newPost);
     } catch (err) {

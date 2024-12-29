@@ -5,7 +5,6 @@ import { TDatabase } from './types';
 
 export let client: MongoClient;
 export let db: Db;
-export let postsCollection: Collection<TDatabase.TPost>;
 export let commentsCollection: Collection<TDatabase.TComment>;
 export let usersCollection: Collection<TDatabase.TUser>;
 export let authDeviceSessionsCollection: Collection<TDatabase.TDevice>;
@@ -25,7 +24,6 @@ export const connectToDatabase = async (url: string, dbName: string) => {
 
         //Db and collections creation
         db = client.db(dbName);
-        postsCollection = db.collection(SETTINGS.DB_COLLECTIONS.postsCollection);
         commentsCollection = db.collection(SETTINGS.DB_COLLECTIONS.commentsCollection);
         usersCollection = db.collection(SETTINGS.DB_COLLECTIONS.usersCollection);
         authDeviceSessionsCollection = db.collection(SETTINGS.DB_COLLECTIONS.authDeviceSessionsCollection);

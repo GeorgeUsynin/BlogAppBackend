@@ -1,7 +1,9 @@
-import { ObjectId } from 'mongodb';
+import { ObjectId, WithId } from 'mongodb';
 import type { TDatabase } from '../database';
 import { add } from 'date-fns/add';
 import { generateUUID } from './test-helpers';
+import { TBlog } from '../features/blogs/domain';
+import { TPost } from '../features/posts/domain';
 
 const firstId = new ObjectId();
 const secondId = new ObjectId();
@@ -17,7 +19,7 @@ const secondDeviceId = generateUUID();
 const thirdDeviceId = generateUUID();
 const fourthDeviceId = generateUUID();
 
-export const blogs: TDatabase.TBlog[] = [
+export const blogs: WithId<TBlog>[] = [
     {
         _id: firstId,
         name: 'Eco Lifestyle',
@@ -56,7 +58,7 @@ export const blogs: TDatabase.TBlog[] = [
     },
 ];
 
-export const posts: TDatabase.TPost[] = [
+export const posts: WithId<TPost>[] = [
     {
         _id: firstId,
         title: 'Easy Green Home Tips',

@@ -18,6 +18,8 @@ export enum ROUTES {
     LOGIN = '/login',
     LOGOUT = '/logout',
     ME = '/me',
+    NEW_PASSWORD = '/new-password',
+    PASSWORD_RECOVERY = '/password-recovery',
     POSTS = '/posts',
     REFRESH_TOKEN = '/refresh-token',
     REGISTRATION = '/registration',

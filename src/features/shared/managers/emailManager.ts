@@ -10,4 +10,13 @@ export const emailManager = {
 
         return emailAdapter.sendEmail(email, subject, message);
     },
+    sendPasswordRecoveryEmail(email: string, code: string) {
+        const subject = 'Password Recovery';
+        const message = `<h1>Password recovery</h1>
+        <p>To finish password recovery please follow the link below:
+        <a href='https://somesite.com/password-recovery?recoveryCode=${code}'>recovery password</a>
+        </p>`;
+
+        return emailAdapter.sendEmail(email, subject, message);
+    },
 };

@@ -4,8 +4,9 @@ import { ResultStatus } from '../../../constants';
 import { randomUUID } from 'crypto';
 import { add } from 'date-fns';
 import { APIError } from '../../shared/helpers';
-import type { CreateUserInputModel } from '../models';
 import { TUser } from './userEntity';
+import { SETTINGS } from '../../../app-settings';
+import type { CreateUserInputModel } from '../models';
 
 export const usersService = {
     async createUser(payload: CreateUserInputModel) {
@@ -18,7 +19,7 @@ export const usersService = {
             });
         }
 
-        const hash = await bcrypt.hash(payload.password, 10);
+        const hash = await bcrypt.hash(payload.password, SETTINGS.HASH_ROUNDS);
 
         const newUser: TUser = {
             ...payload,
@@ -28,6 +29,10 @@ export const usersService = {
                 isConfirmed: true,
                 confirmationCode: randomUUID(),
                 expirationDate: add(new Date(), { hours: 1 }),
+            },
+            passwordRecovery: {
+                expirationDate: null,
+                recoveryCode: null,
             },
         };
 

@@ -13,8 +13,11 @@ export const usersRepository = {
     async findUserById(id: string) {
         return UserModel.findById(id);
     },
-    async findUserByConfirmationCode(code: string) {
+    async findUserByConfirmationEmailCode(code: string) {
         return UserModel.findOne({ 'emailConfirmation.confirmationCode': code });
+    },
+    async findUserByRecoveryPasswordCode(code: string) {
+        return UserModel.findOne({ 'passwordRecovery.recoveryCode': code });
     },
     async updateUserEmailConfirmation(id: string, isConfirmed: boolean) {
         return UserModel.findByIdAndUpdate(id, { 'emailConfirmation.isConfirmed': isConfirmed });
@@ -24,6 +27,15 @@ export const usersRepository = {
             'emailConfirmation.confirmationCode': code,
             'emailConfirmation.expirationDate': expirationDate,
         });
+    },
+    async updateUserRecoveryPasswordCode(id: string, code: string, expirationDate: Date) {
+        return UserModel.findByIdAndUpdate(id, {
+            'passwordRecovery.recoveryCode': code,
+            'passwordRecovery.expirationDate': expirationDate,
+        });
+    },
+    async updatePasswordHash(id: string, passwordHash: string) {
+        return UserModel.findByIdAndUpdate(id, { passwordHash });
     },
     async createUser(newUser: TUser) {
         return UserModel.create(newUser);

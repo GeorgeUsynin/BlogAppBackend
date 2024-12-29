@@ -198,6 +198,10 @@ export const users: WithId<TUser>[] = [
             confirmationCode: '124365',
             expirationDate: add(new Date(), { hours: 1 }),
         },
+        passwordRecovery: {
+            expirationDate: null,
+            recoveryCode: null,
+        },
     },
     {
         _id: secondId,
@@ -209,6 +213,10 @@ export const users: WithId<TUser>[] = [
             isConfirmed: true,
             confirmationCode: '123465',
             expirationDate: add(new Date(), { hours: 1 }),
+        },
+        passwordRecovery: {
+            expirationDate: null,
+            recoveryCode: null,
         },
     },
     {
@@ -222,6 +230,10 @@ export const users: WithId<TUser>[] = [
             confirmationCode: '214365',
             expirationDate: add(new Date(), { hours: 1 }),
         },
+        passwordRecovery: {
+            expirationDate: null,
+            recoveryCode: null,
+        },
     },
     {
         _id: fourthId,
@@ -233,6 +245,10 @@ export const users: WithId<TUser>[] = [
             isConfirmed: true,
             confirmationCode: '321456',
             expirationDate: add(new Date(), { hours: 1 }),
+        },
+        passwordRecovery: {
+            expirationDate: null,
+            recoveryCode: null,
         },
     },
     {
@@ -246,6 +262,10 @@ export const users: WithId<TUser>[] = [
             confirmationCode: '654321',
             expirationDate: add(new Date(), { hours: 1 }),
         },
+        passwordRecovery: {
+            expirationDate: null,
+            recoveryCode: null,
+        },
     },
     {
         _id: sixthId,
@@ -257,6 +277,10 @@ export const users: WithId<TUser>[] = [
             isConfirmed: false,
             confirmationCode: '111111',
             expirationDate: new Date(),
+        },
+        passwordRecovery: {
+            expirationDate: null,
+            recoveryCode: null,
         },
     },
 ];

@@ -5,6 +5,8 @@ import { RegistrationInputModel } from './RegistrationInputModel';
 import { RegistrationEmailResendingInputModel } from './RegistrationEmailResendingInputModel';
 import { RegistrationConfirmationInputModel } from './RegistrationConfirmationInputModel';
 import { RefreshTokenViewModel } from './RefreshTokenViewModel';
+import { PasswordRecoveryInputModel } from './PasswordRecoveryInputModel';
+import { NewPasswordInputModel } from './NewPasswordInputModel';
 
 export {
     LoginInputModel,
@@ -14,4 +16,6 @@ export {
     RegistrationEmailResendingInputModel,
     RegistrationConfirmationInputModel,
     RefreshTokenViewModel,
+    PasswordRecoveryInputModel,
+    NewPasswordInputModel,
 };

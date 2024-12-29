@@ -26,7 +26,7 @@ export const registrationService = {
         }
 
         // hash password
-        const hash = await bcrypt.hash(password, 10);
+        const hash = await bcrypt.hash(password, SETTINGS.HASH_ROUNDS);
 
         // create new user
         const newUser: TUser = {
@@ -39,6 +39,10 @@ export const registrationService = {
                 confirmationCode: randomUUID(),
                 expirationDate: add(new Date(), { hours: SETTINGS.CONFIRMATION_CODE_EXPIRATION_TIME_IN_HOURS }),
             },
+            passwordRecovery: {
+                expirationDate: null,
+                recoveryCode: null,
+            },
         };
 
         await usersRepository.createUser(newUser);
@@ -47,7 +51,7 @@ export const registrationService = {
         emailManager.sendPasswordConfirmationEmail(email, newUser.emailConfirmation.confirmationCode);
     },
     async registrationConfirmation(code: string) {
-        const user = await usersRepository.findUserByConfirmationCode(code);
+        const user = await usersRepository.findUserByConfirmationEmailCode(code);
 
         if (!user) {
             throw new APIError({

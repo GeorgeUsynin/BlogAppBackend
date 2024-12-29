@@ -12,6 +12,8 @@ import {
     registrationValidationSchema,
     registrationConfirmationValidationSchema,
     registrationEmailResendingValidationSchema,
+    passwordRecoveryValidationSchema,
+    newPasswordValidationSchema,
 } from '../validation';
 import { ROUTES } from '../../../constants';
 
@@ -33,6 +35,16 @@ const registrationEmailResendingValidators = [
     checkSchema(registrationEmailResendingValidationSchema, ['body']),
     errorMiddleware,
 ];
+const passwordRecoveryValidators = [
+    apiRateLimitMiddleware,
+    checkSchema(passwordRecoveryValidationSchema, ['body']),
+    errorMiddleware,
+];
+const newPasswordValidators = [
+    apiRateLimitMiddleware,
+    checkSchema(newPasswordValidationSchema, ['body']),
+    errorMiddleware,
+];
 
 const AuthController = {
     login: RequestHandler.loginHandler,
@@ -42,6 +54,8 @@ const AuthController = {
     registration: RequestHandler.registrationHandler,
     registrationConfirmation: RequestHandler.registrationConfirmationHandler,
     registrationEmailResending: RequestHandler.registrationEmailResendingHandler,
+    passwordRecovery: RequestHandler.passwordRecoveryHandler,
+    newPassword: RequestHandler.newPasswordHandler,
 };
 
 AuthRouter.get(ROUTES.ME, authBearerMiddleware, AuthController.me);
@@ -59,3 +73,5 @@ AuthRouter.post(
     ...registrationEmailResendingValidators,
     AuthController.registrationEmailResending
 );
+AuthRouter.post(ROUTES.PASSWORD_RECOVERY, ...passwordRecoveryValidators, AuthController.passwordRecovery);
+AuthRouter.post(ROUTES.NEW_PASSWORD, ...newPasswordValidators, AuthController.newPassword);

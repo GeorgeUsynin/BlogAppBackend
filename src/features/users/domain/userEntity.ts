@@ -14,6 +14,10 @@ export type TUser = {
         confirmationCode: string;
         expirationDate: Date;
     };
+    passwordRecovery: {
+        recoveryCode: string | null;
+        expirationDate: Date | null;
+    };
 };
 
 type TUserModel = Model<TUser>;
@@ -51,6 +55,10 @@ const userSchema = new Schema<TUser>({
         isConfirmed: { type: Boolean, required: true },
         confirmationCode: { type: String, required: true },
         expirationDate: { type: Date, required: true },
+    },
+    passwordRecovery: {
+        recoveryCode: { type: String, default: null },
+        expirationDate: { type: Date, default: null },
     },
 });
 

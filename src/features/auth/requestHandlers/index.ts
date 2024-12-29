@@ -5,6 +5,8 @@ import { registrationHandler } from './registrationHandler';
 import { registrationConfirmationHandler } from './registrationConfirmationHandler';
 import { registrationEmailResendingHandler } from './registrationEmailResendingHandler';
 import { refreshTokenHandler } from './refreshTokenHandler';
+import { passwordRecoveryHandler } from './passwordRecoveryHandler';
+import { newPasswordHandler } from './newPasswordHandler';
 
 export {
     loginHandler,
@@ -14,4 +16,6 @@ export {
     registrationConfirmationHandler,
     registrationEmailResendingHandler,
     refreshTokenHandler,
+    passwordRecoveryHandler,
+    newPasswordHandler,
 };

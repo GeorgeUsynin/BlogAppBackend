@@ -4,6 +4,7 @@ import { add } from 'date-fns/add';
 import { generateUUID } from './test-helpers';
 import { TBlog } from '../features/blogs/domain';
 import { TPost } from '../features/posts/domain';
+import { TComment } from '../features/comments/domain';
 
 const firstId = new ObjectId();
 const secondId = new ObjectId();
@@ -141,7 +142,7 @@ export const posts: WithId<TPost>[] = [
     },
 ];
 
-export const comments: TDatabase.TComment[] = [
+export const comments: WithId<TComment>[] = [
     {
         _id: new ObjectId(),
         postId: firstId.toString(),

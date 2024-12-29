@@ -12,12 +12,12 @@ import {
     client,
     db,
     usersCollection,
-    commentsCollection,
     apiRateLimitCollection,
     authDeviceSessionsCollection,
 } from '../database';
 import { BlogModel, TBlog } from '../features/blogs/domain';
 import { PostModel, TPost } from '../features/posts/domain';
+import { CommentModel, TComment } from '../features/comments/domain';
 
 export const request = agent(app);
 
@@ -437,7 +437,7 @@ type TDataset = {
     blogs?: TBlog[];
     posts?: TPost[];
     users?: TDatabase.TUser[];
-    comments?: TDatabase.TComment[];
+    comments?: TComment[];
     apiRateLimit?: TDatabase.TAPIRateLimit[];
     authDeviceSessions?: TDatabase.TDevice[];
 };
@@ -458,7 +458,7 @@ export const dbHelper = {
             await PostModel.deleteMany({});
         }
         if (collectionNames.includes('comments')) {
-            await commentsCollection.deleteMany({});
+            await CommentModel.deleteMany({});
         }
         if (collectionNames.includes('users')) {
             await usersCollection.deleteMany({});
@@ -484,7 +484,7 @@ export const dbHelper = {
         }
 
         if (dataset.comments?.length) {
-            await commentsCollection.insertMany(dataset.comments);
+            await CommentModel.insertMany(dataset.comments);
         }
 
         if (dataset.authDeviceSessions?.length) {
@@ -507,7 +507,7 @@ export const dbHelper = {
         return allUsers[arrayIndex];
     },
     getComment: async (arrayIndex: number) => {
-        const allComments = await commentsCollection.find({}).toArray();
+        const allComments = await CommentModel.find({}).lean();
         return allComments[arrayIndex];
     },
 };

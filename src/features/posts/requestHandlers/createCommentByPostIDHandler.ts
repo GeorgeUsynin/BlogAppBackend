@@ -16,9 +16,9 @@ export const createCommentByPostIDHandler = async (
         const payload = req.body;
         const userId = req.userId;
 
-        const { insertedId } = await commentsService.createCommentByPostId(payload, postId, userId!);
+        const { id } = await commentsService.createCommentByPostId(payload, postId, userId!);
 
-        const newComment = await queryCommentsRepository.getCommentById(insertedId.toString());
+        const newComment = await queryCommentsRepository.getCommentById(id);
 
         res.status(HTTP_STATUS_CODES.CREATED_201).send(newComment);
     } catch (err) {

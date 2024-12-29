@@ -1,13 +1,14 @@
 import { ObjectId, WithId } from 'mongodb';
 import { QueryParamsCommentModel, CommentItemViewModel, CommentsPaginatedViewModel } from '../models';
-import { commentsCollection, TDatabase } from '../../../database';
+import { TDatabase } from '../../../database';
 import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
 import { ResultStatus } from '../../../constants';
 import { PostModel } from '../../posts/domain';
+import { CommentModel, TComment } from '../domain';
 
 type TFilter = ReturnType<typeof createFilter>;
 type TValues = {
-    items: WithId<TDatabase.TComment>[];
+    items: WithId<TComment>[];
     totalCount: number;
     pageNumber: number;
     pageSize: number;
@@ -38,7 +39,7 @@ export const queryCommentsRepository = {
         });
     },
     async getCommentById(commentId: string) {
-        const comment = await commentsCollection.findOne({ _id: new ObjectId(commentId) });
+        const comment = await CommentModel.findById(commentId);
 
         if (!comment) {
             throw new APIError({
@@ -50,21 +51,20 @@ export const queryCommentsRepository = {
         return this.mapMongoCommentToViewModel(comment);
     },
     async findTotalCountOfFilteredComments(filter: TFilter) {
-        return commentsCollection.countDocuments(filter);
+        return CommentModel.countDocuments(filter);
     },
     async findCommentItemsByParamsAndFilter(
         params: ReturnType<typeof normalizeQueryParams>,
         filter: ReturnType<typeof createFilter>
     ) {
         const { sortBy, sortDirection, pageNumber, pageSize } = params;
-        return commentsCollection
-            .find(filter)
+        return CommentModel.find(filter)
             .sort({ [sortBy]: sortDirection === 'desc' ? -1 : 1 })
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
-            .toArray();
+            .lean();
     },
-    mapMongoCommentToViewModel(comment: WithId<TDatabase.TComment>): CommentItemViewModel {
+    mapMongoCommentToViewModel(comment: WithId<TComment>): CommentItemViewModel {
         return {
             id: comment._id.toString(),
             content: comment.content,

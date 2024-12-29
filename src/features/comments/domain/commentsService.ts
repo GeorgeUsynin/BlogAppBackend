@@ -5,6 +5,7 @@ import { usersRepository } from '../../users/repository';
 import { commentsRepository } from '../repository';
 import { ResultStatus } from '../../../constants';
 import { APIError } from '../../shared/helpers';
+import { TComment } from './commentEntity';
 
 export const commentsService = {
     async createCommentByPostId(payload: CreateUpdateCommentInputModel, postId: string, userId: string) {
@@ -19,7 +20,7 @@ export const commentsService = {
 
         const user = await usersRepository.findUserById(userId);
 
-        const newComment: Omit<TDatabase.TComment, '_id'> = {
+        const newComment: TComment = {
             ...payload,
             postId,
             commentatorInfo: {

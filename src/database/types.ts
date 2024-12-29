@@ -1,17 +1,6 @@
 import { ObjectId } from 'mongodb';
 
 export namespace TDatabase {
-    export type TComment = {
-        _id: ObjectId;
-        content: string;
-        commentatorInfo: {
-            userId: string;
-            userLogin: string;
-        };
-        createdAt: string;
-        postId: string;
-    };
-
     export type TUser = {
         _id: ObjectId;
         login: string;

@@ -1,11 +1,10 @@
-import mongoose, { mongo } from 'mongoose';
+import mongoose from 'mongoose';
 import { MongoClient, Db, Collection } from 'mongodb';
 import { SETTINGS } from '../app-settings';
 import { TDatabase } from './types';
 
 export let client: MongoClient;
 export let db: Db;
-export let commentsCollection: Collection<TDatabase.TComment>;
 export let usersCollection: Collection<TDatabase.TUser>;
 export let authDeviceSessionsCollection: Collection<TDatabase.TDevice>;
 export let apiRateLimitCollection: Collection<TDatabase.TAPIRateLimit>;
@@ -24,7 +23,6 @@ export const connectToDatabase = async (url: string, dbName: string) => {
 
         //Db and collections creation
         db = client.db(dbName);
-        commentsCollection = db.collection(SETTINGS.DB_COLLECTIONS.commentsCollection);
         usersCollection = db.collection(SETTINGS.DB_COLLECTIONS.usersCollection);
         authDeviceSessionsCollection = db.collection(SETTINGS.DB_COLLECTIONS.authDeviceSessionsCollection);
         apiRateLimitCollection = db.collection(SETTINGS.DB_COLLECTIONS.apiRateLimitCollection);

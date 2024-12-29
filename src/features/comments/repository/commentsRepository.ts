@@ -1,19 +1,18 @@
 import { ObjectId } from 'mongodb';
-import { commentsCollection, TDatabase } from '../../../database';
 import { CreateUpdateCommentInputModel } from '../models';
+import { CommentModel, TComment } from '../domain';
 
 export const commentsRepository = {
-    async createComment(newComment: Omit<TDatabase.TComment, '_id'>) {
-        //@ts-expect-error since ObjectId will be created by MongoDB we don't need to pass it
-        return commentsCollection.insertOne(newComment);
+    async createComment(newComment: TComment) {
+        return CommentModel.create(newComment);
     },
     async findCommentById(id: string) {
-        return commentsCollection.findOne({ _id: new ObjectId(id) });
+        return CommentModel.findById(id);
     },
     async updateComment(id: string, payload: CreateUpdateCommentInputModel) {
-        return commentsCollection.findOneAndUpdate({ _id: new ObjectId(id) }, { $set: { ...payload } });
+        return CommentModel.findByIdAndUpdate(id, payload, { lean: true, new: true });
     },
     async deleteCommentById(id: string) {
-        return commentsCollection.findOneAndDelete({ _id: new ObjectId(id) });
+        return CommentModel.findByIdAndDelete(id);
     },
 };

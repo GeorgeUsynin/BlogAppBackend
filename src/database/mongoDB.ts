@@ -5,7 +5,6 @@ import { TDatabase } from './types';
 
 export let client: MongoClient;
 export let db: Db;
-export let authDeviceSessionsCollection: Collection<TDatabase.TDevice>;
 export let apiRateLimitCollection: Collection<TDatabase.TAPIRateLimit>;
 
 export const connectToDatabase = async (url: string, dbName: string) => {
@@ -22,7 +21,6 @@ export const connectToDatabase = async (url: string, dbName: string) => {
 
         //Db and collections creation
         db = client.db(dbName);
-        authDeviceSessionsCollection = db.collection(SETTINGS.DB_COLLECTIONS.authDeviceSessionsCollection);
         apiRateLimitCollection = db.collection(SETTINGS.DB_COLLECTIONS.apiRateLimitCollection);
 
         await db.command({ ping: 1 });

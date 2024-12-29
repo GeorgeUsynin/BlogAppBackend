@@ -6,6 +6,7 @@ import { TBlog } from '../features/blogs/domain';
 import { TPost } from '../features/posts/domain';
 import { TComment } from '../features/comments/domain';
 import { TUser } from '../features/users/domain';
+import { TDevice } from '../features/security/domain';
 
 const firstId = new ObjectId();
 const secondId = new ObjectId();
@@ -261,7 +262,7 @@ export const users: WithId<TUser>[] = [
     },
 ];
 
-export const authDeviceSessions: TDatabase.TDevice[] = [
+export const authDeviceSessions: WithId<TDevice>[] = [
     {
         _id: firstId,
         userId: firstId.toString(),

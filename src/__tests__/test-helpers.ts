@@ -6,18 +6,12 @@ import { agent } from 'supertest';
 import { ErrorViewModel } from '../features/shared/types';
 import { capitalizeFirstLetter } from '../helpers';
 import { SETTINGS } from '../app-settings';
-import {
-    TDatabase,
-    connectToDatabase,
-    client,
-    db,
-    apiRateLimitCollection,
-    authDeviceSessionsCollection,
-} from '../database';
+import { TDatabase, connectToDatabase, client, db, apiRateLimitCollection } from '../database';
 import { BlogModel, TBlog } from '../features/blogs/domain';
 import { PostModel, TPost } from '../features/posts/domain';
 import { CommentModel, TComment } from '../features/comments/domain';
 import { TUser, UserModel } from '../features/users/domain';
+import { AuthDeviceSessionModel, TDevice } from '../features/security/domain';
 
 export const request = agent(app);
 
@@ -439,7 +433,7 @@ type TDataset = {
     users?: TUser[];
     comments?: TComment[];
     apiRateLimit?: TDatabase.TAPIRateLimit[];
-    authDeviceSessions?: TDatabase.TDevice[];
+    authDeviceSessions?: TDevice[];
 };
 
 export const dbHelper = {
@@ -467,7 +461,7 @@ export const dbHelper = {
             await apiRateLimitCollection.deleteMany({});
         }
         if (collectionNames.includes('authDeviceSessions')) {
-            await authDeviceSessionsCollection.deleteMany({});
+            await AuthDeviceSessionModel.deleteMany({});
         }
     },
     setDb: async (dataset: TDataset) => {
@@ -488,7 +482,7 @@ export const dbHelper = {
         }
 
         if (dataset.authDeviceSessions?.length) {
-            await authDeviceSessionsCollection.insertMany(dataset.authDeviceSessions);
+            await AuthDeviceSessionModel.insertMany(dataset.authDeviceSessions);
         }
     },
     dropDb: async () => {
@@ -513,3 +507,9 @@ export const dbHelper = {
 };
 
 export const generateUUID = () => randomUUID();
+
+export const delay = async (ms: number) => {
+    return new Promise((res, rej) => {
+        setTimeout(() => res({}), ms);
+    });
+};

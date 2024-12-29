@@ -1,4 +1,4 @@
-import { TDatabase, authDeviceSessionsCollection } from '../../../database';
+import { AuthDeviceSessionModel, TDevice } from '../domain';
 
 type TUpdateAuthDeviceSessionParams = {
     deviceId: string;
@@ -7,25 +7,21 @@ type TUpdateAuthDeviceSessionParams = {
 };
 
 export const authDeviceSessionsRepository = {
-    async addAuthDeviceSession(deviceSession: Omit<TDatabase.TDevice, '_id'>) {
-        //@ts-expect-error since ObjectId will be created by MongoDB we don't need to pass it
-        return authDeviceSessionsCollection.insertOne(deviceSession);
+    async addAuthDeviceSession(deviceSession: TDevice) {
+        return AuthDeviceSessionModel.create(deviceSession);
     },
     async findDeviceById(deviceId: string) {
-        return authDeviceSessionsCollection.findOne({ deviceId });
+        return AuthDeviceSessionModel.findOne({ deviceId });
     },
     async updateAuthDeviceSession(payload: TUpdateAuthDeviceSessionParams) {
         const { deviceId, expirationDateOfRefreshToken, issuedAt } = payload;
 
-        return authDeviceSessionsCollection.findOneAndUpdate(
-            { deviceId },
-            { $set: { issuedAt, expirationDateOfRefreshToken } }
-        );
+        return AuthDeviceSessionModel.findOneAndUpdate({ deviceId }, { issuedAt, expirationDateOfRefreshToken });
     },
     async terminateAllOtherUserDeviceSessions(userId: string, deviceId: string) {
-        return authDeviceSessionsCollection.deleteMany({ $and: [{ userId }, { deviceId: { $ne: deviceId } }] });
+        return AuthDeviceSessionModel.deleteMany({ $and: [{ userId }, { deviceId: { $ne: deviceId } }] });
     },
     async deleteDeviceSessionById(deviceId: string) {
-        return authDeviceSessionsCollection.deleteOne({ deviceId });
+        return AuthDeviceSessionModel.findOneAndDelete({ deviceId });
     },
 };

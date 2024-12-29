@@ -1,4 +1,4 @@
-import { createErrorMessages, dbHelper, request } from '../test-helpers';
+import { createErrorMessages, dbHelper, delay, request } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 import { RegistrationConfirmationInputModel } from '../../features/auth/models';
 import { users } from '../dataset';
@@ -106,7 +106,7 @@ describe('registration confirmation', () => {
             code: '111111',
         };
 
-        await new Promise(resolve => setTimeout(resolve, 600));
+        await delay(600);
 
         const { body } = await request
             .post(`${ROUTES.AUTH}${ROUTES.REGISTRATION_CONFIRMATION}`)

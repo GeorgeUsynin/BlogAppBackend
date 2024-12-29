@@ -1,13 +1,13 @@
 import { AuthDeviceViewModel } from '../models';
-import { authDeviceSessionsCollection, TDatabase } from '../../../database';
+import { AuthDeviceSessionModel, TDevice } from '../domain';
 
 export const authDeviceSessionsQueryRepository = {
     async getAllUserAuthDeviceSessions(userId: string) {
-        const deviceSessions = await authDeviceSessionsCollection.find({ userId }).toArray();
+        const deviceSessions = await AuthDeviceSessionModel.find({ userId }).lean();
 
         return deviceSessions.map(this.mapUserAuthDeviceSessionsToViewModel);
     },
-    mapUserAuthDeviceSessionsToViewModel(deviceSession: TDatabase.TDevice): AuthDeviceViewModel {
+    mapUserAuthDeviceSessionsToViewModel(deviceSession: TDevice): AuthDeviceViewModel {
         return {
             deviceId: deviceSession.deviceId,
             ip: deviceSession.clientIp,

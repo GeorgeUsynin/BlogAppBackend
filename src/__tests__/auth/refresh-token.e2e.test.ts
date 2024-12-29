@@ -1,4 +1,4 @@
-import { dbHelper, request, generateRefreshTokenCookie } from '../test-helpers';
+import { dbHelper, request, generateRefreshTokenCookie, delay } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 import { users, fakeRequestedObjectId, authDeviceSessions } from '../dataset';
 import { LoginInputModel } from '../../features/auth/models/LoginInputModel';
@@ -102,11 +102,7 @@ describe('refresh token', () => {
     });
 
     it('returns 401 status code if refresh token already been used', async () => {
-        await new Promise((res, rej) => {
-            setTimeout(() => {
-                res({});
-            }, 1000);
-        });
+        await delay(1000);
 
         await request
             .post(`${ROUTES.AUTH}${ROUTES.REFRESH_TOKEN}`)

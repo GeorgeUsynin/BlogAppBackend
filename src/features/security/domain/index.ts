@@ -1,3 +1,2 @@
-import { authDeviceSessionsService } from './authDeviceSessionsService';
-
-export { authDeviceSessionsService };
+export * from './authDeviceSessionsService';
+export * from './authDeviceSessionEntity';

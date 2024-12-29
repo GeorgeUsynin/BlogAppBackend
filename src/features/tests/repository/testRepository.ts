@@ -1,7 +1,8 @@
-import { apiRateLimitCollection, authDeviceSessionsCollection } from '../../../database/mongoDB';
+import { apiRateLimitCollection } from '../../../database/mongoDB';
 import { BlogModel } from '../../blogs/domain';
 import { CommentModel } from '../../comments/domain';
 import { PostModel } from '../../posts/domain';
+import { AuthDeviceSessionModel } from '../../security/domain';
 import { UserModel } from '../../users/domain';
 
 export const testRepository = {
@@ -11,6 +12,6 @@ export const testRepository = {
         await CommentModel.deleteMany({});
         await UserModel.deleteMany({});
         await apiRateLimitCollection.deleteMany({});
-        await authDeviceSessionsCollection.deleteMany({});
+        await AuthDeviceSessionModel.deleteMany({});
     },
 };

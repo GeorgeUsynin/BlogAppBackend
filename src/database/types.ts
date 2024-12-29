@@ -1,20 +1,6 @@
 import { ObjectId } from 'mongodb';
 
 export namespace TDatabase {
-    export type TUser = {
-        _id: ObjectId;
-        login: string;
-        email: string;
-        passwordHash: string;
-        createdAt: string;
-        emailConfirmation: {
-            isConfirmed: boolean;
-            confirmationCode: string;
-            expirationDate: Date;
-        };
-        revokedRefreshTokenList: string[];
-    };
-
     export type TDevice = {
         _id: ObjectId;
         userId: string;

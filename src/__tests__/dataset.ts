@@ -5,6 +5,7 @@ import { generateUUID } from './test-helpers';
 import { TBlog } from '../features/blogs/domain';
 import { TPost } from '../features/posts/domain';
 import { TComment } from '../features/comments/domain';
+import { TUser } from '../features/users/domain';
 
 const firstId = new ObjectId();
 const secondId = new ObjectId();
@@ -185,7 +186,7 @@ export const comments: WithId<TComment>[] = [
     },
 ];
 
-export const users: TDatabase.TUser[] = [
+export const users: WithId<TUser>[] = [
     {
         _id: firstId,
         login: 'george',
@@ -197,7 +198,6 @@ export const users: TDatabase.TUser[] = [
             confirmationCode: '124365',
             expirationDate: add(new Date(), { hours: 1 }),
         },
-        revokedRefreshTokenList: [],
     },
     {
         _id: secondId,
@@ -210,7 +210,6 @@ export const users: TDatabase.TUser[] = [
             confirmationCode: '123465',
             expirationDate: add(new Date(), { hours: 1 }),
         },
-        revokedRefreshTokenList: [],
     },
     {
         _id: thirdId,
@@ -223,7 +222,6 @@ export const users: TDatabase.TUser[] = [
             confirmationCode: '214365',
             expirationDate: add(new Date(), { hours: 1 }),
         },
-        revokedRefreshTokenList: [],
     },
     {
         _id: fourthId,
@@ -236,7 +234,6 @@ export const users: TDatabase.TUser[] = [
             confirmationCode: '321456',
             expirationDate: add(new Date(), { hours: 1 }),
         },
-        revokedRefreshTokenList: [],
     },
     {
         _id: fifthId,
@@ -249,7 +246,6 @@ export const users: TDatabase.TUser[] = [
             confirmationCode: '654321',
             expirationDate: add(new Date(), { hours: 1 }),
         },
-        revokedRefreshTokenList: [],
     },
     {
         _id: sixthId,
@@ -262,7 +258,6 @@ export const users: TDatabase.TUser[] = [
             confirmationCode: '111111',
             expirationDate: new Date(),
         },
-        revokedRefreshTokenList: [],
     },
 ];
 

@@ -1,39 +1,36 @@
 import { ObjectId } from 'mongodb';
-import { usersCollection, TDatabase } from '../../../database';
+import { TDatabase } from '../../../database';
+import { TUser, UserModel } from '../domain';
 
 export const usersRepository = {
     async findUserByLoginOrEmail(login: string, email: string) {
-        return usersCollection.findOne({ $or: [{ login }, { email }] });
+        return UserModel.findOne({ $or: [{ login }, { email }] });
     },
     async findUserByLogin(login: string) {
-        return usersCollection.findOne({ login });
+        return UserModel.findOne({ login });
     },
     async findUserByEmail(email: string) {
-        return usersCollection.findOne({ email });
+        return UserModel.findOne({ email });
     },
     async findUserById(id: string) {
-        return usersCollection.findOne({ _id: new ObjectId(id) });
+        return UserModel.findById(id);
     },
     async findUserByConfirmationCode(code: string) {
-        return usersCollection.findOne({ 'emailConfirmation.confirmationCode': code });
+        return UserModel.findOne({ 'emailConfirmation.confirmationCode': code });
     },
     async updateUserEmailConfirmation(id: string, isConfirmed: boolean) {
-        return usersCollection.updateOne(
-            { _id: new ObjectId(id) },
-            { $set: { 'emailConfirmation.isConfirmed': isConfirmed } }
-        );
+        return UserModel.findByIdAndUpdate(id, { 'emailConfirmation.isConfirmed': isConfirmed });
     },
     async updateUserEmailConfirmationCode(id: string, code: string, expirationDate: Date) {
-        return usersCollection.updateOne(
-            { _id: new ObjectId(id) },
-            { $set: { 'emailConfirmation.confirmationCode': code, 'emailConfirmation.expirationDate': expirationDate } }
-        );
+        return UserModel.findByIdAndUpdate(id, {
+            'emailConfirmation.confirmationCode': code,
+            'emailConfirmation.expirationDate': expirationDate,
+        });
     },
-    async createUser(newUser: Omit<TDatabase.TUser, '_id'>) {
-        //@ts-expect-error since ObjectId will be created by MongoDB we don't need to pass it
-        return usersCollection.insertOne(newUser);
+    async createUser(newUser: TUser) {
+        return UserModel.create(newUser);
     },
     async deleteUserById(id: string) {
-        return usersCollection.findOneAndDelete({ _id: new ObjectId(id) });
+        return UserModel.findByIdAndDelete(id);
     },
 };

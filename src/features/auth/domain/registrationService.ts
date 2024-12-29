@@ -8,6 +8,7 @@ import { TDatabase } from '../../../database';
 import { emailManager } from '../../shared/managers/emailManager';
 import { APIError } from '../../shared/helpers';
 import { SETTINGS } from '../../../app-settings';
+import { TUser } from '../../users/domain';
 
 export const registrationService = {
     async registerUser(payload: RegistrationInputModel) {
@@ -29,7 +30,7 @@ export const registrationService = {
         const hash = await bcrypt.hash(password, 10);
 
         // create new user
-        const newUser: Omit<TDatabase.TUser, '_id'> = {
+        const newUser: TUser = {
             login,
             email,
             passwordHash: hash,
@@ -39,7 +40,6 @@ export const registrationService = {
                 confirmationCode: randomUUID(),
                 expirationDate: add(new Date(), { hours: SETTINGS.CONFIRMATION_CODE_EXPIRATION_TIME_IN_HOURS }),
             },
-            revokedRefreshTokenList: [],
         };
 
         await usersRepository.createUser(newUser);

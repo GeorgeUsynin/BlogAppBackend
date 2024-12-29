@@ -1,12 +1,13 @@
 import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
 import { QueryParamsUserModel, UserItemViewModel, UsersPaginatedViewModel } from '../models';
-import { usersCollection, TDatabase } from '../../../database';
+import { TDatabase } from '../../../database';
 import { WithId, ObjectId } from 'mongodb';
 import { ResultStatus } from '../../../constants';
+import { TUser, UserModel } from '../domain';
 
 type TFilter = ReturnType<typeof createFilter>;
 type TValues = {
-    items: WithId<TDatabase.TUser>[];
+    items: WithId<TUser>[];
     totalCount: number;
     pageNumber: number;
     pageSize: number;
@@ -34,7 +35,7 @@ export const queryUsersRepository = {
         });
     },
     async getUserById(userId: string) {
-        const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+        const user = await UserModel.findById(userId);
 
         if (!user) {
             throw new APIError({ status: ResultStatus.NotFound, message: 'User not found' });
@@ -43,7 +44,7 @@ export const queryUsersRepository = {
         return this.mapMongoUserToViewModel(user);
     },
     async getUserInfoById(userId: string) {
-        const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+        const user = await UserModel.findById(userId);
 
         if (!user) {
             throw new APIError({
@@ -59,21 +60,20 @@ export const queryUsersRepository = {
         };
     },
     async getTotalCountOfFilteredUsers(filter: TFilter) {
-        return usersCollection.countDocuments(filter);
+        return UserModel.countDocuments(filter);
     },
     async findUserItemsByParamsAndFilter(
         params: ReturnType<typeof normalizeQueryParams>,
         filter: ReturnType<typeof createFilter>
     ) {
         const { sortBy, sortDirection, pageNumber, pageSize } = params;
-        return usersCollection
-            .find(filter)
+        return UserModel.find(filter)
             .sort({ [sortBy]: sortDirection === 'desc' ? -1 : 1 })
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
-            .toArray();
+            .lean();
     },
-    mapMongoUserToViewModel(user: WithId<TDatabase.TUser>): UserItemViewModel {
+    mapMongoUserToViewModel(user: WithId<TUser>): UserItemViewModel {
         return {
             id: user._id.toString(),
             login: user.login,

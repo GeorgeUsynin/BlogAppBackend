@@ -13,9 +13,9 @@ export const createUserHandler = async (
     try {
         const payload = req.body;
 
-        const { insertedId } = await usersService.createUser(payload);
+        const { id } = await usersService.createUser(payload);
 
-        const newUser = await queryUsersRepository.getUserById(insertedId.toString());
+        const newUser = await queryUsersRepository.getUserById(id);
 
         res.status(HTTP_STATUS_CODES.CREATED_201).send(newUser);
     } catch (err) {

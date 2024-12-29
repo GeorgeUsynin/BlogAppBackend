@@ -11,13 +11,13 @@ import {
     connectToDatabase,
     client,
     db,
-    usersCollection,
     apiRateLimitCollection,
     authDeviceSessionsCollection,
 } from '../database';
 import { BlogModel, TBlog } from '../features/blogs/domain';
 import { PostModel, TPost } from '../features/posts/domain';
 import { CommentModel, TComment } from '../features/comments/domain';
+import { TUser, UserModel } from '../features/users/domain';
 
 export const request = agent(app);
 
@@ -436,7 +436,7 @@ export const generateRefreshTokenCookie = (payload: TPayload, expiresIn: string 
 type TDataset = {
     blogs?: TBlog[];
     posts?: TPost[];
-    users?: TDatabase.TUser[];
+    users?: TUser[];
     comments?: TComment[];
     apiRateLimit?: TDatabase.TAPIRateLimit[];
     authDeviceSessions?: TDatabase.TDevice[];
@@ -461,7 +461,7 @@ export const dbHelper = {
             await CommentModel.deleteMany({});
         }
         if (collectionNames.includes('users')) {
-            await usersCollection.deleteMany({});
+            await UserModel.deleteMany({});
         }
         if (collectionNames.includes('apiRateLimit')) {
             await apiRateLimitCollection.deleteMany({});
@@ -472,7 +472,7 @@ export const dbHelper = {
     },
     setDb: async (dataset: TDataset) => {
         if (dataset.users?.length) {
-            await usersCollection.insertMany(dataset.users);
+            await UserModel.insertMany(dataset.users);
         }
 
         if (dataset.blogs?.length) {
@@ -503,7 +503,7 @@ export const dbHelper = {
         return allPosts[arrayIndex];
     },
     getUser: async (arrayIndex: number) => {
-        const allUsers = await usersCollection.find({}).toArray();
+        const allUsers = await UserModel.find({}).lean();
         return allUsers[arrayIndex];
     },
     getComment: async (arrayIndex: number) => {

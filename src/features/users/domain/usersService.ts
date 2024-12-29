@@ -7,6 +7,7 @@ import { add } from 'date-fns';
 import { APIError } from '../../shared/helpers';
 import type { CreateUserInputModel } from '../models';
 import type { TDatabase } from '../../../database';
+import { TUser } from './userEntity';
 
 export const usersService = {
     async createUser(payload: CreateUserInputModel) {
@@ -21,7 +22,7 @@ export const usersService = {
 
         const hash = await bcrypt.hash(payload.password, 10);
 
-        const newUser: Omit<TDatabase.TUser, '_id'> = {
+        const newUser: TUser = {
             ...payload,
             passwordHash: hash,
             createdAt: new Date().toISOString(),
@@ -30,7 +31,6 @@ export const usersService = {
                 confirmationCode: randomUUID(),
                 expirationDate: add(new Date(), { hours: 1 }),
             },
-            revokedRefreshTokenList: [],
         };
 
         return await usersRepository.createUser(newUser);

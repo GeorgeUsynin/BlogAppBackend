@@ -1,11 +1,11 @@
 import { SETTINGS } from '../../../app-settings';
-import { apiRateLimitCollection, TDatabase } from '../../../database';
+import { ApiRateLimitModel, TAPIRateLimit } from '../services';
 
 export const APIRateLimitRepository = {
-    async addAPIRequest(payload: TDatabase.TAPIRateLimit) {
-        return apiRateLimitCollection.insertOne(payload);
+    async addAPIRequest(payload: TAPIRateLimit) {
+        return ApiRateLimitModel.create(payload);
     },
-    async getTotalCountOfFilteredAPIRequests(payload: TDatabase.TAPIRateLimit) {
+    async getTotalCountOfFilteredAPIRequests(payload: TAPIRateLimit) {
         const { IP, URL, date } = payload;
 
         const filter = {
@@ -16,6 +16,6 @@ export const APIRateLimitRepository = {
             ],
         };
 
-        return apiRateLimitCollection.countDocuments(filter);
+        return ApiRateLimitModel.countDocuments(filter);
     },
 };

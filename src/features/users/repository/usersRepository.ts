@@ -1,5 +1,3 @@
-import { ObjectId } from 'mongodb';
-import { TDatabase } from '../../../database';
 import { TUser, UserModel } from '../domain';
 
 export const usersRepository = {

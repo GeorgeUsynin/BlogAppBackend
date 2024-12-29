@@ -1,7 +1,6 @@
-import { ObjectId, WithId } from 'mongodb';
+import { WithId } from 'mongodb';
 import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
 import { QueryParamsPostModel, PostsPaginatedViewModel, PostItemViewModel } from '../models';
-import { TDatabase } from '../../../database';
 import { ResultStatus } from '../../../constants';
 import { BlogModel } from '../../blogs/domain';
 import { PostModel, TPost } from '../domain';

@@ -1,6 +1,5 @@
 import { ObjectId, WithId } from 'mongodb';
 import { QueryParamsCommentModel, CommentItemViewModel, CommentsPaginatedViewModel } from '../models';
-import { TDatabase } from '../../../database';
 import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
 import { ResultStatus } from '../../../constants';
 import { PostModel } from '../../posts/domain';

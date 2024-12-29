@@ -1,12 +1,10 @@
 import bcrypt from 'bcrypt';
 import { usersRepository } from '../repository';
 import { ResultStatus } from '../../../constants';
-import { SETTINGS } from '../../../app-settings';
 import { randomUUID } from 'crypto';
 import { add } from 'date-fns';
 import { APIError } from '../../shared/helpers';
 import type { CreateUserInputModel } from '../models';
-import type { TDatabase } from '../../../database';
 import { TUser } from './userEntity';
 
 export const usersService = {

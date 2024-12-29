@@ -1,4 +1,3 @@
-import { JWTService } from './JWTService';
-import { APIRateLimitService } from './APIRateLimitService';
-
-export { APIRateLimitService, JWTService };
+export * from './JWTService';
+export * from './APIRateLimitService';
+export * from './APIRateLimitEntity';

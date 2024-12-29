@@ -1,35 +1,22 @@
-import mongoose from 'mongoose';
-import { MongoClient, Db, Collection } from 'mongodb';
-import { SETTINGS } from '../app-settings';
-import { TDatabase } from './types';
-
-export let client: MongoClient;
-export let db: Db;
-export let apiRateLimitCollection: Collection<TDatabase.TAPIRateLimit>;
+import mongoose, { STATES, Mongoose } from 'mongoose';
 
 export const connectToDatabase = async (url: string, dbName: string) => {
-    if (db) {
+    let connection: Mongoose | null = null;
+    let isConnected: boolean = false;
+
+    if (isConnected && connection) {
         console.log('Database was restored from cache!');
-        return true;
+        return { isConnected, connection };
     }
 
-    client = new MongoClient(url);
-
     try {
-        await client.connect();
-        await mongoose.connect(url, { dbName });
-
-        //Db and collections creation
-        db = client.db(dbName);
-        apiRateLimitCollection = db.collection(SETTINGS.DB_COLLECTIONS.apiRateLimitCollection);
-
-        await db.command({ ping: 1 });
-        console.log('Pinged your deployment. You successfully connected to MongoDB!');
-        return true;
+        const connection = await mongoose.connect(url, { dbName });
+        isConnected = connection.STATES.connected === STATES.connected;
+        return { isConnected, connection };
     } catch (err) {
-        await client.close();
         await mongoose.disconnect();
         console.dir(err);
-        return false;
+        isConnected = false;
+        return { isConnected, connection: null };
     }
 };

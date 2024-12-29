@@ -1,10 +1,10 @@
-import { TDatabase } from '../../../database';
 import { APIError } from '../helpers';
 import { ResultStatus } from '../../../constants';
 import { APIRateLimitRepository } from '../repository';
+import { TAPIRateLimit } from './APIRateLimitEntity';
 
 export const APIRateLimitService = {
-    async logApiRequest(payload: TDatabase.TAPIRateLimit) {
+    async logApiRequest(payload: TAPIRateLimit) {
         const totalCountOfFilteredAPIRequests = await APIRateLimitRepository.getTotalCountOfFilteredAPIRequests(
             payload
         );

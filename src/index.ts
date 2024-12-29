@@ -4,7 +4,7 @@ import { connectToDatabase } from './database/mongoDB';
 
 const runExpressLongLifeServer = () => {
     app.listen(SETTINGS.PORT, async () => {
-        const isConnected = await connectToDatabase(SETTINGS.MONGO_URL, SETTINGS.DB_NAME);
+        const { isConnected } = await connectToDatabase(SETTINGS.MONGO_URL, SETTINGS.DB_NAME);
 
         if (!isConnected) {
             console.log('MongoDB connection closed.');

@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import { Mongoose } from 'mongoose';
 import jwt from 'jsonwebtoken';
 import { randomUUID } from 'crypto';
 import { app } from '../app';
@@ -6,12 +6,13 @@ import { agent } from 'supertest';
 import { ErrorViewModel } from '../features/shared/types';
 import { capitalizeFirstLetter } from '../helpers';
 import { SETTINGS } from '../app-settings';
-import { TDatabase, connectToDatabase, client, db, apiRateLimitCollection } from '../database';
+import { connectToDatabase } from '../database';
 import { BlogModel, TBlog } from '../features/blogs/domain';
 import { PostModel, TPost } from '../features/posts/domain';
 import { CommentModel, TComment } from '../features/comments/domain';
 import { TUser, UserModel } from '../features/users/domain';
 import { AuthDeviceSessionModel, TDevice } from '../features/security/domain';
+import { ApiRateLimitModel, TAPIRateLimit } from '../features/shared/services';
 
 export const request = agent(app);
 
@@ -432,17 +433,19 @@ type TDataset = {
     posts?: TPost[];
     users?: TUser[];
     comments?: TComment[];
-    apiRateLimit?: TDatabase.TAPIRateLimit[];
+    apiRateLimit?: TAPIRateLimit[];
     authDeviceSessions?: TDevice[];
 };
 
+let mongooseConnection: Mongoose | null = null;
+
 export const dbHelper = {
     connectToDb: async () => {
-        await connectToDatabase(SETTINGS.MONGO_URL as string, 'guilds_test');
+        const { connection } = await connectToDatabase(SETTINGS.MONGO_URL as string, 'guilds_test');
+        mongooseConnection = connection;
     },
     closeConnection: async () => {
-        await client.close();
-        await mongoose.disconnect();
+        await mongooseConnection?.disconnect();
     },
     resetCollections: async (collectionNames: (keyof TDataset)[]) => {
         if (collectionNames.includes('blogs')) {
@@ -458,7 +461,7 @@ export const dbHelper = {
             await UserModel.deleteMany({});
         }
         if (collectionNames.includes('apiRateLimit')) {
-            await apiRateLimitCollection.deleteMany({});
+            await ApiRateLimitModel.deleteMany({});
         }
         if (collectionNames.includes('authDeviceSessions')) {
             await AuthDeviceSessionModel.deleteMany({});
@@ -486,7 +489,7 @@ export const dbHelper = {
         }
     },
     dropDb: async () => {
-        await db.dropDatabase();
+        await mongooseConnection?.connection.db?.dropDatabase();
     },
     getBlog: async (arrayIndex: number) => {
         const allBlogs = await BlogModel.find({}).lean();

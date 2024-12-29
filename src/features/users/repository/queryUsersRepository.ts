@@ -1,7 +1,6 @@
 import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
 import { QueryParamsUserModel, UserItemViewModel, UsersPaginatedViewModel } from '../models';
-import { TDatabase } from '../../../database';
-import { WithId, ObjectId } from 'mongodb';
+import { WithId } from 'mongodb';
 import { ResultStatus } from '../../../constants';
 import { TUser, UserModel } from '../domain';
 

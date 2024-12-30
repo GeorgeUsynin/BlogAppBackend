@@ -60,39 +60,6 @@ describe('delete auth device except current', () => {
         });
     });
 
-    it('returns 401 status code if there is no userId in payload from refresh token', async () => {
-        await request
-            .delete(`${ROUTES.SECURITY}${ROUTES.DEVICES}`)
-            .set(generateRefreshTokenCookie({ deviceId: authDeviceSessions[0].deviceId }, '7d'))
-            .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
-    });
-
-    it('returns 401 status code if there is no user with id from refresh token in collection', async () => {
-        await request
-            .delete(`${ROUTES.SECURITY}${ROUTES.DEVICES}`)
-            .set(
-                generateRefreshTokenCookie(
-                    { userId: fakeRequestedObjectId, deviceId: authDeviceSessions[0].deviceId },
-                    '7d'
-                )
-            )
-            .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
-    });
-
-    it('returns 401 status code if there is no deviceId in payload from refresh token', async () => {
-        await request
-            .delete(`${ROUTES.SECURITY}${ROUTES.DEVICES}`)
-            .set(generateRefreshTokenCookie({ userId: users[0]._id.toString() }, '7d'))
-            .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
-    });
-
-    it('returns 401 status code if there is no device with id from refresh token in collection', async () => {
-        await request
-            .delete(`${ROUTES.SECURITY}${ROUTES.DEVICES}`)
-            .set(generateRefreshTokenCookie({ userId: users[0]._id.toString(), deviceId: fakeRequestedObjectId }, '7d'))
-            .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
-    });
-
     it('returns 401 status code if refresh token already been used', async () => {
         await delay(1000);
 

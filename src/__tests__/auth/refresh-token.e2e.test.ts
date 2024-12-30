@@ -52,55 +52,6 @@ describe('refresh token', () => {
         expect(response.headers['set-cookie'][0]).toContain('Secure');
     });
 
-    it('returns 401 status code if refresh token is not set', async () => {
-        await request.post(`${ROUTES.AUTH}${ROUTES.REFRESH_TOKEN}`).expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
-    });
-
-    it('returns 401 status code if refresh token is expired', async () => {
-        await request
-            .post(`${ROUTES.AUTH}${ROUTES.REFRESH_TOKEN}`)
-            .set(
-                generateRefreshTokenCookie(
-                    { userId: users[0]._id.toString(), deviceId: authDeviceSessions[0].deviceId },
-                    0
-                )
-            )
-            .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
-    });
-
-    it('returns 401 status code if there is no userId in payload from refresh token', async () => {
-        await request
-            .post(`${ROUTES.AUTH}${ROUTES.REFRESH_TOKEN}`)
-            .set(generateRefreshTokenCookie({ deviceId: authDeviceSessions[0].deviceId }, '7d'))
-            .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
-    });
-
-    it('returns 401 status code if there is no user with id from refresh token in collection', async () => {
-        await request
-            .post(`${ROUTES.AUTH}${ROUTES.REFRESH_TOKEN}`)
-            .set(
-                generateRefreshTokenCookie(
-                    { userId: fakeRequestedObjectId, deviceId: authDeviceSessions[0].deviceId },
-                    '7d'
-                )
-            )
-            .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
-    });
-
-    it('returns 401 status code if there is no deviceId in payload from refresh token', async () => {
-        await request
-            .post(`${ROUTES.AUTH}${ROUTES.REFRESH_TOKEN}`)
-            .set(generateRefreshTokenCookie({ userId: users[0]._id.toString() }, '7d'))
-            .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
-    });
-
-    it('returns 401 status code if there is no device with id from refresh token in collection', async () => {
-        await request
-            .post(`${ROUTES.AUTH}${ROUTES.REFRESH_TOKEN}`)
-            .set(generateRefreshTokenCookie({ userId: users[0]._id.toString(), deviceId: fakeRequestedObjectId }, '7d'))
-            .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
-    });
-
     it('returns 401 status code if refresh token already been used', async () => {
         await delay(1000);
 

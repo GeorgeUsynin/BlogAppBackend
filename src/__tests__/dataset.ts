@@ -199,8 +199,8 @@ export const users: WithId<TUser>[] = [
             expirationDate: add(new Date(), { hours: 1 }),
         },
         passwordRecovery: {
-            expirationDate: null,
-            recoveryCode: null,
+            expirationDate: add(new Date(), { hours: 1 }),
+            recoveryCode: '334455',
         },
     },
     {
@@ -215,8 +215,8 @@ export const users: WithId<TUser>[] = [
             expirationDate: add(new Date(), { hours: 1 }),
         },
         passwordRecovery: {
-            expirationDate: null,
-            recoveryCode: null,
+            expirationDate: new Date(),
+            recoveryCode: '111111',
         },
     },
     {

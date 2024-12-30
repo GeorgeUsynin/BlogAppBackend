@@ -36,8 +36,10 @@ type TValues = {
     login?: (Omit<TProperties, 'maxLength'> | 'minMaxLength' | 'isPattern' | 'isUnique')[];
     email?: (Omit<TProperties, 'maxLength'> | 'isPattern')[];
     password?: (Omit<TProperties, 'maxLength'> | 'minMaxLength')[];
+    newPassword?: (Omit<TProperties, 'maxLength'> | 'minMaxLength')[];
     loginOrEmail?: Omit<TProperties, 'maxLength'>[];
     code?: Omit<TProperties, 'maxLength'>[];
+    recoveryCode?: Omit<TProperties, 'maxLength'>[];
     from?: 'blogs' | 'posts' | 'comments' | 'users';
 };
 
@@ -125,6 +127,8 @@ export const createErrorMessages = (values: TValues) => {
         loginOrEmail,
         from,
         code,
+        newPassword,
+        recoveryCode,
     } = values;
 
     const errorsMessages: ErrorViewModel['errorsMessages'] = [];
@@ -399,6 +403,41 @@ export const createErrorMessages = (values: TValues) => {
                     break;
                 case 'isEmptyString':
                     errorsMessages.push(errorMessagesConfig.isEmptyString('code'));
+                    break;
+            }
+        });
+    }
+
+    if (newPassword) {
+        newPassword.forEach(value => {
+            switch (value) {
+                case 'isRequired':
+                    errorsMessages.push(errorMessagesConfig.isRequired('newPassword'));
+                    break;
+                case 'isEmptyString':
+                    errorsMessages.push(errorMessagesConfig.isEmptyString('newPassword'));
+                    break;
+                case 'isString':
+                    errorsMessages.push(errorMessagesConfig.isString('newPassword'));
+                    break;
+                case 'minMaxLength':
+                    errorsMessages.push(errorMessagesConfig.minMaxLength('newPassword', 6, 20));
+                    break;
+            }
+        });
+    }
+
+    if (recoveryCode) {
+        recoveryCode.forEach(value => {
+            switch (value) {
+                case 'isRequired':
+                    errorsMessages.push(errorMessagesConfig.isRequired('recoveryCode'));
+                    break;
+                case 'isString':
+                    errorsMessages.push(errorMessagesConfig.isString('recoveryCode'));
+                    break;
+                case 'isEmptyString':
+                    errorsMessages.push(errorMessagesConfig.isEmptyString('recoveryCode'));
                     break;
             }
         });

@@ -1,5 +1,5 @@
-import { registrationService } from './registrationService';
-import { authService } from './authService';
-import { passwordService } from './passwordService';
+import { RegistrationService } from './registrationService';
+import { AuthService } from './authService';
+import { PasswordService } from './passwordService';
 
-export { authService, registrationService, passwordService };
+export { AuthService, RegistrationService, PasswordService };

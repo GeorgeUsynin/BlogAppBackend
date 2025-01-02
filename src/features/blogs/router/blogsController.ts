@@ -26,10 +26,10 @@ import { PostsService } from '../../posts/domain';
 
 export class BlogsController {
     constructor(
-        protected blogsService: BlogsService,
-        protected queryBlogsRepository: QueryBlogsRepository,
-        protected postsService: PostsService,
-        protected queryPostsRepository: QueryPostsRepository
+        private blogsService: BlogsService,
+        private queryBlogsRepository: QueryBlogsRepository,
+        private postsService: PostsService,
+        private queryPostsRepository: QueryPostsRepository
     ) {}
 
     async getAllBlogs(

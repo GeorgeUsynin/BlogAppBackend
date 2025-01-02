@@ -1,12 +1,13 @@
 import { AuthDeviceViewModel } from '../models';
 import { AuthDeviceSessionModel, TDevice } from '../domain';
 
-export const authDeviceSessionsQueryRepository = {
+export class AuthDeviceSessionsQueryRepository {
     async getAllUserAuthDeviceSessions(userId: string) {
         const deviceSessions = await AuthDeviceSessionModel.find({ userId }).lean();
 
         return deviceSessions.map(this.mapUserAuthDeviceSessionsToViewModel);
-    },
+    }
+
     mapUserAuthDeviceSessionsToViewModel(deviceSession: TDevice): AuthDeviceViewModel {
         return {
             deviceId: deviceSession.deviceId,
@@ -14,5 +15,5 @@ export const authDeviceSessionsQueryRepository = {
             lastActiveDate: deviceSession.issuedAt,
             title: deviceSession.deviceName,
         };
-    },
-};
+    }
+}

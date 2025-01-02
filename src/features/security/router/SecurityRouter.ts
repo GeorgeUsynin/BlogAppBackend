@@ -1,20 +1,22 @@
 import { Router } from 'express';
 import { ROUTES } from '../../../constants';
-import * as RequestHandler from '../requestHandlers';
 import { authRefreshTokenMiddleware } from '../../shared/middlewares';
+import { securityController } from './compositionRoot';
 
 export const SecurityRouter = Router();
 
-const SecurityController = {
-    getAllAuthDeviceSessions: RequestHandler.getAllAuthDeviceSessionsHandler,
-    terminateAllAuthDeviceSessions: RequestHandler.terminateAllAuthDeviceSessionsHandler,
-    terminateDeviceSessionByID: RequestHandler.terminateDeviceSessionByIDHandler,
-};
-
-SecurityRouter.get(ROUTES.DEVICES, authRefreshTokenMiddleware, SecurityController.getAllAuthDeviceSessions);
-SecurityRouter.delete(ROUTES.DEVICES, authRefreshTokenMiddleware, SecurityController.terminateAllAuthDeviceSessions);
+SecurityRouter.get(
+    ROUTES.DEVICES,
+    authRefreshTokenMiddleware,
+    securityController.getAllAuthDeviceSessions.bind(securityController)
+);
+SecurityRouter.delete(
+    ROUTES.DEVICES,
+    authRefreshTokenMiddleware,
+    securityController.terminateAllAuthDeviceSessions.bind(securityController)
+);
 SecurityRouter.delete(
     `${ROUTES.DEVICES}/:id`,
     authRefreshTokenMiddleware,
-    SecurityController.terminateDeviceSessionByID
+    securityController.terminateDeviceSessionByID.bind(securityController)
 );

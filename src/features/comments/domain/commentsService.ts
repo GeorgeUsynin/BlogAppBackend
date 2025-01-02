@@ -1,5 +1,5 @@
 import { CreateUpdateCommentInputModel } from '../models';
-import { usersRepository } from '../../users/repository';
+import { UsersRepository } from '../../users/repository';
 import { CommentsRepository } from '../repository';
 import { ResultStatus } from '../../../constants';
 import { APIError } from '../../shared/helpers';
@@ -7,7 +7,11 @@ import { TComment } from './commentEntity';
 import { PostsRepository } from '../../posts/repository';
 
 export class CommentsService {
-    constructor(protected commentsRepository: CommentsRepository, protected postsRepository: PostsRepository) {}
+    constructor(
+        private commentsRepository: CommentsRepository,
+        private postsRepository: PostsRepository,
+        private usersRepository: UsersRepository
+    ) {}
 
     async createCommentByPostId(payload: CreateUpdateCommentInputModel, postId: string, userId: string) {
         const { content } = payload;
@@ -20,12 +24,11 @@ export class CommentsService {
             });
         }
 
-        const user = await usersRepository.findUserById(userId);
+        const user = await this.usersRepository.findUserById(userId);
 
         const newComment = new TComment({
             content,
-            userId,
-            userLogin: user?.login as string,
+            commentatorInfo: { userId, userLogin: user?.login as string },
             createdAt: new Date().toISOString(),
             postId,
         });

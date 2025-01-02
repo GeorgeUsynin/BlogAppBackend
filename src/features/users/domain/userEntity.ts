@@ -4,7 +4,7 @@ import { SETTINGS } from '../../../app-settings';
 const loginPattern = '^[a-zA-Z0-9_-]*$';
 const emailPattern = '^[w-.]+@([w-]+.)+[w-]{2,4}$';
 
-export type TUser = {
+type TUserValues = {
     login: string;
     email: string;
     passwordHash: string;
@@ -19,6 +19,31 @@ export type TUser = {
         expirationDate: Date | null;
     };
 };
+
+export class TUser {
+    public login: string;
+    public email: string;
+    public passwordHash: string;
+    public createdAt: string;
+    public emailConfirmation: {
+        isConfirmed: boolean;
+        confirmationCode: string;
+        expirationDate: Date;
+    };
+    public passwordRecovery: {
+        recoveryCode: string | null;
+        expirationDate: Date | null;
+    };
+
+    constructor(values: TUserValues) {
+        this.login = values.login;
+        this.email = values.email;
+        this.passwordHash = values.passwordHash;
+        this.createdAt = values.createdAt;
+        this.emailConfirmation = values.emailConfirmation;
+        this.passwordRecovery = values.passwordRecovery;
+    }
+}
 
 type TUserModel = Model<TUser>;
 

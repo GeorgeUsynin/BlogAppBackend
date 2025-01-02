@@ -27,10 +27,10 @@ import { QueryCommentsRepository } from '../../comments/repository';
 
 export class PostsController {
     constructor(
-        protected postsService: PostsService,
-        protected commentsService: CommentsService,
-        protected queryPostsRepository: QueryPostsRepository,
-        protected queryCommentsRepository: QueryCommentsRepository
+        private postsService: PostsService,
+        private commentsService: CommentsService,
+        private queryPostsRepository: QueryPostsRepository,
+        private queryCommentsRepository: QueryCommentsRepository
     ) {}
 
     async getAllPosts(

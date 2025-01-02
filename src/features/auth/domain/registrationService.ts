@@ -1,21 +1,23 @@
 import bcrypt from 'bcrypt';
 import { add } from 'date-fns/add';
 import { randomUUID } from 'crypto';
-import { usersRepository } from '../../users/repository';
+import { UsersRepository } from '../../users/repository';
 import { RegistrationInputModel } from '../models';
 import { ResultStatus } from '../../../constants';
-import { emailManager } from '../../shared/managers/emailManager';
+import { EmailManager } from '../../shared/managers/emailManager';
 import { APIError } from '../../shared/helpers';
 import { SETTINGS } from '../../../app-settings';
 import { TUser } from '../../users/domain';
 
-export const registrationService = {
+export class RegistrationService {
+    constructor(private usersRepository: UsersRepository, private emailManager: EmailManager) {}
+
     async registerUser(payload: RegistrationInputModel) {
         const { login, email, password } = payload;
 
         // check if user already exists
-        const userWithLogin = await usersRepository.findUserByLogin(login);
-        const userWithEmail = await usersRepository.findUserByEmail(email);
+        const userWithLogin = await this.usersRepository.findUserByLogin(login);
+        const userWithEmail = await this.usersRepository.findUserByEmail(email);
 
         if (userWithLogin || userWithEmail) {
             throw new APIError({
@@ -29,7 +31,7 @@ export const registrationService = {
         const hash = await bcrypt.hash(password, SETTINGS.HASH_ROUNDS);
 
         // create new user
-        const newUser: TUser = {
+        const newUser = new TUser({
             login,
             email,
             passwordHash: hash,
@@ -43,15 +45,16 @@ export const registrationService = {
                 expirationDate: null,
                 recoveryCode: null,
             },
-        };
+        });
 
-        await usersRepository.createUser(newUser);
+        await this.usersRepository.createUser(newUser);
 
         // sent confirmation email
-        emailManager.sendPasswordConfirmationEmail(email, newUser.emailConfirmation.confirmationCode);
-    },
+        this.emailManager.sendPasswordConfirmationEmail(email, newUser.emailConfirmation.confirmationCode);
+    }
+
     async registrationConfirmation(code: string) {
-        const user = await usersRepository.findUserByConfirmationEmailCode(code);
+        const user = await this.usersRepository.findUserByConfirmationEmailCode(code);
 
         if (!user) {
             throw new APIError({
@@ -77,10 +80,11 @@ export const registrationService = {
             });
         }
 
-        await usersRepository.updateUserEmailConfirmation(user._id.toString(), true);
-    },
+        await this.usersRepository.updateUserEmailConfirmation(user._id.toString(), true);
+    }
+
     async registrationEmailResending(email: string) {
-        const user = await usersRepository.findUserByEmail(email);
+        const user = await this.usersRepository.findUserByEmail(email);
 
         if (!user) {
             throw new APIError({
@@ -101,12 +105,12 @@ export const registrationService = {
         const newConfirmationCode = randomUUID();
         const newExpirationDate = add(new Date(), { hours: SETTINGS.CONFIRMATION_CODE_EXPIRATION_TIME_IN_HOURS });
 
-        await usersRepository.updateUserEmailConfirmationCode(
+        await this.usersRepository.updateUserEmailConfirmationCode(
             user._id.toString(),
             newConfirmationCode,
             newExpirationDate
         );
 
-        emailManager.sendPasswordConfirmationEmail(email, newConfirmationCode);
-    },
-};
+        this.emailManager.sendPasswordConfirmationEmail(email, newConfirmationCode);
+    }
+}

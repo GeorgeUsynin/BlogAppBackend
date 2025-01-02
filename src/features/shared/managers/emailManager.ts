@@ -1,6 +1,8 @@
-import { emailAdapter } from '../adapters';
+import { EmailAdapter } from '../adapters';
 
-export const emailManager = {
+export class EmailManager {
+    constructor(private emailAdapter: EmailAdapter) {}
+
     sendPasswordConfirmationEmail(email: string, code: string) {
         const subject = 'Password Confirmation';
         const message = `<h1>Thank for your registration</h1>
@@ -8,8 +10,9 @@ export const emailManager = {
         <a href='https://some-front.com/confirm-email?code=${code}'>complete registration</a>
         </p>`;
 
-        return emailAdapter.sendEmail(email, subject, message);
-    },
+        return this.emailAdapter.sendEmail(email, subject, message);
+    }
+
     sendPasswordRecoveryEmail(email: string, code: string) {
         const subject = 'Password Recovery';
         const message = `<h1>Password recovery</h1>
@@ -17,6 +20,6 @@ export const emailManager = {
         <a href='https://somesite.com/password-recovery?recoveryCode=${code}'>recovery password</a>
         </p>`;
 
-        return emailAdapter.sendEmail(email, subject, message);
-    },
-};
+        return this.emailAdapter.sendEmail(email, subject, message);
+    }
+}

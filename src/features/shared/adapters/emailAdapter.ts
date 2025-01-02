@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-export const emailAdapter = {
+export class EmailAdapter {
     sendEmail(email: string, subject: string, message: string) {
         transporter
             .sendMail({
@@ -23,5 +23,5 @@ export const emailAdapter = {
                 console.error(err);
                 throw new APIError({ status: ResultStatus.Failure, message: 'Email adapter send error' });
             });
-    },
-};
+    }
+}

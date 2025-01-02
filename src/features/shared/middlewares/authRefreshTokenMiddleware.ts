@@ -1,9 +1,11 @@
 import { Response, Request, NextFunction } from 'express';
 import { HTTP_STATUS_CODES } from '../../../constants';
 import { JWTService } from '../../shared/services';
-import { usersService } from '../../users/domain';
-import { authDeviceSessionsService } from '../../security/domain';
+import { usersService } from '../../users/router/compositionRoot';
+import { authDeviceSessionsService } from '../../security/router/compositionRoot';
 import { ErrorViewModel } from '../types';
+
+const jwtService = new JWTService();
 
 export const authRefreshTokenMiddleware = async (req: Request, res: Response<ErrorViewModel>, next: NextFunction) => {
     const refreshToken = req.cookies.refreshToken;
@@ -13,7 +15,7 @@ export const authRefreshTokenMiddleware = async (req: Request, res: Response<Err
         return;
     }
 
-    const decoded = await JWTService.parseJWTToken(refreshToken);
+    const decoded = await jwtService.parseJWTToken(refreshToken);
 
     if (!decoded) {
         res.sendStatus(HTTP_STATUS_CODES.UNAUTHORIZED_401);

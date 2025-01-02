@@ -6,10 +6,7 @@ import { QueryCommentsRepository } from '../repository';
 import { CommentsService } from '../domain';
 
 export class CommentsController {
-    constructor(
-        protected commentsService: CommentsService,
-        protected queryCommentsRepository: QueryCommentsRepository
-    ) {}
+    constructor(private commentsService: CommentsService, private queryCommentsRepository: QueryCommentsRepository) {}
 
     async getCommentByID(
         req: RequestWithParams<URIParamsCommentIDModel>,

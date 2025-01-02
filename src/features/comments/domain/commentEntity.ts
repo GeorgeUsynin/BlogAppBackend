@@ -3,8 +3,10 @@ import { SETTINGS } from '../../../app-settings';
 
 type TCommentValues = {
     content: string;
-    userId: string;
-    userLogin: string;
+    commentatorInfo: {
+        userId: string;
+        userLogin: string;
+    };
     createdAt: string;
     postId: string;
 };
@@ -19,7 +21,7 @@ export class TComment {
 
     constructor(values: TCommentValues) {
         this.content = values.content;
-        this.commentatorInfo = { userId: values.userId, userLogin: values.userLogin };
+        this.commentatorInfo = values.commentatorInfo;
         this.createdAt = values.createdAt;
         this.postId = values.postId;
     }

@@ -3,10 +3,9 @@ import { randomUUID } from 'crypto';
 import { SETTINGS } from '../../../app-settings';
 import { ResultStatus } from '../../../constants';
 import { JWTService } from '../../shared/services/JWTService';
-import { authDeviceSessionsRepository } from '../../security/repository';
 import { APIError, getDeviceName } from '../../shared/helpers';
-import { usersRepository } from '../../users/repository';
-import { authDeviceSessionsService } from '../../security/domain';
+import { UsersRepository } from '../../users/repository';
+import { AuthDeviceSessionsService } from '../../security/domain';
 
 type TLoginPayload = {
     loginOrEmail: string;
@@ -18,12 +17,19 @@ type TLoginPayload = {
 const accessTokenExpirationTime = SETTINGS.ACCESS_TOKEN_EXPIRATION_TIME;
 const refreshTokenExpirationTime = SETTINGS.REFRESH_TOKEN_EXPIRATION_TIME;
 
-export const authService = {
+export class AuthService {
+    constructor(
+        private JWTService: JWTService,
+        private authDeviceSessionsService: AuthDeviceSessionsService,
+        private usersRepository: UsersRepository
+    ) {}
+
     verifyBasicAuthorization(authorizationHeader: string) {
         const isMatched = authorizationHeader === `Basic ${SETTINGS.CODE_AUTH_BASE64}`;
 
         return { data: { isMatched }, status: isMatched ? ResultStatus.Success : ResultStatus.Unauthorized };
-    },
+    }
+
     async verifyBearerAuthorization(authorizationHeader: string) {
         const [type, token] = authorizationHeader.split(' ');
 
@@ -31,18 +37,19 @@ export const authService = {
             return { data: null, status: ResultStatus.Unauthorized };
         }
 
-        const decoded = await JWTService.parseJWTToken(token);
+        const decoded = await this.JWTService.parseJWTToken(token);
 
         if (!decoded) {
             return { data: null, status: ResultStatus.Unauthorized };
         }
 
         return { data: { userId: decoded.userId }, status: ResultStatus.Success };
-    },
+    }
+
     async login(payload: TLoginPayload) {
         const { clientIp, loginOrEmail, password, userAgent } = payload;
 
-        const user = await usersRepository.findUserByLoginOrEmail(loginOrEmail, loginOrEmail);
+        const user = await this.usersRepository.findUserByLoginOrEmail(loginOrEmail, loginOrEmail);
 
         if (!user) {
             throw new APIError({
@@ -70,20 +77,20 @@ export const authService = {
 
         const deviceId = randomUUID();
 
-        const accessToken = JWTService.createJWTToken(
+        const accessToken = this.JWTService.createJWTToken(
             { userId: user._id.toString() },
             { expiresIn: accessTokenExpirationTime }
         );
-        const refreshToken = JWTService.createJWTToken(
+        const refreshToken = this.JWTService.createJWTToken(
             { userId: user._id.toString(), deviceId },
             { expiresIn: refreshTokenExpirationTime }
         );
 
-        const decodedRefreshToken = await JWTService.parseJWTToken(refreshToken);
+        const decodedRefreshToken = await this.JWTService.parseJWTToken(refreshToken);
         const issuedAt = new Date(Number(decodedRefreshToken?.iat) * 1000).toISOString();
         const expirationDateOfRefreshToken = new Date(Number(decodedRefreshToken?.exp) * 1000).toISOString();
 
-        await authDeviceSessionsRepository.addAuthDeviceSession({
+        await this.authDeviceSessionsService.addAuthDeviceSession({
             userId: user._id.toString(),
             deviceId,
             issuedAt,
@@ -93,24 +100,29 @@ export const authService = {
         });
 
         return { accessToken, refreshToken };
-    },
-    async logout(userId: string, deviceId: string) {
-        await authDeviceSessionsService.terminateDeviceSessionByIDHandler(userId, deviceId);
-    },
-    async updateTokens(userId: string, deviceId: string) {
-        const accessToken = JWTService.createJWTToken({ userId }, { expiresIn: accessTokenExpirationTime });
-        const refreshToken = JWTService.createJWTToken({ userId, deviceId }, { expiresIn: refreshTokenExpirationTime });
+    }
 
-        const decodedRefreshToken = await JWTService.parseJWTToken(refreshToken);
+    async logout(userId: string, deviceId: string) {
+        await this.authDeviceSessionsService.terminateDeviceSessionByIDHandler(userId, deviceId);
+    }
+
+    async updateTokens(userId: string, deviceId: string) {
+        const accessToken = this.JWTService.createJWTToken({ userId }, { expiresIn: accessTokenExpirationTime });
+        const refreshToken = this.JWTService.createJWTToken(
+            { userId, deviceId },
+            { expiresIn: refreshTokenExpirationTime }
+        );
+
+        const decodedRefreshToken = await this.JWTService.parseJWTToken(refreshToken);
         const issuedAt = new Date(Number(decodedRefreshToken?.iat) * 1000).toISOString();
         const expirationDateOfRefreshToken = new Date(Number(decodedRefreshToken?.exp) * 1000).toISOString();
 
-        await authDeviceSessionsRepository.updateAuthDeviceSession({
+        await this.authDeviceSessionsService.updateAuthDeviceSession({
             deviceId,
             issuedAt,
             expirationDateOfRefreshToken,
         });
 
         return { newAccessToken: accessToken, newRefreshToken: refreshToken };
-    },
-};
+    }
+}

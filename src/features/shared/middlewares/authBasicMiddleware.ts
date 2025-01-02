@@ -1,6 +1,6 @@
 import { Response, Request, NextFunction } from 'express';
 import { HTTP_STATUS_CODES } from '../../../constants';
-import { authService } from '../../auth/domain';
+import { authService } from '../../auth/router/compositionRoot';
 import { ResultStatus } from '../../../constants';
 
 export const authBasicMiddleware = (req: Request, res: Response, next: NextFunction) => {

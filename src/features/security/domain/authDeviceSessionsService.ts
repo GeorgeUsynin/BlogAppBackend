@@ -1,16 +1,30 @@
 import { ResultStatus } from '../../../constants';
 import { APIError } from '../../shared/helpers';
-import { authDeviceSessionsRepository } from '../repository';
+import { AuthDeviceSessionsRepository } from '../repository';
+import { TUpdateAuthDeviceSessionParams } from '../repository/authDeviceSessionsRepository';
+import { TDevice } from './authDeviceSessionEntity';
 
-export const authDeviceSessionsService = {
+export class AuthDeviceSessionsService {
+    constructor(private authDeviceSessionsRepository: AuthDeviceSessionsRepository) {}
+
+    async addAuthDeviceSession(deviceSession: TDevice) {
+        this.authDeviceSessionsRepository.addAuthDeviceSession(deviceSession);
+    }
+
     async findDeviceById(deviceId: string) {
-        return authDeviceSessionsRepository.findDeviceById(deviceId);
-    },
+        return this.authDeviceSessionsRepository.findDeviceById(deviceId);
+    }
+
+    async updateAuthDeviceSession(payload: TUpdateAuthDeviceSessionParams) {
+        return this.authDeviceSessionsRepository.updateAuthDeviceSession(payload);
+    }
+
     async terminateAllOtherUserDeviceSessions(userId: string, deviceId: string) {
-        return authDeviceSessionsRepository.terminateAllOtherUserDeviceSessions(userId, deviceId);
-    },
+        return this.authDeviceSessionsRepository.terminateAllOtherUserDeviceSessions(userId, deviceId);
+    }
+
     async terminateDeviceSessionByIDHandler(userId: string, deviceId: string) {
-        const foundDevice = await authDeviceSessionsRepository.findDeviceById(deviceId);
+        const foundDevice = await this.authDeviceSessionsRepository.findDeviceById(deviceId);
 
         if (!foundDevice) {
             throw new APIError({
@@ -26,6 +40,6 @@ export const authDeviceSessionsService = {
             });
         }
 
-        await authDeviceSessionsRepository.deleteDeviceSessionById(deviceId);
-    },
-};
+        await this.authDeviceSessionsRepository.deleteDeviceSessionById(deviceId);
+    }
+}

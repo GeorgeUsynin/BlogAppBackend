@@ -1,4 +1,4 @@
-import { queryUsersRepository } from './queryUsersRepository';
-import { usersRepository } from './usersRepository';
+import { QueryUsersRepository } from './queryUsersRepository';
+import { UsersRepository } from './usersRepository';
 
-export { queryUsersRepository, usersRepository };
+export { QueryUsersRepository, UsersRepository };

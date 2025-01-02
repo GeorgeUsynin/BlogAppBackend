@@ -1,11 +1,9 @@
 import { HydratedDocument, model, Model, Schema } from 'mongoose';
 import { SETTINGS } from '../../../app-settings';
 
-export type TAPIRateLimit = {
-    IP: string;
-    URL: string;
-    date: Date;
-};
+export class TAPIRateLimit {
+    constructor(public IP: string, public URL: string, public date: Date) {}
+}
 
 type TAPIRateLimitModel = Model<TAPIRateLimit>;
 

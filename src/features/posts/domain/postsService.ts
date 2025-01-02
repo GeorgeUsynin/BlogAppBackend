@@ -6,7 +6,7 @@ import { ResultStatus } from '../../../constants';
 import { TPost } from './postEntity';
 
 export class PostsService {
-    constructor(protected postsRepository: PostsRepository, protected blogsRepository: BlogsRepository) {}
+    constructor(private postsRepository: PostsRepository, private blogsRepository: BlogsRepository) {}
 
     async createPost(payload: CreateUpdatePostInputModel) {
         const { blogId, content, shortDescription, title } = payload;

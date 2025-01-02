@@ -1,3 +1,3 @@
-import { emailManager } from './emailManager';
+import { emailManager } from './compositionRoot';
 
 export { emailManager };

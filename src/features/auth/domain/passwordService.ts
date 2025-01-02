@@ -1,28 +1,31 @@
 import bcrypt from 'bcrypt';
 import { add } from 'date-fns';
-import { usersRepository } from '../../users/repository';
+import { UsersRepository } from '../../users/repository';
 import { randomUUID } from 'crypto';
 import { SETTINGS } from '../../../app-settings';
-import { emailManager } from '../../shared/managers';
+import { EmailManager } from '../../shared/managers/emailManager';
 import { APIError } from '../../shared/helpers';
 import { ResultStatus } from '../../../constants';
 
-export const passwordService = {
+export class PasswordService {
+    constructor(private usersRepository: UsersRepository, private emailManager: EmailManager) {}
+
     async recoverPassword(email: string) {
-        const user = await usersRepository.findUserByEmail(email);
+        const user = await this.usersRepository.findUserByEmail(email);
 
         if (!user) return;
 
         const recoveryCode = randomUUID();
         const expirationDate = add(new Date(), { hours: SETTINGS.RECOVERY_CODE_EXPIRATION_TIME_IN_HOURS });
 
-        await usersRepository.updateUserRecoveryPasswordCode(user.id, recoveryCode, expirationDate);
+        await this.usersRepository.updateUserRecoveryPasswordCode(user.id, recoveryCode, expirationDate);
 
         // sent confirmation email
-        emailManager.sendPasswordRecoveryEmail(email, recoveryCode);
-    },
+        this.emailManager.sendPasswordRecoveryEmail(email, recoveryCode);
+    }
+
     async changePassword(newPassword: string, recoveryCode: string) {
-        const user = await usersRepository.findUserByRecoveryPasswordCode(recoveryCode);
+        const user = await this.usersRepository.findUserByRecoveryPasswordCode(recoveryCode);
 
         if (!user) {
             throw new APIError({
@@ -43,6 +46,6 @@ export const passwordService = {
         // hash password
         const hash = await bcrypt.hash(newPassword, SETTINGS.HASH_ROUNDS);
 
-        await usersRepository.updatePasswordHash(user.id, hash);
-    },
-};
+        await this.usersRepository.updatePasswordHash(user.id, hash);
+    }
+}

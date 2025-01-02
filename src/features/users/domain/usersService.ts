@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { usersRepository } from '../repository';
+import { UsersRepository } from '../repository';
 import { ResultStatus } from '../../../constants';
 import { randomUUID } from 'crypto';
 import { add } from 'date-fns';
@@ -8,9 +8,11 @@ import { TUser } from './userEntity';
 import { SETTINGS } from '../../../app-settings';
 import type { CreateUserInputModel } from '../models';
 
-export const usersService = {
+export class UsersService {
+    constructor(private usersRepository: UsersRepository) {}
+
     async createUser(payload: CreateUserInputModel) {
-        const user = await usersRepository.findUserByLoginOrEmail(payload.login, payload.email);
+        const user = await this.usersRepository.findUserByLoginOrEmail(payload.login, payload.email);
 
         if (user) {
             throw new APIError({
@@ -21,7 +23,7 @@ export const usersService = {
 
         const hash = await bcrypt.hash(payload.password, SETTINGS.HASH_ROUNDS);
 
-        const newUser: TUser = {
+        const newUser = new TUser({
             ...payload,
             passwordHash: hash,
             createdAt: new Date().toISOString(),
@@ -34,18 +36,20 @@ export const usersService = {
                 expirationDate: null,
                 recoveryCode: null,
             },
-        };
+        });
 
-        return await usersRepository.createUser(newUser);
-    },
+        return await this.usersRepository.createUser(newUser);
+    }
+
     async findUserById(userId: string) {
-        return await usersRepository.findUserById(userId);
-    },
+        return await this.usersRepository.findUserById(userId);
+    }
+
     async deleteUserById(userId: string) {
-        const foundUser = await usersRepository.deleteUserById(userId);
+        const foundUser = await this.usersRepository.deleteUserById(userId);
 
         if (!foundUser) {
             throw new APIError({ status: ResultStatus.NotFound, message: 'User not found' });
         }
-    },
-};
+    }
+}

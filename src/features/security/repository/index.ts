@@ -1,4 +1,4 @@
-import { authDeviceSessionsRepository } from './authDeviceSessionsRepository';
-import { authDeviceSessionsQueryRepository } from './authDeviceSessionsQueryRepository';
+import { AuthDeviceSessionsRepository } from './authDeviceSessionsRepository';
+import { AuthDeviceSessionsQueryRepository } from './authDeviceSessionsQueryRepository';
 
-export { authDeviceSessionsRepository, authDeviceSessionsQueryRepository };
+export { AuthDeviceSessionsRepository, AuthDeviceSessionsQueryRepository };

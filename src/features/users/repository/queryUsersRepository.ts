@@ -12,7 +12,7 @@ type TValues = {
     pageSize: number;
 };
 
-export const queryUsersRepository = {
+export class QueryUsersRepository {
     async getAllUsers(queryParams: QueryParamsUserModel) {
         const params = normalizeQueryParams(queryParams);
         const filter = createFilter(
@@ -32,7 +32,8 @@ export const queryUsersRepository = {
             pageNumber: params.pageNumber,
             pageSize: params.pageSize,
         });
-    },
+    }
+
     async getUserById(userId: string) {
         const user = await UserModel.findById(userId);
 
@@ -41,7 +42,8 @@ export const queryUsersRepository = {
         }
 
         return this.mapMongoUserToViewModel(user);
-    },
+    }
+
     async getUserInfoById(userId: string) {
         const user = await UserModel.findById(userId);
 
@@ -57,10 +59,12 @@ export const queryUsersRepository = {
             login: user.login,
             userId: user._id.toString(),
         };
-    },
+    }
+
     async getTotalCountOfFilteredUsers(filter: TFilter) {
         return UserModel.countDocuments(filter);
-    },
+    }
+
     async findUserItemsByParamsAndFilter(
         params: ReturnType<typeof normalizeQueryParams>,
         filter: ReturnType<typeof createFilter>
@@ -71,7 +75,8 @@ export const queryUsersRepository = {
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
             .lean();
-    },
+    }
+
     mapMongoUserToViewModel(user: WithId<TUser>): UserItemViewModel {
         return {
             id: user._id.toString(),
@@ -79,7 +84,8 @@ export const queryUsersRepository = {
             email: user.email,
             createdAt: user.createdAt,
         };
-    },
+    }
+
     mapUsersToPaginationModel(values: TValues): UsersPaginatedViewModel {
         return {
             pagesCount: Math.ceil(values.totalCount / values.pageSize),
@@ -88,5 +94,5 @@ export const queryUsersRepository = {
             totalCount: values.totalCount,
             items: values.items.map(user => this.mapMongoUserToViewModel(user)),
         };
-    },
-};
+    }
+}

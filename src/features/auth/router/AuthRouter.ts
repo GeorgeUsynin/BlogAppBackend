@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { checkSchema } from 'express-validator';
-import * as RequestHandler from '../requestHandlers';
 import {
     authBearerMiddleware,
     authRefreshTokenMiddleware,
@@ -16,6 +15,7 @@ import {
     newPasswordValidationSchema,
 } from '../validation';
 import { ROUTES } from '../../../constants';
+import { authController } from './compositionRoot';
 
 export const AuthRouter = Router();
 
@@ -46,32 +46,24 @@ const newPasswordValidators = [
     errorMiddleware,
 ];
 
-const AuthController = {
-    login: RequestHandler.loginHandler,
-    logout: RequestHandler.logoutHandler,
-    me: RequestHandler.meHandler,
-    refreshToken: RequestHandler.refreshTokenHandler,
-    registration: RequestHandler.registrationHandler,
-    registrationConfirmation: RequestHandler.registrationConfirmationHandler,
-    registrationEmailResending: RequestHandler.registrationEmailResendingHandler,
-    passwordRecovery: RequestHandler.passwordRecoveryHandler,
-    newPassword: RequestHandler.newPasswordHandler,
-};
-
-AuthRouter.get(ROUTES.ME, authBearerMiddleware, AuthController.me);
-AuthRouter.post(ROUTES.LOGIN, ...loginValidators, AuthController.login);
-AuthRouter.post(ROUTES.LOGOUT, authRefreshTokenMiddleware, AuthController.logout);
-AuthRouter.post(ROUTES.REFRESH_TOKEN, authRefreshTokenMiddleware, AuthController.refreshToken);
-AuthRouter.post(ROUTES.REGISTRATION, ...registrationValidators, AuthController.registration);
+AuthRouter.get(ROUTES.ME, authBearerMiddleware, authController.me.bind(authController));
+AuthRouter.post(ROUTES.LOGIN, ...loginValidators, authController.login.bind(authController));
+AuthRouter.post(ROUTES.LOGOUT, authRefreshTokenMiddleware, authController.logout.bind(authController));
+AuthRouter.post(ROUTES.REFRESH_TOKEN, authRefreshTokenMiddleware, authController.refreshToken.bind(authController));
+AuthRouter.post(ROUTES.REGISTRATION, ...registrationValidators, authController.registration.bind(authController));
 AuthRouter.post(
     ROUTES.REGISTRATION_CONFIRMATION,
     ...registrationConfirmationValidators,
-    AuthController.registrationConfirmation
+    authController.registrationConfirmation.bind(authController)
 );
 AuthRouter.post(
     ROUTES.REGISTRATION_EMAIL_RESENDING,
     ...registrationEmailResendingValidators,
-    AuthController.registrationEmailResending
+    authController.registrationEmailResending.bind(authController)
 );
-AuthRouter.post(ROUTES.PASSWORD_RECOVERY, ...passwordRecoveryValidators, AuthController.passwordRecovery);
-AuthRouter.post(ROUTES.NEW_PASSWORD, ...newPasswordValidators, AuthController.newPassword);
+AuthRouter.post(
+    ROUTES.PASSWORD_RECOVERY,
+    ...passwordRecoveryValidators,
+    authController.passwordRecovery.bind(authController)
+);
+AuthRouter.post(ROUTES.NEW_PASSWORD, ...newPasswordValidators, authController.newPassword.bind(authController));

@@ -5,7 +5,7 @@ import { ResultStatus } from '../../../constants';
 import { TBlog } from './blogEntity';
 
 export class BlogsService {
-    constructor(protected blogsRepository: BlogsRepository) {}
+    constructor(private blogsRepository: BlogsRepository) {}
 
     async createBlog(payload: CreateUpdateBlogInputModel) {
         const { description, name, websiteUrl } = payload;

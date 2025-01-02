@@ -1,10 +1,11 @@
 import { SETTINGS } from '../../../app-settings';
 import { ApiRateLimitModel, TAPIRateLimit } from '../services';
 
-export const APIRateLimitRepository = {
+export class APIRateLimitRepository {
     async addAPIRequest(payload: TAPIRateLimit) {
         return ApiRateLimitModel.create(payload);
-    },
+    }
+
     async getTotalCountOfFilteredAPIRequests(payload: TAPIRateLimit) {
         const { IP, URL, date } = payload;
 
@@ -17,5 +18,5 @@ export const APIRateLimitRepository = {
         };
 
         return ApiRateLimitModel.countDocuments(filter);
-    },
-};
+    }
+}

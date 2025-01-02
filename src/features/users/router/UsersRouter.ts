@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { checkSchema } from 'express-validator';
-import * as RequestHandler from '../requestHandlers';
 import { authBasicMiddleware, errorMiddleware } from '../../shared/middlewares';
 import { queryParamsValidationSchema } from '../../shared/validation';
 import { createUserValidationSchema } from '../validation';
+import { usersController } from './compositionRoot';
 
 export const UsersRouter = Router();
 
@@ -15,12 +15,6 @@ const getAllUsersValidators = [
     errorMiddleware,
 ];
 
-const UsersController = {
-    getAllUsers: RequestHandler.getAllUsersHandler,
-    createUser: RequestHandler.createUserHandler,
-    deleteUserByID: RequestHandler.deleteUserByIDHandler,
-};
-
-UsersRouter.get('/', ...getAllUsersValidators, UsersController.getAllUsers);
-UsersRouter.post('/', ...createUserValidators, UsersController.createUser);
-UsersRouter.delete('/:id', authBasicMiddleware, UsersController.deleteUserByID);
+UsersRouter.get('/', ...getAllUsersValidators, usersController.getAllUsers.bind(usersController));
+UsersRouter.post('/', ...createUserValidators, usersController.createUser.bind(usersController));
+UsersRouter.delete('/:id', authBasicMiddleware, usersController.deleteUserByID.bind(usersController));

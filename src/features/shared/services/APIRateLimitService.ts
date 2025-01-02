@@ -3,9 +3,11 @@ import { ResultStatus } from '../../../constants';
 import { APIRateLimitRepository } from '../repository';
 import { TAPIRateLimit } from './APIRateLimitEntity';
 
-export const APIRateLimitService = {
+export class APIRateLimitService {
+    constructor(private APIRateLimitRepository: APIRateLimitRepository) {}
+
     async logApiRequest(payload: TAPIRateLimit) {
-        const totalCountOfFilteredAPIRequests = await APIRateLimitRepository.getTotalCountOfFilteredAPIRequests(
+        const totalCountOfFilteredAPIRequests = await this.APIRateLimitRepository.getTotalCountOfFilteredAPIRequests(
             payload
         );
 
@@ -16,6 +18,6 @@ export const APIRateLimitService = {
             });
         }
 
-        await APIRateLimitRepository.addAPIRequest(payload);
-    },
-};
+        await this.APIRateLimitRepository.addAPIRequest(payload);
+    }
+}

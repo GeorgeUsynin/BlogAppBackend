@@ -1,22 +1,28 @@
-import { blogsRepository } from '../repository';
+import { BlogsRepository } from '../repository';
 import type { CreateUpdateBlogInputModel } from '../models';
 import { APIError } from '../../shared/helpers';
 import { ResultStatus } from '../../../constants';
 import { TBlog } from './blogEntity';
 
-export const blogsService = {
+export class BlogsService {
+    constructor(protected blogsRepository: BlogsRepository) {}
+
     async createBlog(payload: CreateUpdateBlogInputModel) {
-        const newBlog: TBlog = {
-            ...payload,
+        const { description, name, websiteUrl } = payload;
+
+        const newBlog = new TBlog({
+            name,
+            description,
+            websiteUrl,
             createdAt: new Date().toISOString(),
             isMembership: false,
-        };
+        });
 
-        return blogsRepository.createBlog(newBlog);
-    },
+        return this.blogsRepository.createBlog(newBlog);
+    }
 
     async updateBlog(blogId: string, payload: CreateUpdateBlogInputModel) {
-        const updatedBlog = await blogsRepository.updateBlog(blogId, payload);
+        const updatedBlog = await this.blogsRepository.updateBlog(blogId, payload);
 
         if (!updatedBlog) {
             throw new APIError({
@@ -26,10 +32,10 @@ export const blogsService = {
         }
 
         return updatedBlog;
-    },
+    }
 
     async deleteBlogById(blogId: string) {
-        const foundBlog = await blogsRepository.deleteBlogById(blogId);
+        const foundBlog = await this.blogsRepository.deleteBlogById(blogId);
 
         if (!foundBlog) {
             throw new APIError({
@@ -37,5 +43,5 @@ export const blogsService = {
                 message: 'Blog was not found',
             });
         }
-    },
-};
+    }
+}

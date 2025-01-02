@@ -3,13 +3,28 @@ import { SETTINGS } from '../../../app-settings';
 
 const pattern = '^https://([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$';
 
-export type TBlog = {
+type TBlogValues = {
     name: string;
     description: string;
     websiteUrl: string;
     createdAt: string;
     isMembership: boolean;
 };
+export class TBlog {
+    public name: string;
+    public description: string;
+    public websiteUrl: string;
+    public createdAt: string;
+    public isMembership: boolean;
+
+    constructor(values: TBlogValues) {
+        this.name = values.name;
+        this.description = values.description;
+        this.websiteUrl = values.websiteUrl;
+        this.createdAt = values.createdAt;
+        this.isMembership = values.isMembership;
+    }
+}
 
 type TBlogModel = Model<TBlog>;
 

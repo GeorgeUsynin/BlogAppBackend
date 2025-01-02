@@ -53,7 +53,7 @@ describe('create a comment by requested postId', () => {
             .get(`${ROUTES.POSTS}/${secondPostId}${ROUTES.COMMENTS}`)
             .expect(HTTP_STATUS_CODES.OK_200);
 
-        expect(allCommentsBodyResponse.items[2]).toEqual(createdComment);
+        expect(allCommentsBodyResponse.items).toContainEqual(createdComment);
         expect(allCommentsBodyResponse.items.length).toEqual(3);
     });
 

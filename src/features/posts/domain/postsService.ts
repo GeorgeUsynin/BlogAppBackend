@@ -1,25 +1,30 @@
-import { postsRepository } from '../repository';
+import { PostsRepository } from '../repository';
 import type { CreateUpdatePostInputModel } from '../models';
-import { blogsRepository } from '../../blogs/repository';
+import { BlogsRepository } from '../../blogs/repository';
 import { APIError } from '../../shared/helpers';
 import { ResultStatus } from '../../../constants';
 import { TPost } from './postEntity';
 
-export const postsService = {
+export class PostsService {
+    constructor(protected postsRepository: PostsRepository, protected blogsRepository: BlogsRepository) {}
+
     async createPost(payload: CreateUpdatePostInputModel) {
-        const blogId = payload.blogId;
-        const linkedBlogName = (await blogsRepository.getBlogById(blogId))?.name as string;
-        const newPost: TPost = {
-            ...payload,
+        const { blogId, content, shortDescription, title } = payload;
+        const linkedBlogName = (await this.blogsRepository.getBlogById(blogId))?.name as string;
+        const newPost = new TPost({
+            title,
+            shortDescription,
+            content,
+            blogId,
             blogName: linkedBlogName,
             createdAt: new Date().toISOString(),
-        };
+        });
 
-        return postsRepository.createPost(newPost);
-    },
+        return this.postsRepository.createPost(newPost);
+    }
 
     async createPostByBlogId(payload: CreateUpdatePostInputModel, blogId: string) {
-        const blog = await blogsRepository.getBlogById(blogId);
+        const blog = await this.blogsRepository.getBlogById(blogId);
 
         if (!blog) {
             throw new APIError({
@@ -29,10 +34,10 @@ export const postsService = {
         }
 
         return this.createPost({ ...payload, blogId });
-    },
+    }
 
     async updatePost(postId: string, payload: CreateUpdatePostInputModel) {
-        const updatedPost = await postsRepository.updatePost(postId, payload);
+        const updatedPost = await this.postsRepository.updatePost(postId, payload);
 
         if (!updatedPost) {
             throw new APIError({
@@ -42,10 +47,10 @@ export const postsService = {
         }
 
         return updatedPost;
-    },
+    }
 
     async deletePostById(postId: string) {
-        const deletedPost = await postsRepository.deletePostById(postId);
+        const deletedPost = await this.postsRepository.deletePostById(postId);
 
         if (!deletedPost) {
             throw new APIError({
@@ -53,5 +58,5 @@ export const postsService = {
                 message: 'Post was not found',
             });
         }
-    },
-};
+    }
+}

@@ -13,7 +13,7 @@ type TValues = {
     pageSize: number;
 };
 
-export const queryPostsRepository = {
+export class QueryPostsRepository {
     async getAllPosts(queryParams: QueryParamsPostModel, blogId?: string) {
         const params = normalizeQueryParams(queryParams);
         const filter = createFilter({ blogId });
@@ -27,7 +27,8 @@ export const queryPostsRepository = {
             pageNumber: params.pageNumber,
             pageSize: params.pageSize,
         });
-    },
+    }
+
     async getAllPostsByBlogId(queryParams: QueryParamsPostModel, blogId: string) {
         const blog = await BlogModel.findById(blogId).lean();
 
@@ -39,7 +40,8 @@ export const queryPostsRepository = {
         }
 
         return this.getAllPosts(queryParams, blogId);
-    },
+    }
+
     async getPostById(postId: string) {
         const post = await PostModel.findById(postId);
 
@@ -51,10 +53,12 @@ export const queryPostsRepository = {
         }
 
         return this.mapMongoPostToViewModel(post);
-    },
+    }
+
     async findTotalCountOfFilteredPosts(filter: TFilter) {
         return PostModel.countDocuments(filter);
-    },
+    }
+
     async findPostItemsByParamsAndFilter(
         params: ReturnType<typeof normalizeQueryParams>,
         filter: ReturnType<typeof createFilter>
@@ -65,7 +69,8 @@ export const queryPostsRepository = {
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
             .lean();
-    },
+    }
+
     mapMongoPostToViewModel(post: WithId<TPost>): PostItemViewModel {
         return {
             id: post._id.toString(),
@@ -76,7 +81,8 @@ export const queryPostsRepository = {
             blogId: post.blogId,
             createdAt: post.createdAt,
         };
-    },
+    }
+
     mapPostsToPaginationModel(values: TValues): PostsPaginatedViewModel {
         return {
             pagesCount: Math.ceil(values.totalCount / values.pageSize),
@@ -85,5 +91,5 @@ export const queryPostsRepository = {
             totalCount: values.totalCount,
             items: values.items.map(this.mapMongoPostToViewModel.bind(this)),
         };
-    },
-};
+    }
+}

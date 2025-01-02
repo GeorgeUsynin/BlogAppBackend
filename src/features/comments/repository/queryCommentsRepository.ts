@@ -1,4 +1,4 @@
-import { ObjectId, WithId } from 'mongodb';
+import { WithId } from 'mongodb';
 import { QueryParamsCommentModel, CommentItemViewModel, CommentsPaginatedViewModel } from '../models';
 import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
 import { ResultStatus } from '../../../constants';
@@ -13,7 +13,7 @@ type TValues = {
     pageSize: number;
 };
 
-export const queryCommentsRepository = {
+export class QueryCommentsRepository {
     async getAllCommentsByPostId(queryParams: QueryParamsCommentModel, postId: string) {
         const post = await PostModel.findById(postId);
 
@@ -36,7 +36,8 @@ export const queryCommentsRepository = {
             pageNumber: params.pageNumber,
             pageSize: params.pageSize,
         });
-    },
+    }
+
     async getCommentById(commentId: string) {
         const comment = await CommentModel.findById(commentId);
 
@@ -48,10 +49,12 @@ export const queryCommentsRepository = {
         }
 
         return this.mapMongoCommentToViewModel(comment);
-    },
+    }
+
     async findTotalCountOfFilteredComments(filter: TFilter) {
         return CommentModel.countDocuments(filter);
-    },
+    }
+
     async findCommentItemsByParamsAndFilter(
         params: ReturnType<typeof normalizeQueryParams>,
         filter: ReturnType<typeof createFilter>
@@ -62,7 +65,8 @@ export const queryCommentsRepository = {
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
             .lean();
-    },
+    }
+
     mapMongoCommentToViewModel(comment: WithId<TComment>): CommentItemViewModel {
         return {
             id: comment._id.toString(),
@@ -73,7 +77,8 @@ export const queryCommentsRepository = {
             },
             createdAt: comment.createdAt,
         };
-    },
+    }
+
     mapCommentsToPaginationModel(values: TValues): CommentsPaginatedViewModel {
         return {
             pagesCount: Math.ceil(values.totalCount / values.pageSize),
@@ -82,5 +87,5 @@ export const queryCommentsRepository = {
             totalCount: values.totalCount,
             items: values.items.map(this.mapMongoCommentToViewModel),
         };
-    },
-};
+    }
+}

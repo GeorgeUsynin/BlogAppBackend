@@ -1,14 +1,17 @@
 import { CreateUpdateCommentInputModel } from '../models';
-import { postsRepository } from '../../posts/repository';
 import { usersRepository } from '../../users/repository';
-import { commentsRepository } from '../repository';
+import { CommentsRepository } from '../repository';
 import { ResultStatus } from '../../../constants';
 import { APIError } from '../../shared/helpers';
 import { TComment } from './commentEntity';
+import { PostsRepository } from '../../posts/repository';
 
-export const commentsService = {
+export class CommentsService {
+    constructor(protected commentsRepository: CommentsRepository, protected postsRepository: PostsRepository) {}
+
     async createCommentByPostId(payload: CreateUpdateCommentInputModel, postId: string, userId: string) {
-        const post = await postsRepository.findPostById(postId);
+        const { content } = payload;
+        const post = await this.postsRepository.findPostById(postId);
 
         if (!post) {
             throw new APIError({
@@ -19,21 +22,19 @@ export const commentsService = {
 
         const user = await usersRepository.findUserById(userId);
 
-        const newComment: TComment = {
-            ...payload,
-            postId,
-            commentatorInfo: {
-                userId: userId,
-                userLogin: user?.login as string,
-            },
+        const newComment = new TComment({
+            content,
+            userId,
+            userLogin: user?.login as string,
             createdAt: new Date().toISOString(),
-        };
+            postId,
+        });
 
-        return await commentsRepository.createComment(newComment);
-    },
+        return await this.commentsRepository.createComment(newComment);
+    }
 
     async updateCommentById(commentId: string, userId: string, payload: CreateUpdateCommentInputModel) {
-        const comment = await commentsRepository.findCommentById(commentId);
+        const comment = await this.commentsRepository.findCommentById(commentId);
 
         if (!comment) {
             throw new APIError({
@@ -49,11 +50,11 @@ export const commentsService = {
             });
         }
 
-        await commentsRepository.updateComment(commentId, payload);
-    },
+        await this.commentsRepository.updateComment(commentId, payload);
+    }
 
     async deleteCommentById(commentId: string, userId: string) {
-        const comment = await commentsRepository.findCommentById(commentId);
+        const comment = await this.commentsRepository.findCommentById(commentId);
 
         if (!comment) {
             throw new APIError({
@@ -69,6 +70,6 @@ export const commentsService = {
             });
         }
 
-        await commentsRepository.deleteCommentById(commentId);
-    },
-};
+        await this.commentsRepository.deleteCommentById(commentId);
+    }
+}

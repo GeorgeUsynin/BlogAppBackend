@@ -1,6 +1,8 @@
 import { CreateUpdatePostInputModel } from '../models';
 import { Schema } from 'express-validator';
-import { queryBlogsRepository } from '../../blogs/repository';
+import { QueryBlogsRepository } from '../../blogs/repository';
+
+const queryBlogsRepository = new QueryBlogsRepository();
 
 const titleMaxLength = 30;
 const shortDescriptionMaxLength = 100;

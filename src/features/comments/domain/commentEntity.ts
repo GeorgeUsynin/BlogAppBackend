@@ -1,15 +1,29 @@
 import { HydratedDocument, model, Model, Schema } from 'mongoose';
 import { SETTINGS } from '../../../app-settings';
 
-export type TComment = {
+type TCommentValues = {
     content: string;
-    commentatorInfo: {
-        userId: string;
-        userLogin: string;
-    };
+    userId: string;
+    userLogin: string;
     createdAt: string;
     postId: string;
 };
+export class TComment {
+    public content: string;
+    public commentatorInfo: {
+        userId: string;
+        userLogin: string;
+    };
+    public createdAt: string;
+    public postId: string;
+
+    constructor(values: TCommentValues) {
+        this.content = values.content;
+        this.commentatorInfo = { userId: values.userId, userLogin: values.userLogin };
+        this.createdAt = values.createdAt;
+        this.postId = values.postId;
+    }
+}
 
 type TCommentModel = Model<TComment>;
 

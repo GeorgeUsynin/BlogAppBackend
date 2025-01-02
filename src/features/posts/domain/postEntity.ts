@@ -1,7 +1,7 @@
 import { HydratedDocument, model, Model, Schema } from 'mongoose';
 import { SETTINGS } from '../../../app-settings';
 
-export type TPost = {
+type TPostValues = {
     title: string;
     shortDescription: string;
     content: string;
@@ -9,6 +9,23 @@ export type TPost = {
     blogName: string;
     createdAt: string;
 };
+export class TPost {
+    public title: string;
+    public shortDescription: string;
+    public content: string;
+    public blogId: string;
+    public blogName: string;
+    public createdAt: string;
+
+    constructor(values: TPostValues) {
+        this.title = values.title;
+        this.shortDescription = values.shortDescription;
+        this.content = values.content;
+        this.blogId = values.blogId;
+        this.blogName = values.blogName;
+        this.createdAt = values.createdAt;
+    }
+}
 
 type TPostModel = Model<TPost>;
 

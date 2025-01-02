@@ -12,7 +12,7 @@ type TValues = {
     pageSize: number;
 };
 
-export const queryBlogsRepository = {
+export class QueryBlogsRepository {
     async getAllBlogs(queryParams: QueryParamsBlogModel) {
         const params = normalizeQueryParams(queryParams);
         const filter = createFilter({ searchNameTerm: params.searchNameTerm });
@@ -26,7 +26,8 @@ export const queryBlogsRepository = {
             pageNumber: params.pageNumber,
             pageSize: params.pageSize,
         });
-    },
+    }
+
     async getBlogById(blogId: string) {
         const blog = await BlogModel.findById(blogId).lean();
 
@@ -38,10 +39,12 @@ export const queryBlogsRepository = {
         }
 
         return this.mapMongoBlogToViewModel(blog);
-    },
+    }
+
     async getTotalCountOfFilteredBlogs(filter: TFilter) {
         return BlogModel.countDocuments(filter);
-    },
+    }
+
     async findBlogItemsByParamsAndFilter(
         params: ReturnType<typeof normalizeQueryParams>,
         filter: ReturnType<typeof createFilter>
@@ -52,7 +55,8 @@ export const queryBlogsRepository = {
             .skip((pageNumber - 1) * pageSize)
             .limit(pageSize)
             .lean();
-    },
+    }
+
     mapMongoBlogToViewModel(blog: WithId<TBlog>): BlogItemViewModel {
         return {
             id: blog._id.toString(),
@@ -62,7 +66,8 @@ export const queryBlogsRepository = {
             createdAt: blog.createdAt,
             isMembership: blog.isMembership,
         };
-    },
+    }
+
     mapBlogsToPaginationModel(values: TValues): BlogsPaginatedViewModel {
         return {
             pagesCount: Math.ceil(values.totalCount / values.pageSize),
@@ -71,5 +76,5 @@ export const queryBlogsRepository = {
             totalCount: values.totalCount,
             items: values.items.map(this.mapMongoBlogToViewModel),
         };
-    },
-};
+    }
+}

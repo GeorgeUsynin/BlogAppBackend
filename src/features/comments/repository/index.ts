@@ -1,4 +1,4 @@
-import { queryCommentsRepository } from './queryCommentsRepository';
-import { commentsRepository } from './commentsRepository';
+import { QueryCommentsRepository } from './queryCommentsRepository';
+import { CommentsRepository } from './commentsRepository';
 
-export { commentsRepository, queryCommentsRepository };
+export { CommentsRepository, QueryCommentsRepository };

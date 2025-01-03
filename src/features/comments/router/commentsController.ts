@@ -4,6 +4,7 @@ import { CommentItemViewModel, CreateUpdateCommentInputModel, URIParamsCommentID
 import { HTTP_STATUS_CODES } from '../../../constants';
 import { QueryCommentsRepository } from '../repository';
 import { CommentsService } from '../domain';
+import { CommentLikeStatusInputModel } from '../../likes/models';
 
 export class CommentsController {
     constructor(private commentsService: CommentsService, private queryCommentsRepository: QueryCommentsRepository) {}
@@ -15,8 +16,9 @@ export class CommentsController {
     ) {
         try {
             const commentId = req.params.id;
+            const userId = req.userId;
 
-            const comment = await this.queryCommentsRepository.getCommentById(commentId);
+            const comment = await this.queryCommentsRepository.getCommentById(commentId, userId as string);
 
             res.status(HTTP_STATUS_CODES.OK_200).send(comment);
         } catch (err) {
@@ -48,6 +50,24 @@ export class CommentsController {
             const userId = req.userId;
 
             await this.commentsService.deleteCommentById(commentId, userId as string);
+
+            res.sendStatus(HTTP_STATUS_CODES.NO_CONTENT_204);
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async updateLikeStatusByCommentID(
+        req: RequestWithParamsAndBody<URIParamsCommentIDModel, CommentLikeStatusInputModel>,
+        res: Response,
+        next: NextFunction
+    ) {
+        try {
+            const commentId = req.params.id;
+            const likeStatus = req.body.likeStatus;
+            const userId = req.userId;
+
+            await this.commentsService.updateLikeStatusByCommentID(commentId, likeStatus, userId as string);
 
             res.sendStatus(HTTP_STATUS_CODES.NO_CONTENT_204);
         } catch (err) {

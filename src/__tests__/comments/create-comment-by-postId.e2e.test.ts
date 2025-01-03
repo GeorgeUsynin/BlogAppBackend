@@ -37,6 +37,11 @@ describe('create a comment by requested postId', () => {
                 userLogin: secondUser.login,
             },
             createdAt: expect.any(String),
+            likesInfo: {
+                dislikesCount: expect.any(Number),
+                likesCount: expect.any(Number),
+                myStatus: expect.any(String),
+            },
         };
 
         //creating new comment

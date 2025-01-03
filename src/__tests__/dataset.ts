@@ -153,6 +153,10 @@ export const comments: WithId<TComment>[] = [
             userLogin: 'george',
         },
         createdAt: '2024-12-29T10:50:15.222Z',
+        likesInfo: {
+            dislikesCount: 0,
+            likesCount: 0,
+        },
     },
     {
         _id: new ObjectId(),
@@ -163,6 +167,10 @@ export const comments: WithId<TComment>[] = [
             userLogin: 'george',
         },
         createdAt: '2024-12-30T11:50:15.222Z',
+        likesInfo: {
+            dislikesCount: 0,
+            likesCount: 0,
+        },
     },
     {
         _id: new ObjectId(),
@@ -173,6 +181,10 @@ export const comments: WithId<TComment>[] = [
             userLogin: 'natasha',
         },
         createdAt: '2025-01-01T15:50:15.222Z',
+        likesInfo: {
+            dislikesCount: 0,
+            likesCount: 0,
+        },
     },
     {
         _id: new ObjectId(),
@@ -183,6 +195,10 @@ export const comments: WithId<TComment>[] = [
             userLogin: 'natasha',
         },
         createdAt: '2025-01-04T13:45:00.000Z',
+        likesInfo: {
+            dislikesCount: 0,
+            likesCount: 0,
+        },
     },
 ];
 

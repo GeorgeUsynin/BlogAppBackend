@@ -1,4 +1,4 @@
-import { CommentModel, TComment } from '../domain';
+import { CommentDocument, CommentModel, TComment } from '../domain';
 import { CreateUpdateCommentInputModel } from '../models';
 
 export class CommentsRepository {
@@ -16,5 +16,9 @@ export class CommentsRepository {
 
     async deleteCommentById(id: string) {
         return CommentModel.findByIdAndDelete(id);
+    }
+
+    async saveComment(commentDocument: CommentDocument) {
+        return commentDocument.save();
     }
 }

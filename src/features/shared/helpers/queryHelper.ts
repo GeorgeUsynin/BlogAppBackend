@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb';
 import { QueryParamsBlogModel } from '../../blogs/models';
 import { QueryParamsPostModel } from '../../posts/models';
 import { QueryParamsUserModel } from '../../users/models';
+import { LikeStatus } from '../../../constants';
 
 export const normalizeQueryParams = (
     queryParams: QueryParamsBlogModel | QueryParamsPostModel | QueryParamsUserModel
@@ -26,6 +27,7 @@ type TFilterParams = {
     searchNameTerm?: ReturnType<typeof normalizeQueryParams>['searchNameTerm'];
     searchLoginTerm?: ReturnType<typeof normalizeQueryParams>['searchLoginTerm'];
     searchEmailTerm?: ReturnType<typeof normalizeQueryParams>['searchEmailTerm'];
+    likeStatus?: keyof typeof LikeStatus;
 };
 
 export type TFilter = {

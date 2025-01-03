@@ -68,8 +68,13 @@ export class PostsController {
         try {
             const queryParams = req.query;
             const postId = req.params.id;
+            const userId = req.userId;
 
-            const result = await this.queryCommentsRepository.getAllCommentsByPostId(queryParams, postId);
+            const result = await this.queryCommentsRepository.getAllCommentsByPostId(
+                queryParams,
+                postId,
+                userId as string
+            );
 
             res.status(HTTP_STATUS_CODES.OK_200).send(result);
         } catch (err) {
@@ -106,7 +111,7 @@ export class PostsController {
 
             const { id } = await this.commentsService.createCommentByPostId(payload, postId, userId!);
 
-            const newComment = await this.queryCommentsRepository.getCommentById(id);
+            const newComment = await this.queryCommentsRepository.getCommentById(id, userId as string);
 
             res.status(HTTP_STATUS_CODES.CREATED_201).send(newComment);
         } catch (err) {

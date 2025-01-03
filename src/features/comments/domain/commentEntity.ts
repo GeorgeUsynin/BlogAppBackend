@@ -9,6 +9,10 @@ type TCommentValues = {
     };
     createdAt: string;
     postId: string;
+    likesInfo: {
+        likesCount: number;
+        dislikesCount: number;
+    };
 };
 export class TComment {
     public content: string;
@@ -18,12 +22,17 @@ export class TComment {
     };
     public createdAt: string;
     public postId: string;
+    public likesInfo: {
+        likesCount: number;
+        dislikesCount: number;
+    };
 
     constructor(values: TCommentValues) {
         this.content = values.content;
         this.commentatorInfo = values.commentatorInfo;
         this.createdAt = values.createdAt;
         this.postId = values.postId;
+        this.likesInfo = values.likesInfo;
     }
 }
 
@@ -39,6 +48,10 @@ const commentSchema = new Schema<TComment>({
     },
     postId: { type: String, required: true },
     createdAt: { type: String, required: true },
+    likesInfo: {
+        dislikesCount: { type: Number, required: true },
+        likesCount: { type: Number, required: true },
+    },
 });
 
 export const CommentModel = model<TComment, TCommentModel>(SETTINGS.DB_COLLECTIONS.commentsCollection, commentSchema);

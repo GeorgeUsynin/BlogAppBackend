@@ -15,6 +15,7 @@ export enum ROUTES {
     BLOGS = '/blogs',
     COMMENTS = '/comments',
     DEVICES = '/devices',
+    LIKE_STATUS = '/like-status',
     LOGIN = '/login',
     LOGOUT = '/logout',
     ME = '/me',
@@ -38,4 +39,10 @@ export enum ResultStatus {
     Success = 'Success',
     Unauthorized = 'Unauthorized',
     RateLimit = 'RateLimit',
+}
+
+export enum LikeStatus {
+    None = 'None',
+    Like = 'Like',
+    Dislike = 'Dislike',
 }

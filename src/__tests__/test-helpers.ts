@@ -13,6 +13,8 @@ import { CommentModel, TComment } from '../features/comments/domain';
 import { TUser, UserModel } from '../features/users/domain';
 import { AuthDeviceSessionModel, TDevice } from '../features/security/domain';
 import { ApiRateLimitModel, TAPIRateLimit } from '../features/shared/services';
+import { LikeStatus } from '../constants';
+import { LikeModel, TLike } from '../features/likes/domain';
 
 export const request = agent(app);
 
@@ -41,13 +43,15 @@ type TValues = {
     code?: Omit<TProperties, 'maxLength'>[];
     recoveryCode?: Omit<TProperties, 'maxLength'>[];
     from?: 'blogs' | 'posts' | 'comments' | 'users';
+    likeStatus?: (Omit<TProperties, 'maxLength'> | 'isEqualTo')[];
 };
 
-const sortByConfig = {
+const config = {
     blogs: ['name', 'createdAt'],
     posts: ['title', 'blogName', 'createdAt'],
     comments: ['createdAt'],
     users: ['login', 'email', 'createdAt'],
+    likes: [LikeStatus.None, LikeStatus.Like, LikeStatus.Dislike],
 };
 
 const errorMessagesConfig = {
@@ -64,13 +68,13 @@ const errorMessagesConfig = {
         field,
     }),
     //@ts-expect-error
-    isEqualTo: (field: string, from?: 'blogs' | 'posts' | 'comments' | 'users') => {
+    isEqualTo: (field: string, from?: 'blogs' | 'posts' | 'comments' | 'users' | 'likes') => {
         switch (field) {
             case 'sortBy':
                 return {
                     message: `${capitalizeFirstLetter(
                         field
-                    )} field should be equal one of the following values: ${sortByConfig[from || 'blogs'].join(', ')}`,
+                    )} field should be equal one of the following values: ${config[from || 'blogs'].join(', ')}`,
                     field,
                 };
             case 'sortDirection':
@@ -78,6 +82,13 @@ const errorMessagesConfig = {
                     message: `${capitalizeFirstLetter(
                         field
                     )} field should be equal one of the following values: asc, desc`,
+                    field,
+                };
+            case 'likeStatus':
+                return {
+                    message: `${capitalizeFirstLetter(
+                        field
+                    )} field should be equal one of the following values: ${config['likes'].join(', ')}`,
                     field,
                 };
         }
@@ -129,6 +140,7 @@ export const createErrorMessages = (values: TValues) => {
         code,
         newPassword,
         recoveryCode,
+        likeStatus,
     } = values;
 
     const errorsMessages: ErrorViewModel['errorsMessages'] = [];
@@ -443,6 +455,26 @@ export const createErrorMessages = (values: TValues) => {
         });
     }
 
+    if (likeStatus) {
+        likeStatus.forEach(value => {
+            switch (value) {
+                case 'isRequired':
+                    errorsMessages.push(errorMessagesConfig.isRequired('likeStatus'));
+                    break;
+                case 'isEmptyString':
+                    errorsMessages.push(errorMessagesConfig.isEmptyString('likeStatus'));
+                    break;
+                case 'isString':
+                    errorsMessages.push(errorMessagesConfig.isString('likeStatus'));
+                    break;
+                case 'isEqualTo':
+                    const error = errorMessagesConfig.isEqualTo('likeStatus');
+                    if (error) errorsMessages.push(error);
+                    break;
+            }
+        });
+    }
+
     return { errorsMessages };
 };
 
@@ -474,6 +506,7 @@ type TDataset = {
     comments?: TComment[];
     apiRateLimit?: TAPIRateLimit[];
     authDeviceSessions?: TDevice[];
+    likes?: TLike[];
 };
 
 let mongooseConnection: Mongoose | null = null;
@@ -504,6 +537,9 @@ export const dbHelper = {
         }
         if (collectionNames.includes('authDeviceSessions')) {
             await AuthDeviceSessionModel.deleteMany({});
+        }
+        if (collectionNames.includes('likes')) {
+            await LikeModel.deleteMany({});
         }
     },
     setDb: async (dataset: TDataset) => {

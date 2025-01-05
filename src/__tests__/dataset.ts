@@ -15,6 +15,10 @@ const fifthId = new ObjectId();
 const sixthId = new ObjectId();
 const seventhId = new ObjectId();
 const eighthId = new ObjectId();
+const firstCommentId = new ObjectId();
+const secondCommentId = new ObjectId();
+const thirdCommentId = new ObjectId();
+const fourthCommentId = new ObjectId();
 
 const firstDeviceId = generateUUID();
 const secondDeviceId = generateUUID();
@@ -145,7 +149,7 @@ export const posts: WithId<TPost>[] = [
 
 export const comments: WithId<TComment>[] = [
     {
-        _id: new ObjectId(),
+        _id: firstCommentId,
         postId: firstId.toString(),
         content: "This is George's first comment.",
         commentatorInfo: {
@@ -159,7 +163,7 @@ export const comments: WithId<TComment>[] = [
         },
     },
     {
-        _id: new ObjectId(),
+        _id: secondCommentId,
         postId: firstId.toString(),
         content: "This is George's second comment.",
         commentatorInfo: {
@@ -173,7 +177,7 @@ export const comments: WithId<TComment>[] = [
         },
     },
     {
-        _id: new ObjectId(),
+        _id: thirdCommentId,
         postId: secondId.toString(),
         content: "This is Natasha's first comment.",
         commentatorInfo: {
@@ -187,7 +191,7 @@ export const comments: WithId<TComment>[] = [
         },
     },
     {
-        _id: new ObjectId(),
+        _id: fourthCommentId,
         postId: secondId.toString(),
         content: "This is Natasha's second comment.",
         commentatorInfo: {

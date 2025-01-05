@@ -1,6 +1,6 @@
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 import { blogs, posts, users } from '../dataset';
-import { createErrorMessages, request, getAuthorization, getBearerAuthorization } from '../test-helpers';
+import { createErrorMessages, request, getAuthorization, getBearerAuthorization, dbHelper } from '../test-helpers';
 
 const secondBlogId = blogs[1]._id.toString();
 const secondPostId = posts[1]._id.toString();
@@ -24,6 +24,23 @@ const setAuthorization = (from: 'users' | 'comments' | 'posts' | 'blogs') => {
     }
     return {};
 };
+
+beforeAll(async () => {
+    await dbHelper.connectToDb();
+});
+
+beforeEach(async () => {
+    await dbHelper.setDb({ users });
+});
+
+afterEach(async () => {
+    await dbHelper.resetCollections(['users']);
+});
+
+afterAll(async () => {
+    await dbHelper.dropDb();
+    await dbHelper.closeConnection();
+});
 
 URLS.forEach(item => {
     const { url, from } = item;

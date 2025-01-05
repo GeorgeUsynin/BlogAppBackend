@@ -38,11 +38,11 @@ export class UsersService {
             },
         });
 
-        return await this.usersRepository.createUser(newUser);
+        return this.usersRepository.createUser(newUser);
     }
 
     async findUserById(userId: string) {
-        return await this.usersRepository.findUserById(userId);
+        return this.usersRepository.findUserById(userId);
     }
 
     async deleteUserById(userId: string) {

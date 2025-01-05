@@ -47,6 +47,11 @@ describe('update comment by id', () => {
                 userId: expect.any(String),
                 userLogin: expect.any(String),
             },
+            likesInfo: {
+                dislikesCount: 0,
+                likesCount: 0,
+                myStatus: 'None',
+            },
             ...updatedComment,
         });
     });

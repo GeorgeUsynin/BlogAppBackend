@@ -2,7 +2,12 @@ import { Router } from 'express';
 import { checkSchema } from 'express-validator';
 import { createUpdatePostValidationSchema, blogIdValidationSchema } from '../validation';
 import { createUpdateCommentValidationSchema } from '../../comments/validation';
-import { authBasicMiddleware, authBearerMiddleware, errorMiddleware } from '../../shared/middlewares';
+import {
+    authBasicMiddleware,
+    authBearerMiddleware,
+    errorMiddleware,
+    getUserIdFromAccessTokenMiddleware,
+} from '../../shared/middlewares';
 import { queryParamsValidationSchema } from '../../shared/validation';
 import { ROUTES } from '../../../constants';
 import { postsController } from './compositionRoot';
@@ -21,7 +26,11 @@ const createCommentValidators = [
     errorMiddleware,
 ];
 const getAllPostsValidators = [checkSchema(queryParamsValidationSchema('posts'), ['query']), errorMiddleware];
-const getAllCommentsByPostID = [checkSchema(queryParamsValidationSchema('comments'), ['query']), errorMiddleware];
+const getAllCommentsByPostID = [
+    getUserIdFromAccessTokenMiddleware,
+    checkSchema(queryParamsValidationSchema('comments'), ['query']),
+    errorMiddleware,
+];
 
 PostsRouter.get('/', ...getAllPostsValidators, postsController.getAllPosts.bind(postsController));
 PostsRouter.get('/:id', postsController.getPostByID.bind(postsController));

@@ -1,3 +1,4 @@
+import { LikeStatus } from '../../../constants';
 import { PaginatedViewModel } from '../../shared/types';
 
 /**
@@ -37,6 +38,13 @@ export type CommentItemViewModel = {
      * @required
      */
     createdAt: string;
+
+    /**
+     * Information about likes and dislikes for the comment.
+     * @type {LikesInfoViewModel}
+     * @required
+     */
+    likesInfo: LikesInfoViewModel;
 };
 
 /**
@@ -56,4 +64,32 @@ type CommentatorInfo = {
      * @required
      */
     userLogin: string;
+};
+
+/**
+ * Represents information about likes and dislikes.
+ */
+export type LikesInfoViewModel = {
+    /**
+     * Total likes for the parent item.
+     * @type {number}
+     * @required
+     */
+    likesCount: number;
+
+    /**
+     * Total dislikes for the parent item.
+     * @type {number}
+     * @required
+     */
+    dislikesCount: number;
+
+    /**
+     * The current user's like status for the comment.
+     * Send "None" if you want to unlike/undislike.
+     * @type {LikeStatus}
+     * @required
+     * @enum {string}
+     */
+    myStatus: keyof typeof LikeStatus;
 };

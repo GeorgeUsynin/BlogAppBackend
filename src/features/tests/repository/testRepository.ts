@@ -4,6 +4,7 @@ import { PostModel } from '../../posts/domain';
 import { AuthDeviceSessionModel } from '../../security/domain';
 import { ApiRateLimitModel } from '../../shared/services';
 import { UserModel } from '../../users/domain';
+import { LikeModel } from '../../likes/domain';
 
 export const testRepository = {
     async deleteAllData() {
@@ -13,5 +14,6 @@ export const testRepository = {
         await UserModel.deleteMany({});
         await ApiRateLimitModel.deleteMany({});
         await AuthDeviceSessionModel.deleteMany({});
+        await LikeModel.deleteMany({});
     },
 };

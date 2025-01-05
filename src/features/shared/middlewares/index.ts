@@ -5,6 +5,7 @@ import { databaseConnectionMiddleware } from './databaseConnectionMiddleware';
 import { authRefreshTokenMiddleware } from './authRefreshTokenMiddleware';
 import { APIErrorMiddleware } from './APIErrorMiddleware';
 import { apiRateLimitMiddleware } from './apiRateLimitMiddleware';
+import { getUserIdFromAccessTokenMiddleware } from './getUserIdFromAccessTokenMiddleware';
 
 export {
     authBasicMiddleware,
@@ -14,4 +15,5 @@ export {
     databaseConnectionMiddleware,
     APIErrorMiddleware,
     apiRateLimitMiddleware,
+    getUserIdFromAccessTokenMiddleware,
 };

@@ -4,6 +4,7 @@ import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpe
 import { ResultStatus } from '../../../constants';
 import { PostModel } from '../../posts/domain';
 import { CommentModel, TComment } from '../domain';
+import { LikesRepository } from '../../likes/repository';
 
 type TFilter = ReturnType<typeof createFilter>;
 type TValues = {
@@ -11,10 +12,13 @@ type TValues = {
     totalCount: number;
     pageNumber: number;
     pageSize: number;
+    userId: string;
 };
 
 export class QueryCommentsRepository {
-    async getAllCommentsByPostId(queryParams: QueryParamsCommentModel, postId: string) {
+    constructor(private likesRepository: LikesRepository) {}
+
+    async getAllCommentsByPostId(queryParams: QueryParamsCommentModel, postId: string, userId: string) {
         const post = await PostModel.findById(postId);
 
         if (!post) {
@@ -35,10 +39,11 @@ export class QueryCommentsRepository {
             totalCount,
             pageNumber: params.pageNumber,
             pageSize: params.pageSize,
+            userId,
         });
     }
 
-    async getCommentById(commentId: string) {
+    async getCommentById(commentId: string, userId: string) {
         const comment = await CommentModel.findById(commentId);
 
         if (!comment) {
@@ -48,7 +53,7 @@ export class QueryCommentsRepository {
             });
         }
 
-        return this.mapMongoCommentToViewModel(comment);
+        return this.mapMongoCommentToViewModel(comment, userId);
     }
 
     async findTotalCountOfFilteredComments(filter: TFilter) {
@@ -67,7 +72,10 @@ export class QueryCommentsRepository {
             .lean();
     }
 
-    mapMongoCommentToViewModel(comment: WithId<TComment>): CommentItemViewModel {
+    async mapMongoCommentToViewModel(comment: WithId<TComment>, userId: string): Promise<CommentItemViewModel> {
+        const myStatus = (await this.likesRepository.findLikeByParams({ parentId: comment._id.toString(), userId }))
+            ?.status;
+
         return {
             id: comment._id.toString(),
             content: comment.content,
@@ -76,16 +84,28 @@ export class QueryCommentsRepository {
                 userLogin: comment.commentatorInfo.userLogin,
             },
             createdAt: comment.createdAt,
+            likesInfo: {
+                dislikesCount: comment.likesInfo.dislikesCount,
+                likesCount: comment.likesInfo.likesCount,
+                myStatus: myStatus ?? 'None',
+            },
         };
     }
 
-    mapCommentsToPaginationModel(values: TValues): CommentsPaginatedViewModel {
+    async mapCommentsToPaginationModel(values: TValues): Promise<CommentsPaginatedViewModel> {
+        let items: CommentItemViewModel[] = [];
+
+        for (let promiseItem of values.items) {
+            const item = await this.mapMongoCommentToViewModel(promiseItem, values.userId);
+            items.push(item);
+        }
+
         return {
             pagesCount: Math.ceil(values.totalCount / values.pageSize),
             page: values.pageNumber,
             pageSize: values.pageSize,
             totalCount: values.totalCount,
-            items: values.items.map(this.mapMongoCommentToViewModel),
+            items,
         };
     }
 }

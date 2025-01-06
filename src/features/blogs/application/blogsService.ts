@@ -1,11 +1,13 @@
+import { inject, injectable } from 'inversify';
 import { BlogsRepository } from '../infrastructure';
 import type { CreateUpdateBlogInputDTO } from '../application';
 import { APIError } from '../../shared/helpers';
 import { ResultStatus } from '../../../constants';
 import { TBlog } from '../domain';
 
+@injectable()
 export class BlogsService {
-    constructor(private blogsRepository: BlogsRepository) {}
+    constructor(@inject(BlogsRepository) private blogsRepository: BlogsRepository) {}
 
     async createBlog(dto: CreateUpdateBlogInputDTO) {
         const newBlog = new TBlog(dto);

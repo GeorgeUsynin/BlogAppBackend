@@ -1,3 +1,4 @@
+import { inject, injectable } from 'inversify';
 import { PostsRepository } from '../repository';
 import type { CreateUpdatePostInputModel } from '../models';
 import { BlogsRepository } from '../../blogs/infrastructure';
@@ -5,8 +6,12 @@ import { APIError } from '../../shared/helpers';
 import { ResultStatus } from '../../../constants';
 import { TPost } from './postEntity';
 
+@injectable()
 export class PostsService {
-    constructor(private postsRepository: PostsRepository, private blogsRepository: BlogsRepository) {}
+    constructor(
+        @inject(PostsRepository) private postsRepository: PostsRepository,
+        @inject(BlogsRepository) private blogsRepository: BlogsRepository
+    ) {}
 
     async createPost(payload: CreateUpdatePostInputModel) {
         const { blogId, content, shortDescription, title } = payload;

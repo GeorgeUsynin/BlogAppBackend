@@ -1,3 +1,4 @@
+import { inject, injectable } from 'inversify';
 import { NextFunction, Request, Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../../constants';
 import { QueryPostsRepository } from '../../posts/repository';
@@ -19,12 +20,13 @@ import { BlogsService } from '../application';
 import { QueryBlogsRepository } from '../infrastructure';
 import { PostsService } from '../../posts/domain';
 
+@injectable()
 export class BlogsController {
     constructor(
-        private blogsService: BlogsService,
-        private queryBlogsRepository: QueryBlogsRepository,
-        private postsService: PostsService,
-        private queryPostsRepository: QueryPostsRepository
+        @inject(BlogsService) private blogsService: BlogsService,
+        @inject(QueryBlogsRepository) private queryBlogsRepository: QueryBlogsRepository,
+        @inject(PostsService) private postsService: PostsService,
+        @inject(QueryPostsRepository) private queryPostsRepository: QueryPostsRepository
     ) {}
 
     async getAllBlogs(

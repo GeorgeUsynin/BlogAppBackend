@@ -5,7 +5,10 @@ import { authBasicMiddleware, errorMiddleware } from '../../shared/middlewares';
 import { queryParamsValidationSchema } from '../../shared/validation';
 import { createUpdatePostValidationSchema } from '../../posts/validation';
 import { ROUTES } from '../../../constants';
-import { blogsController } from './compositionRoot';
+import { container } from './compositionRoot';
+import { BlogsController } from './blogsController';
+
+const blogsController = container.get(BlogsController);
 
 export const BlogsRouter = Router();
 

@@ -1,21 +1,17 @@
+import 'reflect-metadata';
+import { Container } from 'inversify';
 import { BlogsRepository, QueryBlogsRepository } from '../infrastructure';
 import { BlogsService } from '../application';
 import { PostsService } from '../../posts/domain';
 import { PostsRepository, QueryPostsRepository } from '../../posts/repository';
 import { BlogsController } from './blogsController';
 
-const blogsRepository = new BlogsRepository();
-const queryBlogsRepository = new QueryBlogsRepository();
+export const container: Container = new Container();
 
-const postsRepository = new PostsRepository();
-const queryPostsRepository = new QueryPostsRepository();
-
-const blogsService = new BlogsService(blogsRepository);
-const postService = new PostsService(postsRepository, blogsRepository);
-
-export const blogsController = new BlogsController(
-    blogsService,
-    queryBlogsRepository,
-    postService,
-    queryPostsRepository
-);
+container.bind(BlogsRepository).toSelf();
+container.bind(QueryBlogsRepository).toSelf();
+container.bind(PostsRepository).toSelf();
+container.bind(QueryPostsRepository).toSelf();
+container.bind(BlogsService).toSelf();
+container.bind(PostsService).toSelf();
+container.bind(BlogsController).toSelf();

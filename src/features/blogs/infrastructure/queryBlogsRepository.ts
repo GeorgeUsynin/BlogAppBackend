@@ -1,3 +1,4 @@
+import { injectable } from 'inversify';
 import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
 import { QueryParamsBlogModel, BlogsPaginatedViewModel, BlogItemViewModel } from '../api';
 import { BlogModel, TBlog } from '../domain';
@@ -12,6 +13,7 @@ type TValues = {
     pageSize: number;
 };
 
+@injectable()
 export class QueryBlogsRepository {
     async getAllBlogs(queryParams: QueryParamsBlogModel) {
         const params = normalizeQueryParams(queryParams);

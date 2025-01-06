@@ -1,3 +1,4 @@
+import { injectable } from 'inversify';
 import { WithId } from 'mongodb';
 import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
 import { QueryParamsPostModel, PostsPaginatedViewModel, PostItemViewModel } from '../models';
@@ -13,6 +14,7 @@ type TValues = {
     pageSize: number;
 };
 
+@injectable()
 export class QueryPostsRepository {
     async getAllPosts(queryParams: QueryParamsPostModel, blogId?: string) {
         const params = normalizeQueryParams(queryParams);

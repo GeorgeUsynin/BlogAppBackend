@@ -1,6 +1,8 @@
+import { injectable } from 'inversify';
 import { PostModel, TPost } from '../domain';
 import { CreateUpdatePostInputModel } from '../models';
 
+@injectable()
 export class PostsRepository {
     async createPost(newPost: TPost) {
         return PostModel.create(newPost);

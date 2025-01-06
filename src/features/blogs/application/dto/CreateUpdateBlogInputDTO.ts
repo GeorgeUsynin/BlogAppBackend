@@ -1,7 +1,7 @@
 /**
  * Represents the input model for creating or updating an existing blog.
  */
-export type CreateUpdateBlogInputModel = {
+export type CreateUpdateBlogInputDTO = {
     /**
      * The name of the blog.
      * @type {string}

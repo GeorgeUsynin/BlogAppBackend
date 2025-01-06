@@ -4,7 +4,7 @@ import express, { Request, Response } from 'express';
 import { HTTP_STATUS_CODES, ROUTES } from './constants';
 import { AuthRouter } from './features/auth/router';
 import { UsersRouter } from './features/users/router';
-import { BlogsRouter } from './features/blogs/router';
+import { BlogsRouter } from './features/blogs/api';
 import { PostsRouter } from './features/posts/router';
 import { CommentsRouter } from './features/comments/router';
 import { SecurityRouter } from './features/security/router';

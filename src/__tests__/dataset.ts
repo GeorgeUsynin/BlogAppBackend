@@ -34,6 +34,7 @@ export const blogs: WithId<TBlog>[] = [
         websiteUrl: 'https://ecolifestyle.com',
         createdAt: '2024-11-15T10:50:15.222Z',
         isMembership: false,
+        isDeleted: false,
     },
     {
         _id: secondId,
@@ -43,6 +44,7 @@ export const blogs: WithId<TBlog>[] = [
         websiteUrl: 'https://techtrends.io',
         createdAt: '2024-11-17T10:50:15.222Z',
         isMembership: false,
+        isDeleted: false,
     },
     {
         _id: thirdId,
@@ -52,6 +54,7 @@ export const blogs: WithId<TBlog>[] = [
         websiteUrl: 'https://wellnesspath.org',
         createdAt: '2024-11-19T10:50:15.222Z',
         isMembership: false,
+        isDeleted: false,
     },
     {
         _id: fourthId,
@@ -61,6 +64,7 @@ export const blogs: WithId<TBlog>[] = [
         websiteUrl: 'https://creativeminds.art',
         createdAt: '2024-11-22T10:50:15.222Z',
         isMembership: false,
+        isDeleted: false,
     },
 ];
 

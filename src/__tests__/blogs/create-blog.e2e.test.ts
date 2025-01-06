@@ -1,7 +1,8 @@
 import { request, createErrorMessages, getAuthorization, dbHelper } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 import { longDescription, longWebsiteUrl } from '../dataset';
-import { CreateUpdateBlogInputModel, BlogItemViewModel } from '../../features/blogs/models';
+import { BlogItemViewModel } from '../../features/blogs/api';
+import { CreateUpdateBlogInputDTO } from '../../features/blogs/application';
 
 describe('create a blog', () => {
     beforeAll(async () => {
@@ -18,7 +19,7 @@ describe('create a blog', () => {
     });
 
     it('creates a new blog', async () => {
-        const newBlog: CreateUpdateBlogInputModel = {
+        const newBlog: CreateUpdateBlogInputDTO = {
             description: 'Eco lifestyle description',
             name: 'Eco Lifestyle',
             websiteUrl: 'https://ecolifestyle.com',
@@ -50,7 +51,7 @@ describe('create a blog', () => {
         describe('name', () => {
             it('returns 400 status code and proper error object if `name` is missing', async () => {
                 //@ts-expect-error bad request (name is missing)
-                const newBlog: CreateUpdateBlogInputModel = {
+                const newBlog: CreateUpdateBlogInputDTO = {
                     description: 'Eco lifestyle description',
                     websiteUrl: 'https://ecolifestyle.com',
                 };
@@ -64,7 +65,7 @@ describe('create a blog', () => {
             });
 
             it('returns 400 status code and proper error object if `name` is empty or contain only spaces', async () => {
-                const newBlog: CreateUpdateBlogInputModel = {
+                const newBlog: CreateUpdateBlogInputDTO = {
                     name: ' ',
                     description: 'Eco lifestyle description',
                     websiteUrl: 'https://ecolifestyle.com',
@@ -79,7 +80,7 @@ describe('create a blog', () => {
             });
 
             it('returns 400 status code and proper error object for bad `name` type', async () => {
-                const newBlog: CreateUpdateBlogInputModel = {
+                const newBlog: CreateUpdateBlogInputDTO = {
                     //@ts-expect-error bad request (name type is invalid)
                     name: [],
                     description: 'Eco lifestyle description',
@@ -95,7 +96,7 @@ describe('create a blog', () => {
             });
 
             it('returns 400 status code and proper error object for bad `name` max length', async () => {
-                const newBlog: CreateUpdateBlogInputModel = {
+                const newBlog: CreateUpdateBlogInputDTO = {
                     name: 'More than fifteen characters',
                     description: 'Eco lifestyle description',
                     websiteUrl: 'https://ecolifestyle.com',
@@ -113,7 +114,7 @@ describe('create a blog', () => {
         describe('description', () => {
             it('returns 400 status code and proper error object if `description` is missing', async () => {
                 //@ts-expect-error bad request (description is missing)
-                const newBlog: CreateUpdateBlogInputModel = {
+                const newBlog: CreateUpdateBlogInputDTO = {
                     name: 'Eco Lifestyle',
                     websiteUrl: 'https://ecolifestyle.com',
                 };
@@ -127,7 +128,7 @@ describe('create a blog', () => {
             });
 
             it('returns 400 status code and proper error object if `description` is empty or contain only spaces', async () => {
-                const newBlog: CreateUpdateBlogInputModel = {
+                const newBlog: CreateUpdateBlogInputDTO = {
                     name: 'Eco Lifestyle',
                     description: ' ',
                     websiteUrl: 'https://ecolifestyle.com',
@@ -142,7 +143,7 @@ describe('create a blog', () => {
             });
 
             it('returns 400 status code and proper error object for bad `description` type', async () => {
-                const newBlog: CreateUpdateBlogInputModel = {
+                const newBlog: CreateUpdateBlogInputDTO = {
                     name: 'Eco Lifestyle',
                     //@ts-expect-error bad request (description type is invalid)
                     description: [],
@@ -158,7 +159,7 @@ describe('create a blog', () => {
             });
 
             it('returns 400 status code and proper error object for bad `description` max length', async () => {
-                const newBlog: CreateUpdateBlogInputModel = {
+                const newBlog: CreateUpdateBlogInputDTO = {
                     name: 'Eco Lifestyle',
                     description: longDescription,
                     websiteUrl: 'https://ecolifestyle.com',
@@ -176,7 +177,7 @@ describe('create a blog', () => {
         describe('websiteUrl', () => {
             it('returns 400 status code and proper error object if `websiteUrl` is missing', async () => {
                 //@ts-expect-error bad request (websiteUrl is missing)
-                const newBlog: CreateUpdateBlogInputModel = {
+                const newBlog: CreateUpdateBlogInputDTO = {
                     name: 'Eco Lifestyle',
                     description: 'Eco lifestyle description',
                 };
@@ -190,7 +191,7 @@ describe('create a blog', () => {
             });
 
             it('returns 400 status code and proper error object if `websiteUrl` is empty or contain only spaces', async () => {
-                const newBlog: CreateUpdateBlogInputModel = {
+                const newBlog: CreateUpdateBlogInputDTO = {
                     name: 'Eco Lifestyle',
                     description: 'Eco lifestyle description',
                     websiteUrl: ' ',
@@ -205,7 +206,7 @@ describe('create a blog', () => {
             });
 
             it('returns 400 status code and proper error object for bad `websiteUrl` type', async () => {
-                const newBlog: CreateUpdateBlogInputModel = {
+                const newBlog: CreateUpdateBlogInputDTO = {
                     name: 'Eco Lifestyle',
                     description: 'Eco lifestyle description',
                     //@ts-expect-error bad request (websiteUrl type is invalid)
@@ -221,7 +222,7 @@ describe('create a blog', () => {
             });
 
             it('returns 400 status code and proper error object for bad `websiteUrl` max length', async () => {
-                const newBlog: CreateUpdateBlogInputModel = {
+                const newBlog: CreateUpdateBlogInputDTO = {
                     name: 'Eco Lifestyle',
                     description: 'Eco lifestyle description',
                     websiteUrl: longWebsiteUrl,
@@ -236,7 +237,7 @@ describe('create a blog', () => {
             });
 
             it('returns 400 status code and proper error object for invalid `websiteUrl` format', async () => {
-                const newBlog: CreateUpdateBlogInputModel = {
+                const newBlog: CreateUpdateBlogInputDTO = {
                     name: 'Eco Lifestyle',
                     description: 'Eco lifestyle description',
                     websiteUrl: 'invalid-url',
@@ -253,7 +254,7 @@ describe('create a blog', () => {
     });
 
     it('returns 401 Unauthorized status code if there is no proper Authorization header', async () => {
-        const newBlog: CreateUpdateBlogInputModel = {
+        const newBlog: CreateUpdateBlogInputDTO = {
             description: 'Eco lifestyle description',
             name: 'Eco Lifestyle',
             websiteUrl: 'https://ecolifestyle.com',

@@ -1,6 +1,6 @@
 import { PostsService } from '../domain';
 import { PostsRepository, QueryPostsRepository } from '../repository';
-import { BlogsRepository } from '../../blogs/repository';
+import { BlogsRepository } from '../../blogs/infrastructure';
 import { PostsController } from './postsController';
 import { CommentsService } from '../../comments/domain';
 import { CommentsRepository, QueryCommentsRepository } from '../../comments/repository';

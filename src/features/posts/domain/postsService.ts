@@ -1,6 +1,6 @@
 import { PostsRepository } from '../repository';
 import type { CreateUpdatePostInputModel } from '../models';
-import { BlogsRepository } from '../../blogs/repository';
+import { BlogsRepository } from '../../blogs/infrastructure';
 import { APIError } from '../../shared/helpers';
 import { ResultStatus } from '../../../constants';
 import { TPost } from './postEntity';
@@ -10,7 +10,7 @@ export class PostsService {
 
     async createPost(payload: CreateUpdatePostInputModel) {
         const { blogId, content, shortDescription, title } = payload;
-        const linkedBlogName = (await this.blogsRepository.getBlogById(blogId))?.name as string;
+        const linkedBlogName = (await this.blogsRepository.findBlogById(blogId))?.name as string;
         const newPost = new TPost({
             title,
             shortDescription,
@@ -24,7 +24,7 @@ export class PostsService {
     }
 
     async createPostByBlogId(payload: CreateUpdatePostInputModel, blogId: string) {
-        const blog = await this.blogsRepository.getBlogById(blogId);
+        const blog = await this.blogsRepository.findBlogById(blogId);
 
         if (!blog) {
             throw new APIError({

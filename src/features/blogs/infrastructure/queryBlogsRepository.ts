@@ -1,5 +1,5 @@
 import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
-import { QueryParamsBlogModel, BlogsPaginatedViewModel, BlogItemViewModel } from '../models';
+import { QueryParamsBlogModel, BlogsPaginatedViewModel, BlogItemViewModel } from '../api';
 import { BlogModel, TBlog } from '../domain';
 import { WithId } from 'mongodb';
 import { ResultStatus } from '../../../constants';

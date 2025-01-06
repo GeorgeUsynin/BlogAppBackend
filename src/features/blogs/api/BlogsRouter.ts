@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { checkSchema } from 'express-validator';
-import { createUpdateBlogValidationSchema } from '../validation';
+import { createUpdateBlogValidationSchema } from './validation';
 import { authBasicMiddleware, errorMiddleware } from '../../shared/middlewares';
 import { queryParamsValidationSchema } from '../../shared/validation';
 import { createUpdatePostValidationSchema } from '../../posts/validation';

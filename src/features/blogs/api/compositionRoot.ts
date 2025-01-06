@@ -1,5 +1,5 @@
-import { BlogsRepository, QueryBlogsRepository } from '../repository';
-import { BlogsService } from '../domain';
+import { BlogsRepository, QueryBlogsRepository } from '../infrastructure';
+import { BlogsService } from '../application';
 import { PostsService } from '../../posts/domain';
 import { PostsRepository, QueryPostsRepository } from '../../posts/repository';
 import { BlogsController } from './blogsController';

@@ -1,27 +1,22 @@
 import { NextFunction, Request, Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../../constants';
 import { QueryPostsRepository } from '../../posts/repository';
-import {
-    BlogItemViewModel,
-    BlogsPaginatedViewModel,
-    CreateUpdateBlogInputModel,
-    QueryParamsBlogModel,
-    URIParamsBlogIDModel,
-} from '../models';
+import { BlogItemViewModel, BlogsPaginatedViewModel, QueryParamsBlogModel, URIParamsBlogIDModel } from './models';
 import {
     CreateUpdatePostInputModel,
     PostItemViewModel,
     PostsPaginatedViewModel,
     QueryParamsPostModel,
 } from '../../posts/models';
+import { CreateUpdateBlogInputDTO } from '../application';
 import type {
     RequestWithBody,
     RequestWithQueryParams,
     RequestWithParamsAndQueries,
     RequestWithParamsAndBody,
 } from '../../shared/types';
-import { BlogsService } from '../domain';
-import { QueryBlogsRepository } from '../repository';
+import { BlogsService } from '../application';
+import { QueryBlogsRepository } from '../infrastructure';
 import { PostsService } from '../../posts/domain';
 
 export class BlogsController {
@@ -78,7 +73,7 @@ export class BlogsController {
     }
 
     async createBlog(
-        req: RequestWithBody<CreateUpdateBlogInputModel>,
+        req: RequestWithBody<CreateUpdateBlogInputDTO>,
         res: Response<BlogItemViewModel>,
         next: NextFunction
     ) {
@@ -96,7 +91,7 @@ export class BlogsController {
     }
 
     async updateBlogByID(
-        req: RequestWithParamsAndBody<URIParamsBlogIDModel, CreateUpdateBlogInputModel>,
+        req: RequestWithParamsAndBody<URIParamsBlogIDModel, CreateUpdateBlogInputDTO>,
         res: Response,
         next: NextFunction
     ) {

@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { QueryParamsBlogModel } from '../../blogs/models';
+import { QueryParamsBlogModel } from '../../blogs/api';
 import { QueryParamsPostModel } from '../../posts/models';
 import { QueryParamsUserModel } from '../../users/models';
 import { LikeStatus } from '../../../constants';

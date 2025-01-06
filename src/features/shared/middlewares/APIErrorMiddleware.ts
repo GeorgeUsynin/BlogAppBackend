@@ -2,6 +2,21 @@ import { NextFunction, Request, Response } from 'express';
 import { APIError } from '../helpers';
 import { HTTP_STATUS_CODES, ResultStatus } from '../../../constants';
 
+type TObjectIdCastError = {
+    stringValue: string;
+    valueType: string;
+    kind: string;
+    value: string;
+    path: string;
+    reason: Record<string, string>;
+    name: 'CastError';
+    message: string;
+};
+
+const isCastError = (error: unknown): error is TObjectIdCastError => {
+    return typeof error === 'object' && error !== null && 'name' in error && error.name === 'CastError';
+};
+
 export const APIErrorMiddleware = (err: APIError, req: Request, res: Response, next: NextFunction) => {
     if (err instanceof APIError) {
         const { errorsMessages, status } = err.getError();
@@ -38,6 +53,15 @@ export const APIErrorMiddleware = (err: APIError, req: Request, res: Response, n
     }
 
     console.error('Error: ', err);
+
+    if (isCastError(err)) {
+        res.status(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500).send({
+            code: `${err.kind} ${err.name}`,
+            message: err.message,
+        });
+    }
+
     res.sendStatus(HTTP_STATUS_CODES.INTERNAL_SERVER_ERROR_500);
+
     return;
 };

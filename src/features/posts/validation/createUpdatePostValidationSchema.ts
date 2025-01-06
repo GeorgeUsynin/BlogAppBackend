@@ -1,6 +1,6 @@
 import { CreateUpdatePostInputModel } from '../models';
 import { Schema } from 'express-validator';
-import { QueryBlogsRepository } from '../../blogs/repository';
+import { QueryBlogsRepository } from '../../blogs/infrastructure';
 
 const queryBlogsRepository = new QueryBlogsRepository();
 

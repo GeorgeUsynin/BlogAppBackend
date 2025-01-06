@@ -1,6 +1,6 @@
 import { Response, Request, NextFunction } from 'express';
-import { APIRateLimitService } from '../services';
-import { APIRateLimitRepository } from '../repository';
+import { APIRateLimitService } from '../../application/services';
+import { APIRateLimitRepository } from '../../infrastructure/repositories';
 
 const apiRateLimitRepository = new APIRateLimitRepository();
 const apiRateLimitService = new APIRateLimitService(apiRateLimitRepository);

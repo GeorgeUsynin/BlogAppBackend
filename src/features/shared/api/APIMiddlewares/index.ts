@@ -1,7 +1,6 @@
 import { authBasicMiddleware } from './authBasicMiddleware';
 import { errorMiddleware } from './errorMiddleware';
 import { authBearerMiddleware } from './authBearerMiddleware';
-import { databaseConnectionMiddleware } from './databaseConnectionMiddleware';
 import { authRefreshTokenMiddleware } from './authRefreshTokenMiddleware';
 import { APIErrorMiddleware } from './APIErrorMiddleware';
 import { apiRateLimitMiddleware } from './apiRateLimitMiddleware';
@@ -12,7 +11,6 @@ export {
     authBearerMiddleware,
     authRefreshTokenMiddleware,
     errorMiddleware,
-    databaseConnectionMiddleware,
     APIErrorMiddleware,
     apiRateLimitMiddleware,
     getUserIdFromAccessTokenMiddleware,

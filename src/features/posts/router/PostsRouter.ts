@@ -7,8 +7,8 @@ import {
     authBearerMiddleware,
     errorMiddleware,
     getUserIdFromAccessTokenMiddleware,
-} from '../../shared/middlewares';
-import { queryParamsValidationSchema } from '../../shared/validation';
+} from '../../shared/api/APIMiddlewares';
+import { queryParamsValidationSchema } from '../../shared/api/validation';
 import { ROUTES } from '../../../constants';
 import { postsController } from './compositionRoot';
 

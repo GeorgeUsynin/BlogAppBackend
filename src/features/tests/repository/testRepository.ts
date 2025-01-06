@@ -2,7 +2,7 @@ import { BlogModel } from '../../blogs/domain';
 import { CommentModel } from '../../comments/domain';
 import { PostModel } from '../../posts/domain';
 import { AuthDeviceSessionModel } from '../../security/domain';
-import { ApiRateLimitModel } from '../../shared/services';
+import { ApiRateLimitModel } from '../../shared/application/services';
 import { UserModel } from '../../users/domain';
 import { LikeModel } from '../../likes/domain';
 

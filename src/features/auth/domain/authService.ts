@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { randomUUID } from 'crypto';
 import { SETTINGS } from '../../../app-settings';
 import { ResultStatus } from '../../../constants';
-import { JWTService } from '../../shared/services/JWTService';
+import { JWTService } from '../../shared/application/services';
 import { APIError, getDeviceName } from '../../shared/helpers';
 import { UsersRepository } from '../../users/repository';
 import { AuthDeviceSessionsService } from '../../security/domain';

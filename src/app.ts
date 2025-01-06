@@ -9,7 +9,8 @@ import { PostsRouter } from './features/posts/router';
 import { CommentsRouter } from './features/comments/router';
 import { SecurityRouter } from './features/security/router';
 import { TestRouter } from './features/tests/router';
-import { APIErrorMiddleware, databaseConnectionMiddleware } from './features/shared/middlewares';
+import { APIErrorMiddleware } from './features/shared/api/APIMiddlewares';
+import { databaseConnectionMiddleware } from './database/databaseConnectionMiddleware';
 
 export const app = express(); // create app
 

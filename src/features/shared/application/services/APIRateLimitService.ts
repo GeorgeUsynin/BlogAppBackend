@@ -1,6 +1,6 @@
-import { APIError } from '../helpers';
-import { ResultStatus } from '../../../constants';
-import { APIRateLimitRepository } from '../repository';
+import { APIError } from '../../helpers';
+import { ResultStatus } from '../../../../constants';
+import { APIRateLimitRepository } from '../../infrastructure/repositories';
 import { TAPIRateLimit } from './APIRateLimitEntity';
 
 export class APIRateLimitService {

@@ -5,7 +5,7 @@ import {
     authRefreshTokenMiddleware,
     apiRateLimitMiddleware,
     errorMiddleware,
-} from '../../shared/middlewares';
+} from '../../shared/api/APIMiddlewares';
 import {
     loginValidationSchema,
     registrationValidationSchema,

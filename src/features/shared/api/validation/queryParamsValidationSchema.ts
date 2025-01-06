@@ -1,5 +1,5 @@
 import { Schema } from 'express-validator';
-import { SharedQueryParamsModel } from '../types';
+import { SharedQueryParamsModel } from '../../types';
 
 type TOwner = 'blogs' | 'posts' | 'comments' | 'users';
 

@@ -1,9 +1,9 @@
 import { Response, Request, NextFunction } from 'express';
-import { HTTP_STATUS_CODES } from '../../../constants';
-import { JWTService } from '../../shared/services';
-import { usersService } from '../../users/router/compositionRoot';
-import { authDeviceSessionsService } from '../../security/router/compositionRoot';
-import { ErrorViewModel } from '../types';
+import { HTTP_STATUS_CODES } from '../../../../constants';
+import { JWTService } from '../../../shared/application/services';
+import { usersService } from '../../../users/router/compositionRoot';
+import { authDeviceSessionsService } from '../../../security/router/compositionRoot';
+import { ErrorViewModel } from '../../types';
 
 const jwtService = new JWTService();
 

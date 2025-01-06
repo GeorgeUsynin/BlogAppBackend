@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { checkSchema } from 'express-validator';
-import { authBasicMiddleware, errorMiddleware } from '../../shared/middlewares';
-import { queryParamsValidationSchema } from '../../shared/validation';
+import { authBasicMiddleware, errorMiddleware } from '../../shared/api/APIMiddlewares';
+import { queryParamsValidationSchema } from '../../shared/api/validation';
 import { createUserValidationSchema } from '../validation';
 import { usersController } from './compositionRoot';
 

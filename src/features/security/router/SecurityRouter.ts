@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { ROUTES } from '../../../constants';
-import { authRefreshTokenMiddleware } from '../../shared/middlewares';
+import { authRefreshTokenMiddleware } from '../../shared/api/APIMiddlewares';
 import { securityController } from './compositionRoot';
 
 export const SecurityRouter = Router();

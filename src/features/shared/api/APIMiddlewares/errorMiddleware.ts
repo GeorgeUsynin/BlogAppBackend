@@ -1,6 +1,6 @@
 import { Response, Request, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
-import { HTTP_STATUS_CODES } from '../../../constants';
+import { HTTP_STATUS_CODES } from '../../../../constants';
 
 export const errorMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req).array({ onlyFirstError: true });

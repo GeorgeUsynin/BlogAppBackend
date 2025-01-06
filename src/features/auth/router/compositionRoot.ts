@@ -1,10 +1,10 @@
 import { AuthService, RegistrationService, PasswordService } from '../domain';
 import { AuthDeviceSessionsRepository } from '../../security/repository';
 import { AuthDeviceSessionsService } from '../../security/domain';
-import { JWTService } from '../../shared/services';
+import { JWTService } from '../../shared/application/services';
 import { UsersRepository, QueryUsersRepository } from '../../users/repository';
-import { EmailManager } from '../../shared/managers/emailManager';
-import { EmailAdapter } from '../../shared/adapters';
+import { EmailManager } from '../../shared/application/managers/emailManager';
+import { EmailAdapter } from '../../shared/infrastructure/adapters';
 import { AuthController } from './authController';
 
 const jwtService = new JWTService();

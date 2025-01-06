@@ -12,7 +12,7 @@ import { PostModel, TPost } from '../features/posts/domain';
 import { CommentModel, TComment } from '../features/comments/domain';
 import { TUser, UserModel } from '../features/users/domain';
 import { AuthDeviceSessionModel, TDevice } from '../features/security/domain';
-import { ApiRateLimitModel, TAPIRateLimit } from '../features/shared/services';
+import { ApiRateLimitModel, TAPIRateLimit } from '../features/shared/application/services';
 import { LikeStatus } from '../constants';
 import { LikeModel, TLike } from '../features/likes/domain';
 

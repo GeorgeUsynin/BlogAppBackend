@@ -1,6 +1,6 @@
-import { authRefreshTokenMiddleware } from '../../features/shared/middlewares/authRefreshTokenMiddleware';
-import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
-import { dbHelper, delay, request } from '../test-helpers';
+import { authRefreshTokenMiddleware } from '../../features/shared/api/APIMiddlewares';
+import { HTTP_STATUS_CODES } from '../../constants';
+import { dbHelper } from '../test-helpers';
 import { generateToken } from '../test-helpers';
 import { authDeviceSessions, fakeRequestedObjectId } from '../dataset';
 import { users } from '../dataset';

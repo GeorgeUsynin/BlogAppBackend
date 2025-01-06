@@ -1,6 +1,10 @@
 import { Router } from 'express';
 import { checkSchema } from 'express-validator';
-import { authBearerMiddleware, errorMiddleware, getUserIdFromAccessTokenMiddleware } from '../../shared/middlewares';
+import {
+    authBearerMiddleware,
+    errorMiddleware,
+    getUserIdFromAccessTokenMiddleware,
+} from '../../shared/api/APIMiddlewares';
 import { createUpdateCommentValidationSchema } from '../validation';
 import { commentsController } from './compositionRoot';
 import { updateLikeStatusValidationSchema } from '../../likes/validation';

@@ -1,5 +1,3 @@
-import { ResultStatus } from '../../../constants';
-
 export type PaginatedViewModel<T> = {
     /**
      * The total number of pages available.

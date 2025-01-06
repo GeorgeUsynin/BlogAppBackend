@@ -1,4 +1,4 @@
-import { EmailAdapter } from '../adapters';
+import { EmailAdapter } from '../../infrastructure/adapters';
 
 export class EmailManager {
     constructor(private emailAdapter: EmailAdapter) {}

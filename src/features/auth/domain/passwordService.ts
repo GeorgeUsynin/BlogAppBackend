@@ -3,7 +3,7 @@ import { add } from 'date-fns';
 import { UsersRepository } from '../../users/repository';
 import { randomUUID } from 'crypto';
 import { SETTINGS } from '../../../app-settings';
-import { EmailManager } from '../../shared/managers/emailManager';
+import { EmailManager } from '../../shared/application/managers/emailManager';
 import { APIError } from '../../shared/helpers';
 import { ResultStatus } from '../../../constants';
 

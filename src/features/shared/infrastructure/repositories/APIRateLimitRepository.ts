@@ -1,5 +1,5 @@
-import { SETTINGS } from '../../../app-settings';
-import { ApiRateLimitModel, TAPIRateLimit } from '../services';
+import { SETTINGS } from '../../../../app-settings';
+import { ApiRateLimitModel, TAPIRateLimit } from '../../application/services';
 
 export class APIRateLimitRepository {
     async addAPIRequest(payload: TAPIRateLimit) {

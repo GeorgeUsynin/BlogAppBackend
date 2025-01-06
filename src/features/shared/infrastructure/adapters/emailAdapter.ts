@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
-import { APIError } from '../helpers';
-import { ResultStatus } from '../../../constants';
+import { APIError } from '../../helpers';
+import { ResultStatus } from '../../../../constants';
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',

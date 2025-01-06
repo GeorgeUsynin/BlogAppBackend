@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { checkSchema } from 'express-validator';
 import { createUpdateBlogValidationSchema } from './validation';
-import { authBasicMiddleware, errorMiddleware } from '../../shared/middlewares';
-import { queryParamsValidationSchema } from '../../shared/validation';
+import { authBasicMiddleware, errorMiddleware } from '../../shared/api/APIMiddlewares';
+import { queryParamsValidationSchema } from '../../shared/api/validation';
 import { createUpdatePostValidationSchema } from '../../posts/validation';
 import { ROUTES } from '../../../constants';
 import { container } from './compositionRoot';

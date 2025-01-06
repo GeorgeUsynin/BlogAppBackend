@@ -1,5 +1,5 @@
 import { HydratedDocument, model, Model, Schema } from 'mongoose';
-import { SETTINGS } from '../../../app-settings';
+import { SETTINGS } from '../../../../app-settings';
 
 export class TAPIRateLimit {
     constructor(public IP: string, public URL: string, public date: Date) {}

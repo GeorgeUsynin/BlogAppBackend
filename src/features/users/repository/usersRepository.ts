@@ -1,5 +1,7 @@
+import { injectable } from 'inversify';
 import { TUser, UserModel } from '../domain';
 
+@injectable()
 export class UsersRepository {
     async findUserByLoginOrEmail(login: string, email: string) {
         return UserModel.findOne({ $or: [{ login }, { email }] });

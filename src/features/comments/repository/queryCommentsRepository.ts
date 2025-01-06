@@ -1,3 +1,4 @@
+import { injectable } from 'inversify';
 import { WithId } from 'mongodb';
 import { QueryParamsCommentModel, CommentItemViewModel, CommentsPaginatedViewModel } from '../models';
 import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
@@ -15,6 +16,7 @@ type TValues = {
     userId: string;
 };
 
+@injectable()
 export class QueryCommentsRepository {
     constructor(private likesRepository: LikesRepository) {}
 

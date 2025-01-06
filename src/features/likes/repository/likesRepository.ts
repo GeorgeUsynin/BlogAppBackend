@@ -1,3 +1,4 @@
+import { injectable } from 'inversify';
 import { LikeStatus } from '../../../constants';
 import { LikeDocument, LikeModel } from '../domain';
 
@@ -12,6 +13,7 @@ type TPayload = {
     likeStatus: keyof typeof LikeStatus;
 };
 
+@injectable()
 export class LikesRepository {
     async findLikeByParams(params: TParams) {
         return LikeModel.findOne({ $and: [params] });

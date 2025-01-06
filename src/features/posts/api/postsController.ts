@@ -1,3 +1,4 @@
+import { inject, injectable } from 'inversify';
 import { NextFunction, Request, Response } from 'express';
 import type {
     RequestWithBody,
@@ -20,12 +21,13 @@ import { CommentsService } from '../../comments/domain';
 import { QueryCommentsRepository } from '../../comments/repository';
 import { CreateUpdatePostInputDTO } from '../application';
 
+@injectable()
 export class PostsController {
     constructor(
-        private postsService: PostsService,
-        private commentsService: CommentsService,
-        private queryPostsRepository: QueryPostsRepository,
-        private queryCommentsRepository: QueryCommentsRepository
+        @inject(PostsService) private postsService: PostsService,
+        @inject(CommentsService) private commentsService: CommentsService,
+        @inject(QueryPostsRepository) private queryPostsRepository: QueryPostsRepository,
+        @inject(QueryCommentsRepository) private queryCommentsRepository: QueryCommentsRepository
     ) {}
 
     async getAllPosts(

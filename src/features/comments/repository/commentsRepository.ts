@@ -1,6 +1,8 @@
+import { injectable } from 'inversify';
 import { CommentDocument, CommentModel, TComment } from '../domain';
 import { CreateUpdateCommentInputModel } from '../models';
 
+@injectable()
 export class CommentsRepository {
     async createComment(newComment: TComment) {
         return CommentModel.create(newComment);

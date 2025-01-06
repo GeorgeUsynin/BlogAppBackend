@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+import { Container } from 'inversify';
 import { PostsService } from '../domain';
 import { PostsRepository, QueryPostsRepository } from '../infrastructure';
 import { BlogsRepository } from '../../blogs/infrastructure';
@@ -7,20 +9,15 @@ import { CommentsRepository, QueryCommentsRepository } from '../../comments/repo
 import { UsersRepository } from '../../users/repository';
 import { LikesRepository } from '../../likes/repository';
 
-const postsRepository = new PostsRepository();
-const queryPostsRepository = new QueryPostsRepository();
-const blogsRepository = new BlogsRepository();
-const commentsRepository = new CommentsRepository();
-const likesRepository = new LikesRepository();
-const queryCommentsRepository = new QueryCommentsRepository(likesRepository);
-const usersRepository = new UsersRepository();
+export const container: Container = new Container();
 
-const postsService = new PostsService(postsRepository, blogsRepository);
-const commentsService = new CommentsService(commentsRepository, postsRepository, usersRepository, likesRepository);
-
-export const postsController = new PostsController(
-    postsService,
-    commentsService,
-    queryPostsRepository,
-    queryCommentsRepository
-);
+container.bind(PostsRepository).toSelf();
+container.bind(QueryPostsRepository).toSelf();
+container.bind(BlogsRepository).toSelf();
+container.bind(CommentsRepository).toSelf();
+container.bind(QueryCommentsRepository).toSelf();
+container.bind(LikesRepository).toSelf();
+container.bind(UsersRepository).toSelf();
+container.bind(PostsService).toSelf();
+container.bind(CommentsService).toSelf();
+container.bind(PostsController).toSelf();

@@ -1,3 +1,4 @@
+import { inject, injectable } from 'inversify';
 import { CreateUpdateCommentInputModel } from '../models';
 import { UsersRepository } from '../../users/repository';
 import { CommentsRepository } from '../repository';
@@ -7,12 +8,13 @@ import { TComment } from './commentEntity';
 import { PostsRepository } from '../../posts/infrastructure';
 import { LikesRepository } from '../../likes/repository';
 
+@injectable()
 export class CommentsService {
     constructor(
-        private commentsRepository: CommentsRepository,
-        private postsRepository: PostsRepository,
-        private usersRepository: UsersRepository,
-        private likesRepository: LikesRepository
+        @inject(CommentsRepository) private commentsRepository: CommentsRepository,
+        @inject(PostsRepository) private postsRepository: PostsRepository,
+        @inject(UsersRepository) private usersRepository: UsersRepository,
+        @inject(LikesRepository) private likesRepository: LikesRepository
     ) {}
 
     async createCommentByPostId(payload: CreateUpdateCommentInputModel, postId: string, userId: string) {

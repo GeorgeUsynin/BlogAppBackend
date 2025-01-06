@@ -10,7 +10,10 @@ import {
 } from '../../shared/api/APIMiddlewares';
 import { queryParamsValidationSchema } from '../../shared/api/validation';
 import { ROUTES } from '../../../constants';
-import { postsController } from './compositionRoot';
+import { container } from './compositionRoot';
+import { PostsController } from './postsController';
+
+const postsController = container.get(PostsController);
 
 export const PostsRouter = Router();
 

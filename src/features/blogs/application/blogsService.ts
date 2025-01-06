@@ -9,14 +9,14 @@ import { TBlog } from '../domain';
 export class BlogsService {
     constructor(@inject(BlogsRepository) private blogsRepository: BlogsRepository) {}
 
-    async createBlog(dto: CreateUpdateBlogInputDTO) {
-        const newBlog = new TBlog(dto);
+    async createBlog(payload: CreateUpdateBlogInputDTO) {
+        const newBlog = new TBlog(payload);
 
         return this.blogsRepository.createBlog(newBlog);
     }
 
-    async updateBlog(blogId: string, dto: CreateUpdateBlogInputDTO) {
-        const { description, name, websiteUrl } = dto;
+    async updateBlog(blogId: string, payload: CreateUpdateBlogInputDTO) {
+        const { description, name, websiteUrl } = payload;
 
         const foundBlog = await this.blogsRepository.findBlogById(blogId);
 

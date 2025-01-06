@@ -22,13 +22,13 @@ export class PostsService {
             content,
             blogId,
             blogName: linkedBlogName,
-            createdAt: new Date().toISOString(),
         });
 
         return this.postsRepository.createPost(newPost);
     }
 
-    async createPostByBlogId(payload: CreateUpdatePostInputDTO, blogId: string) {
+    async createPostByBlogId(payload: CreateUpdatePostInputDTO) {
+        const { blogId } = payload;
         const blog = await this.blogsRepository.findBlogById(blogId);
 
         if (!blog) {
@@ -38,30 +38,41 @@ export class PostsService {
             });
         }
 
-        return this.createPost({ ...payload, blogId });
+        return this.createPost(payload);
     }
 
     async updatePost(postId: string, payload: CreateUpdatePostInputDTO) {
-        const updatedPost = await this.postsRepository.updatePost(postId, payload);
+        const { blogId, content, shortDescription, title } = payload;
 
-        if (!updatedPost) {
+        const foundPost = await this.postsRepository.findPostById(postId);
+
+        if (!foundPost) {
             throw new APIError({
                 status: ResultStatus.NotFound,
                 message: 'Post was not found',
             });
         }
 
-        return updatedPost;
+        foundPost.blogId = blogId;
+        foundPost.content = content;
+        foundPost.shortDescription = shortDescription;
+        foundPost.title = title;
+
+        await this.postsRepository.save(foundPost);
     }
 
     async deletePostById(postId: string) {
-        const deletedPost = await this.postsRepository.deletePostById(postId);
+        const foundPost = await this.postsRepository.findPostById(postId);
 
-        if (!deletedPost) {
+        if (!foundPost) {
             throw new APIError({
                 status: ResultStatus.NotFound,
                 message: 'Post was not found',
             });
         }
+
+        foundPost.isDeleted = true;
+
+        await this.postsRepository.save(foundPost);
     }
 }

@@ -1,6 +1,5 @@
 import { injectable } from 'inversify';
-import { PostModel, TPost } from '../domain';
-import { CreateUpdatePostInputDTO } from '../application';
+import { PostDocument, PostModel, TPost } from '../domain';
 
 @injectable()
 export class PostsRepository {
@@ -12,11 +11,7 @@ export class PostsRepository {
         return PostModel.findById(id);
     }
 
-    async updatePost(id: string, payload: CreateUpdatePostInputDTO) {
-        return PostModel.findByIdAndUpdate(id, payload, { lean: true, new: true });
-    }
-
-    async deletePostById(id: string) {
-        return PostModel.findByIdAndDelete(id);
+    async save(post: PostDocument) {
+        return post.save();
     }
 }

@@ -118,7 +118,7 @@ export class BlogsController {
     }
 
     async createPostsByBlogID(
-        req: RequestWithParamsAndBody<URIParamsBlogIDModel, CreateUpdatePostInputDTO>,
+        req: RequestWithParamsAndBody<URIParamsBlogIDModel, Omit<CreateUpdatePostInputDTO, 'blogId'>>,
         res: Response<PostItemViewModel>,
         next: NextFunction
     ) {
@@ -126,7 +126,7 @@ export class BlogsController {
             const blogId = req.params.id;
             const payload = req.body;
 
-            const { id } = await this.postsService.createPostByBlogId(payload, blogId);
+            const { id } = await this.postsService.createPostByBlogId({ ...payload, blogId });
 
             const newPost = await this.queryPostsRepository.getPostById(id);
 

@@ -78,6 +78,7 @@ export const posts: WithId<TPost>[] = [
         blogId: firstId.toString(),
         blogName: 'Eco Lifestyle',
         createdAt: '2024-12-28T10:50:15.222Z',
+        isDeleted: false,
     },
     {
         _id: secondId,
@@ -88,6 +89,7 @@ export const posts: WithId<TPost>[] = [
         blogId: firstId.toString(),
         blogName: 'Eco Lifestyle',
         createdAt: '2024-12-22T10:50:15.222Z',
+        isDeleted: false,
     },
     {
         _id: thirdId,
@@ -98,6 +100,7 @@ export const posts: WithId<TPost>[] = [
         blogId: secondId.toString(),
         blogName: 'Tech Trends',
         createdAt: '2024-12-27T10:50:15.222Z',
+        isDeleted: false,
     },
     {
         _id: fourthId,
@@ -108,6 +111,7 @@ export const posts: WithId<TPost>[] = [
         blogId: secondId.toString(),
         blogName: 'Tech Trends',
         createdAt: '2024-12-22T10:50:15.222Z',
+        isDeleted: false,
     },
     {
         _id: fifthId,
@@ -118,6 +122,7 @@ export const posts: WithId<TPost>[] = [
         blogId: thirdId.toString(),
         blogName: 'Wellness Path',
         createdAt: '2024-12-26T10:50:15.222Z',
+        isDeleted: false,
     },
     {
         _id: sixthId,
@@ -128,6 +133,7 @@ export const posts: WithId<TPost>[] = [
         blogId: thirdId.toString(),
         blogName: 'Wellness Path',
         createdAt: '2024-12-22T10:50:15.222Z',
+        isDeleted: false,
     },
     {
         _id: seventhId,
@@ -138,6 +144,7 @@ export const posts: WithId<TPost>[] = [
         blogId: fourthId.toString(),
         blogName: 'Creative Minds',
         createdAt: '2024-12-25T10:50:15.222Z',
+        isDeleted: false,
     },
     {
         _id: eighthId,
@@ -148,6 +155,7 @@ export const posts: WithId<TPost>[] = [
         blogId: fourthId.toString(),
         blogName: 'Creative Minds',
         createdAt: '2024-12-22T10:50:15.222Z',
+        isDeleted: false,
     },
 ];
 

@@ -1,14 +1,9 @@
 import { inject, injectable } from 'inversify';
 import { NextFunction, Request, Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../../constants';
-import { QueryPostsRepository } from '../../posts/repository';
+import { QueryPostsRepository } from '../../posts/infrastructure';
 import { BlogItemViewModel, BlogsPaginatedViewModel, QueryParamsBlogModel, URIParamsBlogIDModel } from './models';
-import {
-    CreateUpdatePostInputModel,
-    PostItemViewModel,
-    PostsPaginatedViewModel,
-    QueryParamsPostModel,
-} from '../../posts/models';
+import { PostItemViewModel, PostsPaginatedViewModel, QueryParamsPostModel } from '../../posts/api/models';
 import { CreateUpdateBlogInputDTO } from '../application';
 import type {
     RequestWithBody,
@@ -19,6 +14,7 @@ import type {
 import { BlogsService } from '../application';
 import { QueryBlogsRepository } from '../infrastructure';
 import { PostsService } from '../../posts/domain';
+import { CreateUpdatePostInputDTO } from '../../posts/application';
 
 @injectable()
 export class BlogsController {
@@ -122,7 +118,7 @@ export class BlogsController {
     }
 
     async createPostsByBlogID(
-        req: RequestWithParamsAndBody<URIParamsBlogIDModel, CreateUpdatePostInputModel>,
+        req: RequestWithParamsAndBody<URIParamsBlogIDModel, CreateUpdatePostInputDTO>,
         res: Response<PostItemViewModel>,
         next: NextFunction
     ) {

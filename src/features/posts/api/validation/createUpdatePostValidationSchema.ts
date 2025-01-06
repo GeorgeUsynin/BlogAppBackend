@@ -1,6 +1,6 @@
-import { CreateUpdatePostInputModel } from '../models';
 import { Schema } from 'express-validator';
-import { QueryBlogsRepository } from '../../blogs/infrastructure';
+import { QueryBlogsRepository } from '../../../blogs/infrastructure';
+import { CreateUpdatePostInputDTO } from '../../application';
 
 const queryBlogsRepository = new QueryBlogsRepository();
 
@@ -8,7 +8,7 @@ const titleMaxLength = 30;
 const shortDescriptionMaxLength = 100;
 const contentMaxLength = 1000;
 
-export const createUpdatePostValidationSchema: Schema<keyof CreateUpdatePostInputModel> = {
+export const createUpdatePostValidationSchema: Schema<keyof CreateUpdatePostInputDTO> = {
     title: {
         exists: {
             errorMessage: 'Title field is required',

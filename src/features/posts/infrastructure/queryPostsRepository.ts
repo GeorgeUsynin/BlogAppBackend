@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 import { WithId } from 'mongodb';
 import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
-import { QueryParamsPostModel, PostsPaginatedViewModel, PostItemViewModel } from '../models';
+import { QueryParamsPostModel, PostsPaginatedViewModel, PostItemViewModel } from '../api/models';
 import { ResultStatus } from '../../../constants';
 import { BlogModel } from '../../blogs/domain';
 import { PostModel, TPost } from '../domain';

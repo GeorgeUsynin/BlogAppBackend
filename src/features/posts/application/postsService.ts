@@ -1,10 +1,10 @@
 import { inject, injectable } from 'inversify';
-import { PostsRepository } from '../repository';
-import type { CreateUpdatePostInputModel } from '../models';
+import { PostsRepository } from '../infrastructure';
 import { BlogsRepository } from '../../blogs/infrastructure';
 import { APIError } from '../../shared/helpers';
 import { ResultStatus } from '../../../constants';
-import { TPost } from './postEntity';
+import { TPost } from '../domain/postEntity';
+import { CreateUpdatePostInputDTO } from './dto';
 
 @injectable()
 export class PostsService {
@@ -13,7 +13,7 @@ export class PostsService {
         @inject(BlogsRepository) private blogsRepository: BlogsRepository
     ) {}
 
-    async createPost(payload: CreateUpdatePostInputModel) {
+    async createPost(payload: CreateUpdatePostInputDTO) {
         const { blogId, content, shortDescription, title } = payload;
         const linkedBlogName = (await this.blogsRepository.findBlogById(blogId))?.name as string;
         const newPost = new TPost({
@@ -28,7 +28,7 @@ export class PostsService {
         return this.postsRepository.createPost(newPost);
     }
 
-    async createPostByBlogId(payload: CreateUpdatePostInputModel, blogId: string) {
+    async createPostByBlogId(payload: CreateUpdatePostInputDTO, blogId: string) {
         const blog = await this.blogsRepository.findBlogById(blogId);
 
         if (!blog) {
@@ -41,7 +41,7 @@ export class PostsService {
         return this.createPost({ ...payload, blogId });
     }
 
-    async updatePost(postId: string, payload: CreateUpdatePostInputModel) {
+    async updatePost(postId: string, payload: CreateUpdatePostInputDTO) {
         const updatedPost = await this.postsRepository.updatePost(postId, payload);
 
         if (!updatedPost) {

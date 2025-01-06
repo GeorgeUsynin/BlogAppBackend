@@ -3,7 +3,7 @@ import { checkSchema } from 'express-validator';
 import { createUpdateBlogValidationSchema } from './validation';
 import { authBasicMiddleware, errorMiddleware } from '../../shared/api/APIMiddlewares';
 import { queryParamsValidationSchema } from '../../shared/api/validation';
-import { createUpdatePostValidationSchema } from '../../posts/validation';
+import { createUpdatePostValidationSchema } from '../../posts/api/validation';
 import { ROUTES } from '../../../constants';
 import { container } from './compositionRoot';
 import { BlogsController } from './blogsController';

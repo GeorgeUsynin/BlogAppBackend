@@ -1,6 +1,6 @@
 import { CommentsService } from '../domain';
 import { CommentsRepository, QueryCommentsRepository } from '../repository';
-import { PostsRepository } from '../../posts/repository';
+import { PostsRepository } from '../../posts/infrastructure';
 import { CommentsController } from './commentsController';
 import { UsersRepository } from '../../users/repository';
 import { LikesRepository } from '../../likes/repository';

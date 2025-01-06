@@ -1,5 +1,5 @@
 import { PostsService } from '../domain';
-import { PostsRepository, QueryPostsRepository } from '../repository';
+import { PostsRepository, QueryPostsRepository } from '../infrastructure';
 import { BlogsRepository } from '../../blogs/infrastructure';
 import { PostsController } from './postsController';
 import { CommentsService } from '../../comments/domain';

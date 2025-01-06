@@ -4,7 +4,7 @@ import { CommentsRepository } from '../repository';
 import { LikeStatus, ResultStatus } from '../../../constants';
 import { APIError } from '../../shared/helpers';
 import { TComment } from './commentEntity';
-import { PostsRepository } from '../../posts/repository';
+import { PostsRepository } from '../../posts/infrastructure';
 import { LikesRepository } from '../../likes/repository';
 
 export class CommentsService {

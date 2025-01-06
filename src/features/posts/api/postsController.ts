@@ -5,15 +5,9 @@ import type {
     RequestWithParamsAndQueries,
     RequestWithQueryParams,
 } from '../../shared/types';
-import {
-    CreateUpdatePostInputModel,
-    PostItemViewModel,
-    PostsPaginatedViewModel,
-    QueryParamsPostModel,
-    URIParamsPostIDModel,
-} from '../models';
+import { PostItemViewModel, PostsPaginatedViewModel, QueryParamsPostModel, URIParamsPostIDModel } from './models';
 import { HTTP_STATUS_CODES } from '../../../constants';
-import { QueryPostsRepository } from '../repository';
+import { QueryPostsRepository } from '../infrastructure';
 import {
     CommentItemViewModel,
     CommentsPaginatedViewModel,
@@ -24,6 +18,7 @@ import {
 import { PostsService } from '../domain';
 import { CommentsService } from '../../comments/domain';
 import { QueryCommentsRepository } from '../../comments/repository';
+import { CreateUpdatePostInputDTO } from '../application';
 
 export class PostsController {
     constructor(
@@ -83,7 +78,7 @@ export class PostsController {
     }
 
     async createPost(
-        req: RequestWithBody<CreateUpdatePostInputModel>,
+        req: RequestWithBody<CreateUpdatePostInputDTO>,
         res: Response<PostItemViewModel>,
         next: NextFunction
     ) {
@@ -120,7 +115,7 @@ export class PostsController {
     }
 
     async updatePostByID(
-        req: RequestWithParamsAndBody<URIParamsPostIDModel, CreateUpdatePostInputModel>,
+        req: RequestWithParamsAndBody<URIParamsPostIDModel, CreateUpdatePostInputDTO>,
         res: Response,
         next: NextFunction
     ) {

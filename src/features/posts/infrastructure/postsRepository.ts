@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 import { PostModel, TPost } from '../domain';
-import { CreateUpdatePostInputModel } from '../models';
+import { CreateUpdatePostInputDTO } from '../application';
 
 @injectable()
 export class PostsRepository {
@@ -12,7 +12,7 @@ export class PostsRepository {
         return PostModel.findById(id);
     }
 
-    async updatePost(id: string, payload: CreateUpdatePostInputModel) {
+    async updatePost(id: string, payload: CreateUpdatePostInputDTO) {
         return PostModel.findByIdAndUpdate(id, payload, { lean: true, new: true });
     }
 

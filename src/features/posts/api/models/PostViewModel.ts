@@ -1,4 +1,4 @@
-import { PaginatedViewModel } from '../../shared/types';
+import { PaginatedViewModel } from '../../../shared/types';
 /**
  * Represents the paginated response model for posts.
  */

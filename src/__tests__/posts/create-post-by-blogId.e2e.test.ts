@@ -1,7 +1,8 @@
 import { dbHelper, request, createErrorMessages, getAuthorization } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 import { fakeRequestedObjectId, blogs, longContent, longTitle, longShortDescription } from '../dataset';
-import { CreateUpdatePostInputModel, PostItemViewModel } from '../../features/posts/models';
+import { PostItemViewModel } from '../../features/posts/api';
+import { CreateUpdatePostInputDTO } from '../../features/posts/application';
 
 describe('create a post by requested blogId', () => {
     beforeAll(async () => {
@@ -26,7 +27,7 @@ describe('create a post by requested blogId', () => {
     it('creates a new post by requested blogId', async () => {
         const blogName = (await dbHelper.getBlog(1)).name;
 
-        const newPost: Omit<CreateUpdatePostInputModel, 'blogId'> = {
+        const newPost: Omit<CreateUpdatePostInputDTO, 'blogId'> = {
             title: 'New title',
             content: 'New content',
             shortDescription: 'New short description',
@@ -61,7 +62,7 @@ describe('create a post by requested blogId', () => {
         describe('title', () => {
             it('returns 400 status code and proper error object if `title` is missing', async () => {
                 //@ts-expect-error bad request (title is missing)
-                const newPost: Omit<CreateUpdatePostInputModel, 'blogId'> = {
+                const newPost: Omit<CreateUpdatePostInputDTO, 'blogId'> = {
                     content: 'New content',
                     shortDescription: 'New short description',
                 };
@@ -75,7 +76,7 @@ describe('create a post by requested blogId', () => {
             });
 
             it('returns 400 status code and proper error object if `title` is empty or contain only spaces', async () => {
-                const newPost: Omit<CreateUpdatePostInputModel, 'blogId'> = {
+                const newPost: Omit<CreateUpdatePostInputDTO, 'blogId'> = {
                     title: ' ',
                     content: 'New content',
                     shortDescription: 'New short description',
@@ -90,7 +91,7 @@ describe('create a post by requested blogId', () => {
             });
 
             it('returns 400 status code and proper error object for bad `title` type', async () => {
-                const newPost: Omit<CreateUpdatePostInputModel, 'blogId'> = {
+                const newPost: Omit<CreateUpdatePostInputDTO, 'blogId'> = {
                     //@ts-expect-error bad request (title type is invalid)
                     title: [],
                     content: 'New content',
@@ -106,7 +107,7 @@ describe('create a post by requested blogId', () => {
             });
 
             it('returns 400 status code and proper error object for bad `title` max length', async () => {
-                const newPost: Omit<CreateUpdatePostInputModel, 'blogId'> = {
+                const newPost: Omit<CreateUpdatePostInputDTO, 'blogId'> = {
                     title: longTitle,
                     content: 'New content',
                     shortDescription: 'New short description',
@@ -124,7 +125,7 @@ describe('create a post by requested blogId', () => {
         describe('shortDescription', () => {
             it('returns 400 status code and proper error object if `shortDescription` is missing', async () => {
                 //@ts-expect-error bad request (shortDescription is missing)
-                const newPost: Omit<CreateUpdatePostInputModel, 'blogId'> = {
+                const newPost: Omit<CreateUpdatePostInputDTO, 'blogId'> = {
                     title: 'New title',
                     content: 'New content',
                 };
@@ -138,7 +139,7 @@ describe('create a post by requested blogId', () => {
             });
 
             it('returns 400 status code and proper error object if `shortDescription` is empty or contain only spaces', async () => {
-                const newPost: Omit<CreateUpdatePostInputModel, 'blogId'> = {
+                const newPost: Omit<CreateUpdatePostInputDTO, 'blogId'> = {
                     title: 'New title',
                     content: 'New content',
                     shortDescription: ' ',
@@ -153,7 +154,7 @@ describe('create a post by requested blogId', () => {
             });
 
             it('returns 400 status code and proper error object for bad `shortDescription` type', async () => {
-                const newPost: Omit<CreateUpdatePostInputModel, 'blogId'> = {
+                const newPost: Omit<CreateUpdatePostInputDTO, 'blogId'> = {
                     title: 'New title',
                     //@ts-expect-error bad request (shortDescription type is invalid)
                     shortDescription: [],
@@ -169,7 +170,7 @@ describe('create a post by requested blogId', () => {
             });
 
             it('returns 400 status code and proper error object for bad `shortDescription` max length', async () => {
-                const newPost: Omit<CreateUpdatePostInputModel, 'blogId'> = {
+                const newPost: Omit<CreateUpdatePostInputDTO, 'blogId'> = {
                     title: 'New title',
                     shortDescription: longShortDescription,
                     content: 'New content',
@@ -187,7 +188,7 @@ describe('create a post by requested blogId', () => {
         describe('content', () => {
             it('returns 400 status code and proper error object if `content` is missing', async () => {
                 //@ts-expect-error bad request (content is missing)
-                const newPost: Omit<CreateUpdatePostInputModel, 'blogId'> = {
+                const newPost: Omit<CreateUpdatePostInputDTO, 'blogId'> = {
                     title: 'New title',
                     shortDescription: 'New short description',
                 };
@@ -201,7 +202,7 @@ describe('create a post by requested blogId', () => {
             });
 
             it('returns 400 status code and proper error object if `content` is empty or contain only spaces', async () => {
-                const newPost: Omit<CreateUpdatePostInputModel, 'blogId'> = {
+                const newPost: Omit<CreateUpdatePostInputDTO, 'blogId'> = {
                     title: 'New title',
                     content: ' ',
                     shortDescription: 'New short description',
@@ -216,7 +217,7 @@ describe('create a post by requested blogId', () => {
             });
 
             it('returns 400 status code and proper error object for bad `content` type', async () => {
-                const newPost: Omit<CreateUpdatePostInputModel, 'blogId'> = {
+                const newPost: Omit<CreateUpdatePostInputDTO, 'blogId'> = {
                     title: 'New title',
                     shortDescription: 'New short description',
                     //@ts-expect-error bad request (content type is invalid)
@@ -232,7 +233,7 @@ describe('create a post by requested blogId', () => {
             });
 
             it('returns 400 status code and proper error object for bad `content` max length', async () => {
-                const newPost: Omit<CreateUpdatePostInputModel, 'blogId'> = {
+                const newPost: Omit<CreateUpdatePostInputDTO, 'blogId'> = {
                     title: 'New title',
                     shortDescription: 'New short description',
                     content: longContent,
@@ -249,7 +250,7 @@ describe('create a post by requested blogId', () => {
     });
 
     it('returns 401 Unauthorized status code if there is no proper Authorization header', async () => {
-        const newPost: Omit<CreateUpdatePostInputModel, 'blogId'> = {
+        const newPost: Omit<CreateUpdatePostInputDTO, 'blogId'> = {
             title: 'New title',
             content: 'New content',
             shortDescription: 'New short description',
@@ -262,7 +263,7 @@ describe('create a post by requested blogId', () => {
     });
 
     it('returns 404 status code if there is no requested blogId in database', async () => {
-        const newPost: Omit<CreateUpdatePostInputModel, 'blogId'> = {
+        const newPost: Omit<CreateUpdatePostInputDTO, 'blogId'> = {
             title: 'New title',
             content: 'New content',
             shortDescription: 'New short description',

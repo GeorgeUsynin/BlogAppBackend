@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { add } from 'date-fns';
-import { UsersRepository } from '../../users/repository';
+import { UsersRepository } from '../../users/infrastructure';
 import { randomUUID } from 'crypto';
 import { SETTINGS } from '../../../app-settings';
 import { EmailManager } from '../../shared/application/managers/emailManager';
@@ -18,7 +18,10 @@ export class PasswordService {
         const recoveryCode = randomUUID();
         const expirationDate = add(new Date(), { hours: SETTINGS.RECOVERY_CODE_EXPIRATION_TIME_IN_HOURS });
 
-        await this.usersRepository.updateUserRecoveryPasswordCode(user.id, recoveryCode, expirationDate);
+        user.passwordRecovery.recoveryCode = recoveryCode;
+        user.passwordRecovery.expirationDate = expirationDate;
+
+        await this.usersRepository.save(user);
 
         // sent confirmation email
         this.emailManager.sendPasswordRecoveryEmail(email, recoveryCode);
@@ -46,6 +49,8 @@ export class PasswordService {
         // hash password
         const hash = await bcrypt.hash(newPassword, SETTINGS.HASH_ROUNDS);
 
-        await this.usersRepository.updatePasswordHash(user.id, hash);
+        user.passwordHash = hash;
+
+        await this.usersRepository.save(user);
     }
 }

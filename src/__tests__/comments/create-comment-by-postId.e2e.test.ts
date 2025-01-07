@@ -2,7 +2,7 @@ import { dbHelper, request, createErrorMessages, getBearerAuthorization } from '
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 import { comments, posts, fakeRequestedObjectId, longContent, users } from '../dataset';
 import { CommentItemViewModel } from '../../features/comments/api/models';
-import { CreateUpdateCommentInputDTO } from '../../features/comments/application/dto';
+import { CreateUpdateCommentInputDTO } from '../../features/comments/application';
 
 describe('create a comment by requested postId', () => {
     beforeAll(async () => {

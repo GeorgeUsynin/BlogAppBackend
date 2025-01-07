@@ -2,8 +2,11 @@ import { Router } from 'express';
 import { checkSchema } from 'express-validator';
 import { authBasicMiddleware, errorMiddleware } from '../../shared/api/APIMiddlewares';
 import { queryParamsValidationSchema } from '../../shared/api/validation';
-import { createUserValidationSchema } from '../validation';
-import { usersController } from './compositionRoot';
+import { createUserValidationSchema } from './validation';
+import { container } from './compositionRoot';
+import { UsersController } from './usersController';
+
+const usersController = container.get(UsersController);
 
 export const UsersRouter = Router();
 

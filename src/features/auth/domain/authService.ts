@@ -4,7 +4,7 @@ import { SETTINGS } from '../../../app-settings';
 import { ResultStatus } from '../../../constants';
 import { JWTService } from '../../shared/application/services';
 import { APIError, getDeviceName } from '../../shared/helpers';
-import { UsersRepository } from '../../users/repository';
+import { UsersRepository } from '../../users/infrastructure';
 import { AuthDeviceSessionsService } from '../../security/domain';
 
 type TLoginPayload = {

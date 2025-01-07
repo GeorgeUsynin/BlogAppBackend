@@ -3,20 +3,20 @@ import { SETTINGS } from '../../../app-settings';
 
 const loginPattern = '^[a-zA-Z0-9_-]*$';
 const emailPattern = '^[w-.]+@([w-]+.)+[w-]{2,4}$';
+const defaultCreatedAt = new Date().toISOString();
+const defaultRecoveryCode = null;
+const defaultExpirationDate = null;
+// Soft delete implementation
+const defaultIsDeleted = false;
 
 type TUserValues = {
     login: string;
     email: string;
     passwordHash: string;
-    createdAt: string;
     emailConfirmation: {
         isConfirmed: boolean;
         confirmationCode: string;
         expirationDate: Date;
-    };
-    passwordRecovery: {
-        recoveryCode: string | null;
-        expirationDate: Date | null;
     };
 };
 
@@ -34,14 +34,19 @@ export class TUser {
         recoveryCode: string | null;
         expirationDate: Date | null;
     };
+    public isDeleted: boolean;
 
     constructor(values: TUserValues) {
         this.login = values.login;
         this.email = values.email;
         this.passwordHash = values.passwordHash;
-        this.createdAt = values.createdAt;
+        this.createdAt = defaultCreatedAt;
         this.emailConfirmation = values.emailConfirmation;
-        this.passwordRecovery = values.passwordRecovery;
+        this.passwordRecovery = {
+            expirationDate: defaultExpirationDate,
+            recoveryCode: defaultRecoveryCode,
+        };
+        this.isDeleted = defaultIsDeleted;
     }
 }
 
@@ -75,16 +80,28 @@ const userSchema = new Schema<TUser>({
         },
     },
     passwordHash: { type: String, required: true },
-    createdAt: { type: String, required: true },
+    createdAt: { type: String, default: defaultCreatedAt },
     emailConfirmation: {
         isConfirmed: { type: Boolean, required: true },
         confirmationCode: { type: String, required: true },
         expirationDate: { type: Date, required: true },
     },
     passwordRecovery: {
-        recoveryCode: { type: String, default: null },
-        expirationDate: { type: Date, default: null },
+        recoveryCode: { type: String, default: defaultRecoveryCode },
+        expirationDate: { type: Date, default: defaultExpirationDate },
     },
+    isDeleted: { type: Boolean, default: defaultIsDeleted },
+});
+
+// Soft delete implementation
+userSchema.pre('find', function () {
+    this.where({ isDeleted: false });
+});
+userSchema.pre('findOne', function () {
+    this.where({ isDeleted: false });
+});
+userSchema.pre('countDocuments', function () {
+    this.where({ isDeleted: false });
 });
 
 export const UserModel = model<TUser, TUserModel>(SETTINGS.DB_COLLECTIONS.usersCollection, userSchema);

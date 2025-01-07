@@ -1,17 +1,19 @@
 import bcrypt from 'bcrypt';
-import { UsersRepository } from '../repository';
+import { inject, injectable } from 'inversify';
+import { UsersRepository } from '../infrastructure';
 import { ResultStatus } from '../../../constants';
 import { randomUUID } from 'crypto';
 import { add } from 'date-fns';
 import { APIError } from '../../shared/helpers';
-import { TUser } from './userEntity';
+import { TUser } from '../domain/userEntity';
 import { SETTINGS } from '../../../app-settings';
-import type { CreateUserInputModel } from '../models';
+import { CreateUserInputDTO } from './dto';
 
+@injectable()
 export class UsersService {
-    constructor(private usersRepository: UsersRepository) {}
+    constructor(@inject(UsersRepository) private usersRepository: UsersRepository) {}
 
-    async createUser(payload: CreateUserInputModel) {
+    async createUser(payload: CreateUserInputDTO) {
         const user = await this.usersRepository.findUserByLoginOrEmail(payload.login, payload.email);
 
         if (user) {
@@ -26,15 +28,10 @@ export class UsersService {
         const newUser = new TUser({
             ...payload,
             passwordHash: hash,
-            createdAt: new Date().toISOString(),
             emailConfirmation: {
                 isConfirmed: true,
                 confirmationCode: randomUUID(),
                 expirationDate: add(new Date(), { hours: 1 }),
-            },
-            passwordRecovery: {
-                expirationDate: null,
-                recoveryCode: null,
             },
         });
 
@@ -46,10 +43,14 @@ export class UsersService {
     }
 
     async deleteUserById(userId: string) {
-        const foundUser = await this.usersRepository.deleteUserById(userId);
+        const foundUser = await this.usersRepository.findUserById(userId);
 
         if (!foundUser) {
             throw new APIError({ status: ResultStatus.NotFound, message: 'User not found' });
         }
+
+        foundUser.isDeleted = true;
+
+        await this.usersRepository.save(foundUser);
     }
 }

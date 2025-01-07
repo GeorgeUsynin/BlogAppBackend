@@ -1,18 +1,17 @@
+import { inject, injectable } from 'inversify';
 import { NextFunction, Request, Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../../constants';
 import type { ErrorViewModel, RequestWithBody, RequestWithQueryParams } from '../../shared/types';
-import {
-    UsersPaginatedViewModel,
-    QueryParamsUserModel,
-    CreateUserInputModel,
-    UserItemViewModel,
-    URIParamsUserIDModel,
-} from '../models';
-import { UsersService } from '../domain';
-import { QueryUsersRepository } from '../repository';
+import { UsersPaginatedViewModel, QueryParamsUserModel, UserItemViewModel, URIParamsUserIDModel } from '../api/models';
+import { CreateUserInputDTO, UsersService } from '../application';
+import { QueryUsersRepository } from '../infrastructure';
 
+@injectable()
 export class UsersController {
-    constructor(private usersService: UsersService, private queryUsersRepository: QueryUsersRepository) {}
+    constructor(
+        @inject(UsersService) private usersService: UsersService,
+        @inject(QueryUsersRepository) private queryUsersRepository: QueryUsersRepository
+    ) {}
 
     async getAllUsers(
         req: RequestWithQueryParams<QueryParamsUserModel>,
@@ -31,7 +30,7 @@ export class UsersController {
     }
 
     async createUser(
-        req: RequestWithBody<CreateUserInputModel>,
+        req: RequestWithBody<CreateUserInputDTO>,
         res: Response<UserItemViewModel | ErrorViewModel>,
         next: NextFunction
     ) {

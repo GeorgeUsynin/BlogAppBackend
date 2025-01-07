@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 import { Container } from 'inversify';
-import { PostsService } from '../domain';
+import { PostsService } from '../application';
 import { PostsRepository, QueryPostsRepository } from '../infrastructure';
 import { BlogsRepository } from '../../blogs/infrastructure';
 import { PostsController } from './postsController';
-import { CommentsService } from '../../comments/domain';
+import { CommentsService } from '../../comments/application';
 import { CommentsRepository, QueryCommentsRepository } from '../../comments/infrastructure';
-import { UsersRepository } from '../../users/repository';
+import { UsersRepository } from '../../users/infrastructure';
 import { LikesRepository } from '../../likes/repository';
 
 export const container: Container = new Container();

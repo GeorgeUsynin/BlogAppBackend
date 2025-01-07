@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { add } from 'date-fns/add';
 import { randomUUID } from 'crypto';
-import { UsersRepository } from '../../users/repository';
+import { UsersRepository } from '../../users/infrastructure';
 import { RegistrationInputModel } from '../models';
 import { ResultStatus } from '../../../constants';
 import { EmailManager } from '../../shared/application/managers/emailManager';
@@ -35,15 +35,10 @@ export class RegistrationService {
             login,
             email,
             passwordHash: hash,
-            createdAt: new Date().toISOString(),
             emailConfirmation: {
                 isConfirmed: false,
                 confirmationCode: randomUUID(),
                 expirationDate: add(new Date(), { hours: SETTINGS.CONFIRMATION_CODE_EXPIRATION_TIME_IN_HOURS }),
-            },
-            passwordRecovery: {
-                expirationDate: null,
-                recoveryCode: null,
             },
         });
 
@@ -80,7 +75,9 @@ export class RegistrationService {
             });
         }
 
-        await this.usersRepository.updateUserEmailConfirmation(user._id.toString(), true);
+        user.emailConfirmation.isConfirmed = true;
+
+        await this.usersRepository.save(user);
     }
 
     async registrationEmailResending(email: string) {
@@ -105,11 +102,10 @@ export class RegistrationService {
         const newConfirmationCode = randomUUID();
         const newExpirationDate = add(new Date(), { hours: SETTINGS.CONFIRMATION_CODE_EXPIRATION_TIME_IN_HOURS });
 
-        await this.usersRepository.updateUserEmailConfirmationCode(
-            user._id.toString(),
-            newConfirmationCode,
-            newExpirationDate
-        );
+        user.emailConfirmation.confirmationCode = newConfirmationCode;
+        user.emailConfirmation.expirationDate = newExpirationDate;
+
+        await this.usersRepository.save(user);
 
         this.emailManager.sendPasswordConfirmationEmail(email, newConfirmationCode);
     }

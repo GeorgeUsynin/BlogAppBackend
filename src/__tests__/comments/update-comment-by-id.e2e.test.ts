@@ -1,7 +1,7 @@
 import { dbHelper, request, createErrorMessages, getBearerAuthorization } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 import { comments, users, fakeRequestedObjectId, longContent } from '../dataset';
-import { CreateUpdateCommentInputDTO } from '../../features/comments/application/dto';
+import { CreateUpdateCommentInputDTO } from '../../features/comments/application';
 
 describe('update comment by id', () => {
     beforeAll(async () => {

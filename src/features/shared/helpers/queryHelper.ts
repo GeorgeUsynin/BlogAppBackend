@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import { QueryParamsBlogModel } from '../../blogs/api';
 import { QueryParamsPostModel } from '../../posts/api';
-import { QueryParamsUserModel } from '../../users/models';
+import { QueryParamsUserModel } from '../../users/api';
 import { LikeStatus } from '../../../constants';
 
 export const normalizeQueryParams = (

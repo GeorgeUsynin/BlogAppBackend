@@ -15,11 +15,11 @@ import {
     QueryParamsCommentModel,
     URIParamsCommentIDModel,
 } from '../../comments/api/models';
-import { PostsService } from '../domain';
-import { CommentsService } from '../../comments/domain';
+import { PostsService } from '../application';
+import { CommentsService } from '../../comments/application';
 import { QueryCommentsRepository } from '../../comments/infrastructure';
 import { CreateUpdatePostInputDTO } from '../application';
-import { CreateUpdateCommentInputDTO } from '../../comments/application/dto';
+import { CreateUpdateCommentInputDTO } from '../../comments/application';
 
 @injectable()
 export class PostsController {

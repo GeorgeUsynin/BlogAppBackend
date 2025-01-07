@@ -1,5 +1,5 @@
-import { CreateUserInputModel } from '../models';
 import { Schema } from 'express-validator';
+import { CreateUserInputDTO } from '../../application';
 
 const loginMinLength = 3;
 const loginMaxLength = 10;
@@ -8,7 +8,7 @@ const passwordMaxLength = 20;
 const loginPattern = '^[a-zA-Z0-9_-]*$';
 const emailPattern = '^[w-.]+@([w-]+.)+[w-]{2,4}$';
 
-export const createUserValidationSchema: Schema<keyof CreateUserInputModel> = {
+export const createUserValidationSchema: Schema<keyof CreateUserInputDTO> = {
     login: {
         exists: {
             errorMessage: 'Login field is required',

@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { Container } from 'inversify';
 import { BlogsRepository, QueryBlogsRepository } from '../infrastructure';
 import { BlogsService } from '../application';
-import { PostsService } from '../../posts/domain';
+import { PostsService } from '../../posts/application';
 import { PostsRepository, QueryPostsRepository } from '../../posts/infrastructure';
 import { BlogsController } from './blogsController';
 

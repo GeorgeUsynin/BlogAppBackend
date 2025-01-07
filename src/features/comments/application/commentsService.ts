@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { UsersRepository } from '../../users/repository';
+import { UsersRepository } from '../../users/infrastructure';
 import { CommentsRepository } from '../infrastructure';
 import { LikeStatus, ResultStatus } from '../../../constants';
 import { APIError } from '../../shared/helpers';

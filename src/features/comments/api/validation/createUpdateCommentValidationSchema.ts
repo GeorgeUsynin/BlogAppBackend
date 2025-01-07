@@ -1,5 +1,5 @@
 import { Schema } from 'express-validator';
-import { CreateUpdateCommentInputDTO } from '../../application/dto';
+import { CreateUpdateCommentInputDTO } from '../../application';
 
 const contentMinLength = 20;
 const contentMaxLength = 300;

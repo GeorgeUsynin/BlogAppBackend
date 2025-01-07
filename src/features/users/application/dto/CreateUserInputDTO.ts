@@ -1,7 +1,7 @@
 /**
  * Represents the input model for creating a user.
  */
-export type CreateUserInputModel = {
+export type CreateUserInputDTO = {
     /**
      * The unique login for the user.
      * Must be between 3 and 10 characters in length.

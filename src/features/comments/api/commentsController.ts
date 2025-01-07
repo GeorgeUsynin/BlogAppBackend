@@ -4,9 +4,9 @@ import { RequestWithParams, RequestWithParamsAndBody } from '../../shared/types'
 import { CommentItemViewModel, URIParamsCommentIDModel } from '../api/models';
 import { HTTP_STATUS_CODES } from '../../../constants';
 import { QueryCommentsRepository } from '../infrastructure';
-import { CommentsService } from '../domain';
+import { CommentsService } from '../application';
 import { CommentLikeStatusInputModel } from '../../likes/models';
-import { CreateUpdateCommentInputDTO } from '../application/dto';
+import { CreateUpdateCommentInputDTO } from '../application';
 
 @injectable()
 export class CommentsController {

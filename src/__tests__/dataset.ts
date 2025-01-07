@@ -238,6 +238,7 @@ export const users: WithId<TUser>[] = [
             expirationDate: add(new Date(), { hours: 1 }),
             recoveryCode: '334455',
         },
+        isDeleted: false,
     },
     {
         _id: secondId,
@@ -254,6 +255,7 @@ export const users: WithId<TUser>[] = [
             expirationDate: new Date(),
             recoveryCode: '111111',
         },
+        isDeleted: false,
     },
     {
         _id: thirdId,
@@ -270,6 +272,7 @@ export const users: WithId<TUser>[] = [
             expirationDate: null,
             recoveryCode: null,
         },
+        isDeleted: false,
     },
     {
         _id: fourthId,
@@ -286,6 +289,7 @@ export const users: WithId<TUser>[] = [
             expirationDate: null,
             recoveryCode: null,
         },
+        isDeleted: false,
     },
     {
         _id: fifthId,
@@ -302,6 +306,7 @@ export const users: WithId<TUser>[] = [
             expirationDate: null,
             recoveryCode: null,
         },
+        isDeleted: false,
     },
     {
         _id: sixthId,
@@ -318,6 +323,7 @@ export const users: WithId<TUser>[] = [
             expirationDate: null,
             recoveryCode: null,
         },
+        isDeleted: false,
     },
 ];
 

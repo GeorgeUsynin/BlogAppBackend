@@ -1,6 +1,9 @@
 import { Response, Request, NextFunction } from 'express';
 import { authService } from '../../../auth/router/compositionRoot';
-import { usersService } from '../../../users/router/compositionRoot';
+import { container } from '../../../users/api/compositionRoot';
+import { UsersService } from '../../../users/application';
+
+const usersService = container.get(UsersService);
 
 export const getUserIdFromAccessTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     req.userId = '';

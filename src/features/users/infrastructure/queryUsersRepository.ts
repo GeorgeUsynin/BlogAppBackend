@@ -1,5 +1,6 @@
+import { injectable } from 'inversify';
 import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
-import { QueryParamsUserModel, UserItemViewModel, UsersPaginatedViewModel } from '../models';
+import { QueryParamsUserModel, UserItemViewModel, UsersPaginatedViewModel } from '../api/models';
 import { WithId } from 'mongodb';
 import { ResultStatus } from '../../../constants';
 import { TUser, UserModel } from '../domain';
@@ -12,6 +13,7 @@ type TValues = {
     pageSize: number;
 };
 
+@injectable()
 export class QueryUsersRepository {
     async getAllUsers(queryParams: QueryParamsUserModel) {
         const params = normalizeQueryParams(queryParams);

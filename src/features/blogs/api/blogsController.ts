@@ -13,7 +13,7 @@ import type {
 } from '../../shared/types';
 import { BlogsService } from '../application';
 import { QueryBlogsRepository } from '../infrastructure';
-import { PostsService } from '../../posts/domain';
+import { PostsService } from '../../posts/application';
 import { CreateUpdatePostInputDTO } from '../../posts/application';
 
 @injectable()

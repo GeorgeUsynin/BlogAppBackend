@@ -13,7 +13,7 @@ import {
 } from '../models';
 import { HTTP_STATUS_CODES } from '../../../constants';
 import { AuthService, PasswordService, RegistrationService } from '../domain';
-import { QueryUsersRepository } from '../../users/repository';
+import { QueryUsersRepository } from '../../users/infrastructure';
 
 export class AuthController {
     constructor(

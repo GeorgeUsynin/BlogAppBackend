@@ -1,6 +1,7 @@
 import { request, createErrorMessages, getAuthorization, dbHelper } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
-import { CreateUserInputModel, UserItemViewModel } from '../../features/users/models';
+import { UserItemViewModel } from '../../features/users/api/models';
+import { CreateUserInputDTO } from '../../features/users/application';
 import { users } from '../dataset';
 
 describe('create a user', () => {
@@ -18,7 +19,7 @@ describe('create a user', () => {
     });
 
     it('creates a new user', async () => {
-        const newUser: CreateUserInputModel = {
+        const newUser: CreateUserInputDTO = {
             login: 'george',
             email: 'user1george@example.com',
             password: '12345678',
@@ -57,7 +58,7 @@ describe('create a user', () => {
         describe('login', () => {
             it('returns 400 status code and proper error object if `login` is missing', async () => {
                 //@ts-expect-error bad request (login is missing)
-                const newUser: CreateUserInputModel = {
+                const newUser: CreateUserInputDTO = {
                     email: 'user1george@example.com',
                     password: '12345678',
                 };
@@ -71,7 +72,7 @@ describe('create a user', () => {
             });
 
             it('returns 400 status code and proper error object if `login` is empty or contain only spaces', async () => {
-                const newUser: CreateUserInputModel = {
+                const newUser: CreateUserInputDTO = {
                     login: ' ',
                     email: 'user1george@example.com',
                     password: '12345678',
@@ -86,7 +87,7 @@ describe('create a user', () => {
             });
 
             it('returns 400 status code and proper error object for bad `login` type', async () => {
-                const newUser: CreateUserInputModel = {
+                const newUser: CreateUserInputDTO = {
                     //@ts-expect-error bad request (login type is invalid)
                     login: [],
                     email: 'user1george@example.com',
@@ -102,7 +103,7 @@ describe('create a user', () => {
             });
 
             it('returns 400 status code and proper error object for bad `login` min length', async () => {
-                const newUser: CreateUserInputModel = {
+                const newUser: CreateUserInputDTO = {
                     login: 'ab',
                     email: 'user1george@example.com',
                     password: '12345678',
@@ -117,7 +118,7 @@ describe('create a user', () => {
             });
 
             it('returns 400 status code and proper error object for bad `login` max length', async () => {
-                const newUser: CreateUserInputModel = {
+                const newUser: CreateUserInputDTO = {
                     login: 'More than ten characters',
                     email: 'user1george@example.com',
                     password: '12345678',
@@ -132,7 +133,7 @@ describe('create a user', () => {
             });
 
             it('returns 400 status code and proper error object for bad `login` pattern', async () => {
-                const newUser: CreateUserInputModel = {
+                const newUser: CreateUserInputDTO = {
                     login: 'my login',
                     email: 'user1george@example.com',
                     password: '12345678',
@@ -147,7 +148,7 @@ describe('create a user', () => {
             });
 
             it('returns 400 status code and proper error object for bad `login` is not unique', async () => {
-                const newUser: CreateUserInputModel = {
+                const newUser: CreateUserInputDTO = {
                     login: 'george',
                     email: 'george@example.com',
                     password: '12345678',
@@ -165,7 +166,7 @@ describe('create a user', () => {
         describe('email', () => {
             it('returns 400 status code and proper error object if `email` is missing', async () => {
                 //@ts-expect-error bad request (email is missing)
-                const newUser: CreateUserInputModel = {
+                const newUser: CreateUserInputDTO = {
                     login: 'george',
                     password: '12345678',
                 };
@@ -179,7 +180,7 @@ describe('create a user', () => {
             });
 
             it('returns 400 status code and proper error object if `email` is empty or contain only spaces', async () => {
-                const newUser: CreateUserInputModel = {
+                const newUser: CreateUserInputDTO = {
                     login: 'george',
                     email: ' ',
                     password: '12345678',
@@ -194,7 +195,7 @@ describe('create a user', () => {
             });
 
             it('returns 400 status code and proper error object for bad `email` type', async () => {
-                const newUser: CreateUserInputModel = {
+                const newUser: CreateUserInputDTO = {
                     login: 'george',
                     //@ts-expect-error bad request (email type is invalid)
                     email: [],
@@ -210,7 +211,7 @@ describe('create a user', () => {
             });
 
             it('returns 400 status code and proper error object for bad `email` pattern', async () => {
-                const newUser: CreateUserInputModel = {
+                const newUser: CreateUserInputDTO = {
                     login: 'george',
                     email: 'user1george@',
                     password: '12345678',
@@ -225,7 +226,7 @@ describe('create a user', () => {
             });
 
             it('returns 400 status code and proper error object for bad `email` is not unique', async () => {
-                const newUser: CreateUserInputModel = {
+                const newUser: CreateUserInputDTO = {
                     login: 'olga',
                     email: 'user1george@example.com',
                     password: '12345678',
@@ -243,7 +244,7 @@ describe('create a user', () => {
         describe('password', () => {
             it('returns 400 status code and proper error object if `password` is missing', async () => {
                 //@ts-expect-error bad request (password is missing)
-                const newUser: CreateUserInputModel = {
+                const newUser: CreateUserInputDTO = {
                     login: 'george',
                     email: 'user1george@example.com',
                 };
@@ -257,7 +258,7 @@ describe('create a user', () => {
             });
 
             it('returns 400 status code and proper error object if `password` is empty or contain only spaces', async () => {
-                const newUser: CreateUserInputModel = {
+                const newUser: CreateUserInputDTO = {
                     login: 'george',
                     email: 'user1george@example.com',
                     password: ' ',
@@ -272,7 +273,7 @@ describe('create a user', () => {
             });
 
             it('returns 400 status code and proper error object for bad `password` type', async () => {
-                const newUser: CreateUserInputModel = {
+                const newUser: CreateUserInputDTO = {
                     login: 'george',
                     //@ts-expect-error bad request (password type is invalid)
                     password: [],
@@ -288,7 +289,7 @@ describe('create a user', () => {
             });
 
             it('returns 400 status code and proper error object for bad `password` min length', async () => {
-                const newUser: CreateUserInputModel = {
+                const newUser: CreateUserInputDTO = {
                     login: 'george',
                     email: 'user1george@example.com',
                     password: '12345',
@@ -303,7 +304,7 @@ describe('create a user', () => {
             });
 
             it('returns 400 status code and proper error object for bad `password` max length', async () => {
-                const newUser: CreateUserInputModel = {
+                const newUser: CreateUserInputDTO = {
                     login: 'olga',
                     email: 'user1olgae@example.com',
                     password: '12345678901234567890122',
@@ -320,7 +321,7 @@ describe('create a user', () => {
     });
 
     it('returns 401 Unauthorized status code if there is no proper Authorization header', async () => {
-        const newUser: CreateUserInputModel = {
+        const newUser: CreateUserInputDTO = {
             login: 'george',
             email: 'user1george@example.com',
             password: '12345678',

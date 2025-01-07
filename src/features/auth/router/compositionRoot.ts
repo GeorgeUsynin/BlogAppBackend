@@ -2,7 +2,7 @@ import { AuthService, RegistrationService, PasswordService } from '../domain';
 import { AuthDeviceSessionsRepository } from '../../security/repository';
 import { AuthDeviceSessionsService } from '../../security/domain';
 import { JWTService } from '../../shared/application/services';
-import { UsersRepository, QueryUsersRepository } from '../../users/repository';
+import { UsersRepository, QueryUsersRepository } from '../../users/infrastructure';
 import { EmailManager } from '../../shared/application/managers/emailManager';
 import { EmailAdapter } from '../../shared/infrastructure/adapters';
 import { AuthController } from './authController';

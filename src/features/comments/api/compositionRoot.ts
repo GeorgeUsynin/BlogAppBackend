@@ -1,10 +1,10 @@
 import 'reflect-metadata';
 import { Container } from 'inversify';
-import { CommentsService } from '../domain';
+import { CommentsService } from '../application';
 import { CommentsRepository, QueryCommentsRepository } from '../infrastructure';
 import { PostsRepository } from '../../posts/infrastructure';
 import { CommentsController } from './commentsController';
-import { UsersRepository } from '../../users/repository';
+import { UsersRepository } from '../../users/infrastructure';
 import { LikesRepository } from '../../likes/repository';
 
 export const container: Container = new Container();

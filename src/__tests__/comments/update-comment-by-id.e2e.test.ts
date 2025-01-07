@@ -1,7 +1,7 @@
 import { dbHelper, request, createErrorMessages, getBearerAuthorization } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 import { comments, users, fakeRequestedObjectId, longContent } from '../dataset';
-import { CreateUpdateCommentInputModel } from '../../features/comments/models';
+import { CreateUpdateCommentInputDTO } from '../../features/comments/application/dto';
 
 describe('update comment by id', () => {
     beforeAll(async () => {
@@ -26,7 +26,7 @@ describe('update comment by id', () => {
     const fourthUser = users[3];
 
     it('updates comment by id', async () => {
-        const updatedComment: CreateUpdateCommentInputModel = {
+        const updatedComment: CreateUpdateCommentInputDTO = {
             content: 'New super content about my life',
         };
 
@@ -60,7 +60,7 @@ describe('update comment by id', () => {
         describe('content', () => {
             it('returns 400 status code and proper error object if `content` is missing', async () => {
                 //@ts-expect-error bad request (content is missing)
-                const updatedComment: CreateUpdateCommentInputModel = {};
+                const updatedComment: CreateUpdateCommentInputDTO = {};
                 const { body } = await request
                     .put(`${ROUTES.COMMENTS}/${secondCommentId}`)
                     .set(getBearerAuthorization(firstUser._id.toString()))
@@ -71,7 +71,7 @@ describe('update comment by id', () => {
             });
 
             it('returns 400 status code and proper error object if `content` is empty or contain only spaces', async () => {
-                const updatedComment: CreateUpdateCommentInputModel = {
+                const updatedComment: CreateUpdateCommentInputDTO = {
                     content: ' ',
                 };
                 const { body } = await request
@@ -84,7 +84,7 @@ describe('update comment by id', () => {
             });
 
             it('returns 400 status code and proper error object for bad `content` type', async () => {
-                const updatedComment: CreateUpdateCommentInputModel = {
+                const updatedComment: CreateUpdateCommentInputDTO = {
                     //@ts-expect-error bad request (content type is invalid)
                     content: [],
                 };
@@ -98,7 +98,7 @@ describe('update comment by id', () => {
             });
 
             it('returns 400 status code and proper error object for bad `content` min length', async () => {
-                const updatedComment: CreateUpdateCommentInputModel = {
+                const updatedComment: CreateUpdateCommentInputDTO = {
                     content: 'More',
                 };
                 const { body } = await request
@@ -111,7 +111,7 @@ describe('update comment by id', () => {
             });
 
             it('returns 400 status code and proper error object for bad `content` max length', async () => {
-                const updatedComment: CreateUpdateCommentInputModel = {
+                const updatedComment: CreateUpdateCommentInputDTO = {
                     content: longContent,
                 };
                 const { body } = await request
@@ -126,7 +126,7 @@ describe('update comment by id', () => {
     });
 
     it('returns 401 Unauthorized status code if there is no proper Authorization header', async () => {
-        const updatedComment: CreateUpdateCommentInputModel = {
+        const updatedComment: CreateUpdateCommentInputDTO = {
             content: 'New super content about my life',
         };
 
@@ -137,7 +137,7 @@ describe('update comment by id', () => {
     });
 
     it('return 404 status code if there is no comment in database', async () => {
-        const updatedComment: CreateUpdateCommentInputModel = {
+        const updatedComment: CreateUpdateCommentInputDTO = {
             content: 'New super content about my life',
         };
 
@@ -149,7 +149,7 @@ describe('update comment by id', () => {
     });
 
     it('returns 403 status code if user tries to update comment of another user', async () => {
-        const updatedComment: CreateUpdateCommentInputModel = {
+        const updatedComment: CreateUpdateCommentInputDTO = {
             content: 'New super content about my life',
         };
 

@@ -1,18 +1,19 @@
 import { HydratedDocument, model, Model, Schema } from 'mongoose';
 import { SETTINGS } from '../../../app-settings';
 
+const defaultLikesCount = 0;
+const defaultDislikesCount = 0;
+const defaultCreatedAt = new Date().toISOString();
+// Soft delete implementation
+const defaultIsDeleted = false;
+
 type TCommentValues = {
     content: string;
     commentatorInfo: {
         userId: string;
         userLogin: string;
     };
-    createdAt: string;
     postId: string;
-    likesInfo: {
-        likesCount: number;
-        dislikesCount: number;
-    };
 };
 export class TComment {
     public content: string;
@@ -26,13 +27,18 @@ export class TComment {
         likesCount: number;
         dislikesCount: number;
     };
+    public isDeleted: boolean;
 
     constructor(values: TCommentValues) {
         this.content = values.content;
         this.commentatorInfo = values.commentatorInfo;
-        this.createdAt = values.createdAt;
+        this.createdAt = defaultCreatedAt;
         this.postId = values.postId;
-        this.likesInfo = values.likesInfo;
+        this.likesInfo = {
+            dislikesCount: defaultDislikesCount,
+            likesCount: defaultLikesCount,
+        };
+        this.isDeleted = defaultIsDeleted;
     }
 }
 
@@ -47,11 +53,23 @@ const commentSchema = new Schema<TComment>({
         userLogin: { type: String, required: true },
     },
     postId: { type: String, required: true },
-    createdAt: { type: String, required: true },
+    createdAt: { type: String, default: defaultCreatedAt },
     likesInfo: {
-        dislikesCount: { type: Number, required: true },
-        likesCount: { type: Number, required: true },
+        dislikesCount: { type: Number, default: 0 },
+        likesCount: { type: Number, default: 0 },
     },
+    isDeleted: { type: Boolean, default: defaultIsDeleted },
+});
+
+// Soft delete implementation
+commentSchema.pre('find', function () {
+    this.where({ isDeleted: false });
+});
+commentSchema.pre('findOne', function () {
+    this.where({ isDeleted: false });
+});
+commentSchema.pre('countDocuments', function () {
+    this.where({ isDeleted: false });
 });
 
 export const CommentModel = model<TComment, TCommentModel>(SETTINGS.DB_COLLECTIONS.commentsCollection, commentSchema);

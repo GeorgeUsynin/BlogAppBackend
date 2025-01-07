@@ -5,7 +5,7 @@ import { PostsRepository, QueryPostsRepository } from '../infrastructure';
 import { BlogsRepository } from '../../blogs/infrastructure';
 import { PostsController } from './postsController';
 import { CommentsService } from '../../comments/domain';
-import { CommentsRepository, QueryCommentsRepository } from '../../comments/repository';
+import { CommentsRepository, QueryCommentsRepository } from '../../comments/infrastructure';
 import { UsersRepository } from '../../users/repository';
 import { LikesRepository } from '../../likes/repository';
 

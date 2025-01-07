@@ -173,6 +173,7 @@ export const comments: WithId<TComment>[] = [
             dislikesCount: 0,
             likesCount: 0,
         },
+        isDeleted: false,
     },
     {
         _id: secondCommentId,
@@ -187,6 +188,7 @@ export const comments: WithId<TComment>[] = [
             dislikesCount: 0,
             likesCount: 0,
         },
+        isDeleted: false,
     },
     {
         _id: thirdCommentId,
@@ -201,6 +203,7 @@ export const comments: WithId<TComment>[] = [
             dislikesCount: 0,
             likesCount: 0,
         },
+        isDeleted: false,
     },
     {
         _id: fourthCommentId,
@@ -215,6 +218,7 @@ export const comments: WithId<TComment>[] = [
             dislikesCount: 0,
             likesCount: 0,
         },
+        isDeleted: false,
     },
 ];
 

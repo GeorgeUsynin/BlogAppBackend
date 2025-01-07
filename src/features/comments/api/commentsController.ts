@@ -1,13 +1,19 @@
+import { inject, injectable } from 'inversify';
 import { NextFunction, Response } from 'express';
 import { RequestWithParams, RequestWithParamsAndBody } from '../../shared/types';
-import { CommentItemViewModel, CreateUpdateCommentInputModel, URIParamsCommentIDModel } from '../models';
+import { CommentItemViewModel, URIParamsCommentIDModel } from '../api/models';
 import { HTTP_STATUS_CODES } from '../../../constants';
-import { QueryCommentsRepository } from '../repository';
+import { QueryCommentsRepository } from '../infrastructure';
 import { CommentsService } from '../domain';
 import { CommentLikeStatusInputModel } from '../../likes/models';
+import { CreateUpdateCommentInputDTO } from '../application/dto';
 
+@injectable()
 export class CommentsController {
-    constructor(private commentsService: CommentsService, private queryCommentsRepository: QueryCommentsRepository) {}
+    constructor(
+        @inject(CommentsService) private commentsService: CommentsService,
+        @inject(QueryCommentsRepository) private queryCommentsRepository: QueryCommentsRepository
+    ) {}
 
     async getCommentByID(
         req: RequestWithParams<URIParamsCommentIDModel>,
@@ -27,7 +33,7 @@ export class CommentsController {
     }
 
     async updateCommentByID(
-        req: RequestWithParamsAndBody<URIParamsCommentIDModel, CreateUpdateCommentInputModel>,
+        req: RequestWithParamsAndBody<URIParamsCommentIDModel, CreateUpdateCommentInputDTO>,
         res: Response,
         next: NextFunction
     ) {

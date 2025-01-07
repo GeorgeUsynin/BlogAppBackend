@@ -6,7 +6,7 @@ import { AuthRouter } from './features/auth/router';
 import { UsersRouter } from './features/users/router';
 import { BlogsRouter } from './features/blogs/api';
 import { PostsRouter } from './features/posts/api';
-import { CommentsRouter } from './features/comments/router';
+import { CommentsRouter } from './features/comments/api';
 import { SecurityRouter } from './features/security/router';
 import { TestRouter } from './features/tests/router';
 import { APIErrorMiddleware } from './features/shared/api/APIMiddlewares';

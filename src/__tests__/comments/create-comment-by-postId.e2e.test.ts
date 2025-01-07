@@ -1,7 +1,8 @@
 import { dbHelper, request, createErrorMessages, getBearerAuthorization } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 import { comments, posts, fakeRequestedObjectId, longContent, users } from '../dataset';
-import { CommentItemViewModel, CreateUpdateCommentInputModel } from '../../features/comments/models';
+import { CommentItemViewModel } from '../../features/comments/api/models';
+import { CreateUpdateCommentInputDTO } from '../../features/comments/application/dto';
 
 describe('create a comment by requested postId', () => {
     beforeAll(async () => {
@@ -25,7 +26,7 @@ describe('create a comment by requested postId', () => {
     const secondUser = users[1];
 
     it('creates a new comment by requested postId', async () => {
-        const newComment: CreateUpdateCommentInputModel = {
+        const newComment: CreateUpdateCommentInputDTO = {
             content: "This is George's third comment.",
         };
 
@@ -66,7 +67,7 @@ describe('create a comment by requested postId', () => {
         describe('content', () => {
             it('returns 400 status code and proper error object if `content` is missing', async () => {
                 //@ts-expect-error bad request (content is missing)
-                const newComment: CreateUpdateCommentInputModel = {};
+                const newComment: CreateUpdateCommentInputDTO = {};
                 const { body } = await request
                     .post(`${ROUTES.POSTS}/${secondPostId}${ROUTES.COMMENTS}`)
                     .set(getBearerAuthorization(secondUser._id.toString()))
@@ -77,7 +78,7 @@ describe('create a comment by requested postId', () => {
             });
 
             it('returns 400 status code and proper error object if `content` is empty or contain only spaces', async () => {
-                const newComment: CreateUpdateCommentInputModel = {
+                const newComment: CreateUpdateCommentInputDTO = {
                     content: ' ',
                 };
                 const { body } = await request
@@ -90,7 +91,7 @@ describe('create a comment by requested postId', () => {
             });
 
             it('returns 400 status code and proper error object for bad `content` type', async () => {
-                const newComment: CreateUpdateCommentInputModel = {
+                const newComment: CreateUpdateCommentInputDTO = {
                     //@ts-expect-error bad request (content type is invalid)
                     content: [],
                 };
@@ -104,7 +105,7 @@ describe('create a comment by requested postId', () => {
             });
 
             it('returns 400 status code and proper error object for bad `content` min length', async () => {
-                const newComment: CreateUpdateCommentInputModel = {
+                const newComment: CreateUpdateCommentInputDTO = {
                     content: 'content',
                 };
                 const { body } = await request
@@ -117,7 +118,7 @@ describe('create a comment by requested postId', () => {
             });
 
             it('returns 400 status code and proper error object for bad `content` max length', async () => {
-                const newComment: CreateUpdateCommentInputModel = {
+                const newComment: CreateUpdateCommentInputDTO = {
                     content: longContent,
                 };
                 const { body } = await request
@@ -132,7 +133,7 @@ describe('create a comment by requested postId', () => {
     });
 
     it('returns 401 Unauthorized status code if there is no proper Authorization header', async () => {
-        const newComment: CreateUpdateCommentInputModel = {
+        const newComment: CreateUpdateCommentInputDTO = {
             content: "This is George's third comment.",
         };
 
@@ -143,7 +144,7 @@ describe('create a comment by requested postId', () => {
     });
 
     it('returns 404 status code if there is no requested postId in database', async () => {
-        const newComment: CreateUpdateCommentInputModel = {
+        const newComment: CreateUpdateCommentInputDTO = {
             content: "This is George's third comment.",
         };
 

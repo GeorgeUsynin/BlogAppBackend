@@ -1,10 +1,10 @@
-import { CreateUpdateCommentInputModel } from '../models';
 import { Schema } from 'express-validator';
+import { CreateUpdateCommentInputDTO } from '../../application/dto';
 
 const contentMinLength = 20;
 const contentMaxLength = 300;
 
-export const createUpdateCommentValidationSchema: Schema<keyof CreateUpdateCommentInputModel> = {
+export const createUpdateCommentValidationSchema: Schema<keyof CreateUpdateCommentInputDTO> = {
     content: {
         exists: {
             errorMessage: 'Content field is required',

@@ -1,5 +1,5 @@
-import { LikeStatus } from '../../../constants';
-import { PaginatedViewModel } from '../../shared/types';
+import { LikeStatus } from '../../../../constants';
+import { PaginatedViewModel } from '../../../shared/types';
 
 /**
  * Represents the paginated response model for comments.

@@ -5,10 +5,13 @@ import {
     errorMiddleware,
     getUserIdFromAccessTokenMiddleware,
 } from '../../shared/api/APIMiddlewares';
-import { createUpdateCommentValidationSchema } from '../validation';
-import { commentsController } from './compositionRoot';
+import { createUpdateCommentValidationSchema } from './validation';
 import { updateLikeStatusValidationSchema } from '../../likes/validation';
 import { ROUTES } from '../../../constants';
+import { container } from './compositionRoot';
+import { CommentsController } from './commentsController';
+
+const commentsController = container.get(CommentsController);
 
 export const CommentsRouter = Router();
 

@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 import { WithId } from 'mongodb';
-import { QueryParamsCommentModel, CommentItemViewModel, CommentsPaginatedViewModel } from '../models';
+import { QueryParamsCommentModel, CommentItemViewModel, CommentsPaginatedViewModel } from '../api/models';
 import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
 import { ResultStatus } from '../../../constants';
 import { PostModel } from '../../posts/domain';

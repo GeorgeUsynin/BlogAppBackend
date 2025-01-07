@@ -12,14 +12,14 @@ import { QueryPostsRepository } from '../infrastructure';
 import {
     CommentItemViewModel,
     CommentsPaginatedViewModel,
-    CreateUpdateCommentInputModel,
     QueryParamsCommentModel,
     URIParamsCommentIDModel,
-} from '../../comments/models';
+} from '../../comments/api/models';
 import { PostsService } from '../domain';
 import { CommentsService } from '../../comments/domain';
-import { QueryCommentsRepository } from '../../comments/repository';
+import { QueryCommentsRepository } from '../../comments/infrastructure';
 import { CreateUpdatePostInputDTO } from '../application';
+import { CreateUpdateCommentInputDTO } from '../../comments/application/dto';
 
 @injectable()
 export class PostsController {
@@ -97,7 +97,7 @@ export class PostsController {
     }
 
     async createCommentByPostID(
-        req: RequestWithParamsAndBody<URIParamsPostIDModel, CreateUpdateCommentInputModel>,
+        req: RequestWithParamsAndBody<URIParamsPostIDModel, CreateUpdateCommentInputDTO>,
         res: Response<CommentItemViewModel>,
         next: NextFunction
     ) {

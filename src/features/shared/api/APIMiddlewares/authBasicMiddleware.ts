@@ -1,6 +1,6 @@
 import { Response, Request, NextFunction } from 'express';
 import { HTTP_STATUS_CODES } from '../../../../constants';
-import { container } from '../../../auth/api/compositionRoot';
+import { container } from '../../../auth/compositionRoot';
 import { ResultStatus } from '../../../../constants';
 import { AuthService } from '../../../auth/application';
 

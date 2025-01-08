@@ -1,5 +1,5 @@
 import { Response, Request, NextFunction } from 'express';
-import { container } from '../../../apiRateLimit/api';
+import { container } from '../../../apiRateLimit';
 import { APIRateLimitService } from '../../../apiRateLimit/application';
 
 const apiRateLimitService = container.get(APIRateLimitService);

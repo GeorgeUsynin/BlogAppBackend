@@ -1,6 +1,6 @@
 import { Response, Request, NextFunction } from 'express';
-import { container as authContainer } from '../../../auth/api/compositionRoot';
-import { container as usersContainer } from '../../../users/api/compositionRoot';
+import { container as authContainer } from '../../../auth/compositionRoot';
+import { container as usersContainer } from '../../../users/compositionRoot';
 import { UsersService } from '../../../users/application';
 import { AuthService } from '../../../auth/application';
 

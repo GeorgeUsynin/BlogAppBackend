@@ -3,8 +3,8 @@ import { HTTP_STATUS_CODES } from '../../../../constants';
 import { JWTService } from '../../../shared/application/services';
 import { UsersService } from '../../../users/application';
 import { AuthDeviceSessionsService } from '../../../security/application';
-import { container as usersContainer } from '../../../users/api/compositionRoot';
-import { container as authDeviceSessionsContainer } from '../../../security/api/compositionRoot';
+import { container as usersContainer } from '../../../users/compositionRoot';
+import { container as authDeviceSessionsContainer } from '../../../security/compositionRoot';
 import { ErrorViewModel } from '../../types';
 
 const usersService = usersContainer.get(UsersService);

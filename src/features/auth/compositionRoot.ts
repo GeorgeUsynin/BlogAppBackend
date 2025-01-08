@@ -1,13 +1,13 @@
 import 'reflect-metadata';
 import { Container } from 'inversify';
-import { AuthService, RegistrationService, PasswordService } from '../application';
-import { AuthDeviceSessionsRepository } from '../../security/infrastructure';
-import { AuthDeviceSessionsService } from '../../security/application';
-import { JWTService } from '../../shared/application/services';
-import { UsersRepository, QueryUsersRepository } from '../../users/infrastructure';
-import { EmailManager } from '../../shared/application/managers/emailManager';
-import { EmailAdapter } from '../../shared/infrastructure';
-import { AuthController } from './authController';
+import { AuthService, RegistrationService, PasswordService } from './application';
+import { AuthDeviceSessionsRepository } from '../security/infrastructure';
+import { AuthDeviceSessionsService } from '../security/application';
+import { JWTService } from '../shared/application/services';
+import { UsersRepository, QueryUsersRepository } from '../users/infrastructure';
+import { EmailManager } from '../shared/application/managers/emailManager';
+import { EmailAdapter } from '../shared/infrastructure';
+import { AuthController } from './api/authController';
 
 export const container: Container = new Container();
 

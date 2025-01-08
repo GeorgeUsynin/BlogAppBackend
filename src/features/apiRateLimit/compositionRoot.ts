@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { Container } from 'inversify';
-import { APIRateLimitRepository } from '../infrastructure';
-import { APIRateLimitService } from '../application';
+import { APIRateLimitRepository } from './infrastructure';
+import { APIRateLimitService } from './application';
 
 export const container: Container = new Container();
 

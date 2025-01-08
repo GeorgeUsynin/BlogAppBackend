@@ -15,7 +15,7 @@ import {
     newPasswordValidationSchema,
 } from '../api/validation';
 import { ROUTES } from '../../../constants';
-import { container } from './compositionRoot';
+import { container } from '../compositionRoot';
 import { AuthController } from './authController';
 
 const authController = container.get(AuthController);

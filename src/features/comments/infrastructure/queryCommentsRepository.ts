@@ -1,4 +1,4 @@
-import { injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import { WithId } from 'mongodb';
 import { QueryParamsCommentModel, CommentItemViewModel, CommentsPaginatedViewModel } from '../api/models';
 import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
@@ -18,7 +18,7 @@ type TValues = {
 
 @injectable()
 export class QueryCommentsRepository {
-    constructor(private likesRepository: LikesRepository) {}
+    constructor(@inject(LikesRepository) private likesRepository: LikesRepository) {}
 
     async getAllCommentsByPostId(queryParams: QueryParamsCommentModel, postId: string, userId: string) {
         const post = await PostModel.findById(postId);

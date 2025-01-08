@@ -5,7 +5,6 @@ import { ResultStatus } from '../../../constants';
 import { APIError } from '../../shared/helpers';
 import { CommentModel } from '../domain/commentEntity';
 import { PostsRepository } from '../../posts/infrastructure';
-import { LikesRepository } from '../../likes/infrastructure';
 import { CreateUpdateCommentInputDTO } from './dto';
 
 @injectable()
@@ -13,8 +12,7 @@ export class CommentsService {
     constructor(
         @inject(CommentsRepository) private commentsRepository: CommentsRepository,
         @inject(PostsRepository) private postsRepository: PostsRepository,
-        @inject(UsersRepository) private usersRepository: UsersRepository,
-        @inject(LikesRepository) private likesRepository: LikesRepository
+        @inject(UsersRepository) private usersRepository: UsersRepository
     ) {}
 
     async createCommentByPostId(payload: CreateUpdateCommentInputDTO, postId: string, userId: string) {

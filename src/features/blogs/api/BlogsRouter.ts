@@ -5,7 +5,7 @@ import { authBasicMiddleware, errorMiddleware } from '../../shared/api/APIMiddle
 import { queryParamsValidationSchema } from '../../shared/api/validation';
 import { createUpdatePostValidationSchema } from '../../posts/api/validation';
 import { ROUTES } from '../../../constants';
-import { container } from './compositionRoot';
+import { container } from '../compositionRoot';
 import { BlogsController } from './blogsController';
 
 const blogsController = container.get(BlogsController);

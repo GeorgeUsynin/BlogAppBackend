@@ -1,13 +1,13 @@
 import 'reflect-metadata';
 import { Container } from 'inversify';
-import { PostsService } from '../application';
-import { PostsRepository, QueryPostsRepository } from '../infrastructure';
-import { BlogsRepository } from '../../blogs/infrastructure';
-import { PostsController } from './postsController';
-import { CommentsService } from '../../comments/application';
-import { CommentsRepository, QueryCommentsRepository } from '../../comments/infrastructure';
-import { UsersRepository } from '../../users/infrastructure';
-import { LikesRepository } from '../../likes/infrastructure';
+import { PostsService } from './application';
+import { PostsRepository, QueryPostsRepository } from './infrastructure';
+import { BlogsRepository } from '../blogs/infrastructure';
+import { PostsController } from './api/postsController';
+import { CommentsService } from '../comments/application';
+import { CommentsRepository, QueryCommentsRepository } from '../comments/infrastructure';
+import { UsersRepository } from '../users/infrastructure';
+import { LikesRepository } from '../likes/infrastructure';
 
 export const container: Container = new Container();
 

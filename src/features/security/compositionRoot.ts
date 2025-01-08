@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import { Container } from 'inversify';
-import { AuthDeviceSessionsQueryRepository, AuthDeviceSessionsRepository } from '../infrastructure';
-import { AuthDeviceSessionsService } from '../application';
-import { SecurityController } from './securityController';
+import { AuthDeviceSessionsQueryRepository, AuthDeviceSessionsRepository } from './infrastructure';
+import { AuthDeviceSessionsService } from './application';
+import { SecurityController } from './api/securityController';
 
 export const container: Container = new Container();
 

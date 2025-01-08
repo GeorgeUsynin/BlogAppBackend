@@ -1,7 +1,8 @@
+import { inject, injectable } from 'inversify';
 import { EmailAdapter } from '../../infrastructure/adapters';
-
+@injectable()
 export class EmailManager {
-    constructor(private emailAdapter: EmailAdapter) {}
+    constructor(@inject(EmailAdapter) private emailAdapter: EmailAdapter) {}
 
     sendPasswordConfirmationEmail(email: string, code: string) {
         const subject = 'Password Confirmation';

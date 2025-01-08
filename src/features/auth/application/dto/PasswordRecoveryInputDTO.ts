@@ -1,7 +1,7 @@
 /**
  * Represents the input model for password recovery.
  */
-export type PasswordRecoveryInputModel = {
+export type PasswordRecoveryInputDTO = {
     /**
      * The email address of the user for recovering their password.
      * This email is associated with the user's account.

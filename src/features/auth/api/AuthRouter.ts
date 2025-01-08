@@ -13,9 +13,12 @@ import {
     registrationEmailResendingValidationSchema,
     passwordRecoveryValidationSchema,
     newPasswordValidationSchema,
-} from '../validation';
+} from '../api/validation';
 import { ROUTES } from '../../../constants';
-import { authController } from './compositionRoot';
+import { container } from './compositionRoot';
+import { AuthController } from './authController';
+
+const authController = container.get(AuthController);
 
 export const AuthRouter = Router();
 

@@ -2,7 +2,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import express, { Request, Response } from 'express';
 import { HTTP_STATUS_CODES, ROUTES } from './constants';
-import { AuthRouter } from './features/auth/router';
+import { AuthRouter } from './features/auth/api';
 import { UsersRouter } from './features/users/api';
 import { BlogsRouter } from './features/blogs/api';
 import { PostsRouter } from './features/posts/api';

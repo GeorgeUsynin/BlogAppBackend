@@ -1,18 +1,23 @@
 import bcrypt from 'bcrypt';
+import { inject, injectable } from 'inversify';
 import { add } from 'date-fns/add';
 import { randomUUID } from 'crypto';
 import { UsersRepository } from '../../users/infrastructure';
-import { RegistrationInputModel } from '../models';
 import { ResultStatus } from '../../../constants';
 import { EmailManager } from '../../shared/application/managers/emailManager';
 import { APIError } from '../../shared/helpers';
 import { SETTINGS } from '../../../app-settings';
 import { TUser } from '../../users/domain';
+import { RegistrationInputDTO } from './dto';
 
+@injectable()
 export class RegistrationService {
-    constructor(private usersRepository: UsersRepository, private emailManager: EmailManager) {}
+    constructor(
+        @inject(UsersRepository) private usersRepository: UsersRepository,
+        @inject(EmailManager) private emailManager: EmailManager
+    ) {}
 
-    async registerUser(payload: RegistrationInputModel) {
+    async registerUser(payload: RegistrationInputDTO) {
         const { login, email, password } = payload;
 
         // check if user already exists

@@ -1,11 +1,15 @@
+import { inject, injectable } from 'inversify';
 import { ResultStatus } from '../../../constants';
 import { APIError } from '../../shared/helpers';
 import { AuthDeviceSessionsRepository } from '../repository';
 import { TUpdateAuthDeviceSessionParams } from '../repository/authDeviceSessionsRepository';
 import { TDevice } from './authDeviceSessionEntity';
 
+@injectable()
 export class AuthDeviceSessionsService {
-    constructor(private authDeviceSessionsRepository: AuthDeviceSessionsRepository) {}
+    constructor(
+        @inject(AuthDeviceSessionsRepository) private authDeviceSessionsRepository: AuthDeviceSessionsRepository
+    ) {}
 
     async addAuthDeviceSession(deviceSession: TDevice) {
         this.authDeviceSessionsRepository.addAuthDeviceSession(deviceSession);

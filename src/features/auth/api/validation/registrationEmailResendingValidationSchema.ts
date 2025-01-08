@@ -1,9 +1,9 @@
 import { Schema } from 'express-validator';
-import { RegistrationEmailResendingInputModel } from '../models';
+import { RegistrationEmailResendingInputDTO } from '../../application';
 
 const emailPattern = '^[w-.]+@([w-]+.)+[w-]{2,4}$';
 
-export const registrationEmailResendingValidationSchema: Schema<keyof RegistrationEmailResendingInputModel> = {
+export const registrationEmailResendingValidationSchema: Schema<keyof RegistrationEmailResendingInputDTO> = {
     email: {
         exists: {
             errorMessage: 'Email field is required',

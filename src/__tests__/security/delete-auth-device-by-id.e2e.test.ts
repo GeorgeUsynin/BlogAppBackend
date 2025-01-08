@@ -1,8 +1,8 @@
-import { dbHelper, delay, generateRefreshTokenCookie, request } from '../test-helpers';
+import { dbHelper, delay, request } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 import { users, authDeviceSessions, fakeRequestedObjectId } from '../dataset';
-import { LoginInputModel } from '../../features/auth/models/LoginInputModel';
 import { AuthDeviceViewModel } from '../../features/security/models';
+import { LoginInputDTO } from '../../features/auth/application';
 
 describe('delete auth device by id', () => {
     let loginRefreshTokenCookie: { Cookie: string[] };
@@ -15,7 +15,7 @@ describe('delete auth device by id', () => {
         await dbHelper.setDb({ authDeviceSessions, users });
 
         // create login refresh token using login credentials
-        const credentialsWithLogin: LoginInputModel = {
+        const credentialsWithLogin: LoginInputDTO = {
             loginOrEmail: 'george',
             password: '12345678',
         };
@@ -86,7 +86,7 @@ describe('delete auth device by id', () => {
     });
 
     it('returns 403 status code if try to delete the deviceId of other user', async () => {
-        const credentialsWithLogin: LoginInputModel = {
+        const credentialsWithLogin: LoginInputDTO = {
             loginOrEmail: 'natasha',
             password: '12345678',
         };

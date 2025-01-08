@@ -6,6 +6,7 @@ import { JWTService } from '../../shared/application/services';
 import { APIError, getDeviceName } from '../../shared/helpers';
 import { UsersRepository } from '../../users/infrastructure';
 import { AuthDeviceSessionsService } from '../../security/domain';
+import { inject, injectable } from 'inversify';
 
 type TLoginPayload = {
     loginOrEmail: string;
@@ -17,11 +18,12 @@ type TLoginPayload = {
 const accessTokenExpirationTime = SETTINGS.ACCESS_TOKEN_EXPIRATION_TIME;
 const refreshTokenExpirationTime = SETTINGS.REFRESH_TOKEN_EXPIRATION_TIME;
 
+@injectable()
 export class AuthService {
     constructor(
-        private JWTService: JWTService,
-        private authDeviceSessionsService: AuthDeviceSessionsService,
-        private usersRepository: UsersRepository
+        @inject(JWTService) private JWTService: JWTService,
+        @inject(AuthDeviceSessionsService) private authDeviceSessionsService: AuthDeviceSessionsService,
+        @inject(UsersRepository) private usersRepository: UsersRepository
     ) {}
 
     verifyBasicAuthorization(authorizationHeader: string) {

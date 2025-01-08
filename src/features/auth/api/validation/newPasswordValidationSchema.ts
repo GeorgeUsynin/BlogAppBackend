@@ -1,10 +1,10 @@
 import { Schema } from 'express-validator';
-import { NewPasswordInputModel } from '../models';
+import { NewPasswordInputDTO } from '../../application';
 
 const passwordMinLength = 6;
 const passwordMaxLength = 20;
 
-export const newPasswordValidationSchema: Schema<keyof NewPasswordInputModel> = {
+export const newPasswordValidationSchema: Schema<keyof NewPasswordInputDTO> = {
     newPassword: {
         exists: {
             errorMessage: 'NewPassword field is required',

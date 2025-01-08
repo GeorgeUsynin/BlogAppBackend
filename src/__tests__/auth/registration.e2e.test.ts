@@ -1,8 +1,8 @@
 import nodemailer from 'nodemailer';
 import { createErrorMessages, dbHelper, request } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
-import { RegistrationInputModel } from '../../features/auth/models';
 import { users } from '../dataset';
+import { RegistrationInputDTO } from '../../features/auth/application';
 
 jest.mock('nodemailer', () => ({
     createTransport: jest.fn().mockReturnValue({
@@ -29,7 +29,7 @@ describe('registration', () => {
     });
 
     it('returns status NoContent 204 if registration is successful', async () => {
-        const credentials: RegistrationInputModel = {
+        const credentials: RegistrationInputDTO = {
             login: 'angiejo03',
             password: '12345678',
             email: 'angiejo03@example.com',
@@ -63,7 +63,7 @@ describe('registration', () => {
         describe('login', () => {
             it('returns 400 status code and proper error object if `login` is missing', async () => {
                 //@ts-expect-error bad request (login is missing)
-                const newCredentials: RegistrationInputModel = {
+                const newCredentials: RegistrationInputDTO = {
                     email: 'user1george@example.com',
                     password: '12345678',
                 };
@@ -76,7 +76,7 @@ describe('registration', () => {
             });
 
             it('returns 400 status code and proper error object if `login` is empty or contain only spaces', async () => {
-                const newCredentials: RegistrationInputModel = {
+                const newCredentials: RegistrationInputDTO = {
                     login: ' ',
                     email: 'user1george@example.com',
                     password: '12345678',
@@ -90,7 +90,7 @@ describe('registration', () => {
             });
 
             it('returns 400 status code and proper error object for bad `login` type', async () => {
-                const newCredentials: RegistrationInputModel = {
+                const newCredentials: RegistrationInputDTO = {
                     //@ts-expect-error bad request (login type is invalid)
                     login: [],
                     email: 'user1george@example.com',
@@ -105,7 +105,7 @@ describe('registration', () => {
             });
 
             it('returns 400 status code and proper error object for bad `login` min length', async () => {
-                const newCredentials: RegistrationInputModel = {
+                const newCredentials: RegistrationInputDTO = {
                     login: 'ab',
                     email: 'user1george@example.com',
                     password: '12345678',
@@ -119,7 +119,7 @@ describe('registration', () => {
             });
 
             it('returns 400 status code and proper error object for bad `login` max length', async () => {
-                const newCredentials: RegistrationInputModel = {
+                const newCredentials: RegistrationInputDTO = {
                     login: 'More than ten characters',
                     email: 'user1george@example.com',
                     password: '12345678',
@@ -133,7 +133,7 @@ describe('registration', () => {
             });
 
             it('returns 400 status code and proper error object for bad `login` pattern', async () => {
-                const newCredentials: RegistrationInputModel = {
+                const newCredentials: RegistrationInputDTO = {
                     login: 'my login',
                     email: 'user1george@example.com',
                     password: '12345678',
@@ -147,7 +147,7 @@ describe('registration', () => {
             });
 
             it('returns 400 status code and proper error object for bad `login` is not unique', async () => {
-                const newCredentials: RegistrationInputModel = {
+                const newCredentials: RegistrationInputDTO = {
                     login: 'george',
                     email: 'george@example.com',
                     password: '12345678',
@@ -166,7 +166,7 @@ describe('registration', () => {
         describe('email', () => {
             it('returns 400 status code and proper error object if `email` is missing', async () => {
                 //@ts-expect-error bad request (email is missing)
-                const newCredentials: RegistrationInputModel = {
+                const newCredentials: RegistrationInputDTO = {
                     login: 'george',
                     password: '12345678',
                 };
@@ -179,7 +179,7 @@ describe('registration', () => {
             });
 
             it('returns 400 status code and proper error object if `email` is empty or contain only spaces', async () => {
-                const newCredentials: RegistrationInputModel = {
+                const newCredentials: RegistrationInputDTO = {
                     login: 'george',
                     email: ' ',
                     password: '12345678',
@@ -193,7 +193,7 @@ describe('registration', () => {
             });
 
             it('returns 400 status code and proper error object for bad `email` type', async () => {
-                const newCredentials: RegistrationInputModel = {
+                const newCredentials: RegistrationInputDTO = {
                     login: 'george',
                     //@ts-expect-error bad request (email type is invalid)
                     email: [],
@@ -208,7 +208,7 @@ describe('registration', () => {
             });
 
             it('returns 400 status code and proper error object for bad `email` pattern', async () => {
-                const newCredentials: RegistrationInputModel = {
+                const newCredentials: RegistrationInputDTO = {
                     login: 'george',
                     email: 'user1george@',
                     password: '12345678',
@@ -222,7 +222,7 @@ describe('registration', () => {
             });
 
             it('returns 400 status code and proper error object for bad `email` is not unique', async () => {
-                const newCredentials: RegistrationInputModel = {
+                const newCredentials: RegistrationInputDTO = {
                     login: 'olga',
                     email: 'user1george@example.com',
                     password: '12345678',
@@ -241,7 +241,7 @@ describe('registration', () => {
         describe('password', () => {
             it('returns 400 status code and proper error object if `password` is missing', async () => {
                 //@ts-expect-error bad request (password is missing)
-                const newCredentials: RegistrationInputModel = {
+                const newCredentials: RegistrationInputDTO = {
                     login: 'george',
                     email: 'user1george@example.com',
                 };
@@ -254,7 +254,7 @@ describe('registration', () => {
             });
 
             it('returns 400 status code and proper error object if `password` is empty or contain only spaces', async () => {
-                const newCredentials: RegistrationInputModel = {
+                const newCredentials: RegistrationInputDTO = {
                     login: 'george',
                     email: 'user1george@example.com',
                     password: ' ',
@@ -268,7 +268,7 @@ describe('registration', () => {
             });
 
             it('returns 400 status code and proper error object for bad `password` type', async () => {
-                const newCredentials: RegistrationInputModel = {
+                const newCredentials: RegistrationInputDTO = {
                     login: 'george',
                     //@ts-expect-error bad request (password type is invalid)
                     password: [],
@@ -283,7 +283,7 @@ describe('registration', () => {
             });
 
             it('returns 400 status code and proper error object for bad `password` min length', async () => {
-                const newCredentials: RegistrationInputModel = {
+                const newCredentials: RegistrationInputDTO = {
                     login: 'george',
                     email: 'user1george@example.com',
                     password: '12345',
@@ -297,7 +297,7 @@ describe('registration', () => {
             });
 
             it('returns 400 status code and proper error object for bad `password` max length', async () => {
-                const newCredentials: RegistrationInputModel = {
+                const newCredentials: RegistrationInputDTO = {
                     login: 'olga',
                     email: 'user1olgae@example.com',
                     password: '12345678901234567890122',

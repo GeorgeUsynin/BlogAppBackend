@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import { inject, injectable } from 'inversify';
 import { add } from 'date-fns';
 import { UsersRepository } from '../../users/infrastructure';
 import { randomUUID } from 'crypto';
@@ -7,8 +8,12 @@ import { EmailManager } from '../../shared/application/managers/emailManager';
 import { APIError } from '../../shared/helpers';
 import { ResultStatus } from '../../../constants';
 
+@injectable()
 export class PasswordService {
-    constructor(private usersRepository: UsersRepository, private emailManager: EmailManager) {}
+    constructor(
+        @inject(UsersRepository) private usersRepository: UsersRepository,
+        @inject(EmailManager) private emailManager: EmailManager
+    ) {}
 
     async recoverPassword(email: string) {
         const user = await this.usersRepository.findUserByEmail(email);

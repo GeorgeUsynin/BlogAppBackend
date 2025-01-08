@@ -1,7 +1,7 @@
-import { dbHelper, request, generateRefreshTokenCookie, delay } from '../test-helpers';
+import { dbHelper, request, delay } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
-import { users, fakeRequestedObjectId, authDeviceSessions } from '../dataset';
-import { LoginInputModel } from '../../features/auth/models/LoginInputModel';
+import { users, authDeviceSessions } from '../dataset';
+import { LoginInputDTO } from '../../features/auth/application';
 
 describe('refresh token', () => {
     let loginRefreshTokenCookie: { Cookie: string[] };
@@ -14,7 +14,7 @@ describe('refresh token', () => {
         await dbHelper.setDb({ authDeviceSessions, users });
 
         // create login refresh token using login credentials
-        const credentialsWithLogin: LoginInputModel = {
+        const credentialsWithLogin: LoginInputDTO = {
             loginOrEmail: 'george',
             password: '12345678',
         };

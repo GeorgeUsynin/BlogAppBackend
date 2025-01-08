@@ -1,7 +1,7 @@
-import { LoginInputModel } from '../models';
 import { Schema } from 'express-validator';
+import { LoginInputDTO } from '../../application';
 
-export const loginValidationSchema: Schema<keyof LoginInputModel> = {
+export const loginValidationSchema: Schema<keyof LoginInputDTO> = {
     loginOrEmail: {
         exists: {
             errorMessage: 'LoginOrEmail field is required',

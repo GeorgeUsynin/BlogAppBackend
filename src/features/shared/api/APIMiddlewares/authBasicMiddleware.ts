@@ -1,7 +1,10 @@
 import { Response, Request, NextFunction } from 'express';
 import { HTTP_STATUS_CODES } from '../../../../constants';
-import { authService } from '../../../auth/router/compositionRoot';
+import { container } from '../../../auth/api/compositionRoot';
 import { ResultStatus } from '../../../../constants';
+import { AuthService } from '../../../auth/application';
+
+const authService = container.get(AuthService);
 
 export const authBasicMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const authorizationHeader = req.headers.authorization;

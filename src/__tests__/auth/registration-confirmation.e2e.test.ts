@@ -1,7 +1,7 @@
 import { createErrorMessages, dbHelper, delay, request } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
-import { RegistrationConfirmationInputModel } from '../../features/auth/models';
 import { users } from '../dataset';
+import { RegistrationConfirmationInputDTO } from '../../features/auth/application';
 
 describe('registration confirmation', () => {
     beforeAll(async () => {
@@ -22,7 +22,7 @@ describe('registration confirmation', () => {
     });
 
     it('returns status NoContent 204 if registration confirmation is successful', async () => {
-        const code: RegistrationConfirmationInputModel = {
+        const code: RegistrationConfirmationInputDTO = {
             code: '654321',
         };
 
@@ -39,7 +39,7 @@ describe('registration confirmation', () => {
         describe('code', () => {
             it('returns 400 status code and proper error object if `code` is missing', async () => {
                 //@ts-expect-error bad request (code is missing)
-                const newCode: RegistrationConfirmationInputModel = {};
+                const newCode: RegistrationConfirmationInputDTO = {};
                 const { body } = await request
                     .post(`${ROUTES.AUTH}${ROUTES.REGISTRATION_CONFIRMATION}`)
                     .send(newCode)
@@ -49,7 +49,7 @@ describe('registration confirmation', () => {
             });
 
             it('returns 400 status code and proper error object if `code` is empty or contain only spaces', async () => {
-                const newCode: RegistrationConfirmationInputModel = {
+                const newCode: RegistrationConfirmationInputDTO = {
                     code: ' ',
                 };
                 const { body } = await request
@@ -61,7 +61,7 @@ describe('registration confirmation', () => {
             });
 
             it('returns 400 status code and proper error object for bad `code` type', async () => {
-                const newCode: RegistrationConfirmationInputModel = {
+                const newCode: RegistrationConfirmationInputDTO = {
                     //@ts-expect-error bad request (code type is invalid)
                     code: [],
                 };
@@ -76,7 +76,7 @@ describe('registration confirmation', () => {
     });
 
     it('returns 400 status code and proper error object if `code` is not found in the database', async () => {
-        const code: RegistrationConfirmationInputModel = {
+        const code: RegistrationConfirmationInputDTO = {
             code: '654321123456',
         };
 
@@ -89,7 +89,7 @@ describe('registration confirmation', () => {
     });
 
     it('returns 400 status code and proper error object if `code` is already confirmed', async () => {
-        const code: RegistrationConfirmationInputModel = {
+        const code: RegistrationConfirmationInputDTO = {
             code: '321456',
         };
 
@@ -102,7 +102,7 @@ describe('registration confirmation', () => {
     });
 
     it('returns 400 status code and proper error object if `code` is expired', async () => {
-        const code: RegistrationConfirmationInputModel = {
+        const code: RegistrationConfirmationInputDTO = {
             code: '111111',
         };
 

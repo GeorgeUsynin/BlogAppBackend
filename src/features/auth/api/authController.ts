@@ -1,29 +1,31 @@
+import { inject, injectable } from 'inversify';
 import { NextFunction, Request, Response } from 'express';
 import { ErrorViewModel, RequestWithBody } from '../../shared/types';
-import {
-    AuthMeViewModel,
-    LoginInputModel,
-    LoginViewModel,
-    NewPasswordInputModel,
-    PasswordRecoveryInputModel,
-    RefreshTokenViewModel,
-    RegistrationConfirmationInputModel,
-    RegistrationEmailResendingInputModel,
-    RegistrationInputModel,
-} from '../models';
+import { AuthMeViewModel, LoginViewModel, RefreshTokenViewModel } from './models';
 import { HTTP_STATUS_CODES } from '../../../constants';
-import { AuthService, PasswordService, RegistrationService } from '../domain';
+import {
+    AuthService,
+    LoginInputDTO,
+    NewPasswordInputDTO,
+    PasswordRecoveryInputDTO,
+    PasswordService,
+    RegistrationConfirmationInputDTO,
+    RegistrationEmailResendingInputDTO,
+    RegistrationInputDTO,
+    RegistrationService,
+} from '../application';
 import { QueryUsersRepository } from '../../users/infrastructure';
 
+@injectable()
 export class AuthController {
     constructor(
-        private authService: AuthService,
-        private registrationService: RegistrationService,
-        private passwordService: PasswordService,
-        private queryUsersRepository: QueryUsersRepository
+        @inject(AuthService) private authService: AuthService,
+        @inject(RegistrationService) private registrationService: RegistrationService,
+        @inject(PasswordService) private passwordService: PasswordService,
+        @inject(QueryUsersRepository) private queryUsersRepository: QueryUsersRepository
     ) {}
 
-    async login(req: RequestWithBody<LoginInputModel>, res: Response<LoginViewModel>, next: NextFunction) {
+    async login(req: RequestWithBody<LoginInputDTO>, res: Response<LoginViewModel>, next: NextFunction) {
         try {
             const userAgent = req.header('user-agent');
             const clientIp = req.ip || '';
@@ -84,11 +86,7 @@ export class AuthController {
         }
     }
 
-    async registration(
-        req: RequestWithBody<RegistrationInputModel>,
-        res: Response<ErrorViewModel>,
-        next: NextFunction
-    ) {
+    async registration(req: RequestWithBody<RegistrationInputDTO>, res: Response<ErrorViewModel>, next: NextFunction) {
         try {
             const payload = req.body;
 
@@ -101,7 +99,7 @@ export class AuthController {
     }
 
     async registrationConfirmation(
-        req: RequestWithBody<RegistrationConfirmationInputModel>,
+        req: RequestWithBody<RegistrationConfirmationInputDTO>,
         res: Response<ErrorViewModel>,
         next: NextFunction
     ) {
@@ -117,7 +115,7 @@ export class AuthController {
     }
 
     async registrationEmailResending(
-        req: RequestWithBody<RegistrationEmailResendingInputModel>,
+        req: RequestWithBody<RegistrationEmailResendingInputDTO>,
         res: Response<ErrorViewModel>,
         next: NextFunction
     ) {
@@ -133,7 +131,7 @@ export class AuthController {
     }
 
     async passwordRecovery(
-        req: RequestWithBody<PasswordRecoveryInputModel>,
+        req: RequestWithBody<PasswordRecoveryInputDTO>,
         res: Response<ErrorViewModel>,
         next: NextFunction
     ) {
@@ -148,7 +146,7 @@ export class AuthController {
         }
     }
 
-    async newPassword(req: RequestWithBody<NewPasswordInputModel>, res: Response<ErrorViewModel>, next: NextFunction) {
+    async newPassword(req: RequestWithBody<NewPasswordInputDTO>, res: Response<ErrorViewModel>, next: NextFunction) {
         try {
             const { newPassword, recoveryCode } = req.body;
 

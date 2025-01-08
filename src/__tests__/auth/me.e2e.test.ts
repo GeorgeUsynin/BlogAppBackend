@@ -1,6 +1,6 @@
 import { dbHelper, request, getBearerAuthorization } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
-import { AuthMeViewModel } from '../../features/auth/models';
+import { AuthMeViewModel } from '../../features/auth/api/models';
 import { users } from '../dataset';
 
 describe('me', () => {

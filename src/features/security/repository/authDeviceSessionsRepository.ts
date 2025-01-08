@@ -1,3 +1,4 @@
+import { injectable } from 'inversify';
 import { AuthDeviceSessionModel, TDevice } from '../domain';
 
 export type TUpdateAuthDeviceSessionParams = {
@@ -6,6 +7,7 @@ export type TUpdateAuthDeviceSessionParams = {
     expirationDateOfRefreshToken: string;
 };
 
+@injectable()
 export class AuthDeviceSessionsRepository {
     async addAuthDeviceSession(deviceSession: TDevice) {
         return AuthDeviceSessionModel.create(deviceSession);

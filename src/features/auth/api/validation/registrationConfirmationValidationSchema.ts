@@ -1,7 +1,7 @@
 import { Schema } from 'express-validator';
-import { RegistrationConfirmationInputModel } from '../models';
+import { RegistrationConfirmationInputDTO } from '../../application';
 
-export const registrationConfirmationValidationSchema: Schema<keyof RegistrationConfirmationInputModel> = {
+export const registrationConfirmationValidationSchema: Schema<keyof RegistrationConfirmationInputDTO> = {
     code: {
         exists: {
             errorMessage: 'Code field is required',

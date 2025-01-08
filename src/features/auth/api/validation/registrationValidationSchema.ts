@@ -1,4 +1,4 @@
-import { RegistrationInputModel } from '../models';
+import { RegistrationInputDTO } from '../../application';
 import { Schema } from 'express-validator';
 
 const loginMinLength = 3;
@@ -8,7 +8,7 @@ const passwordMaxLength = 20;
 const loginPattern = '^[a-zA-Z0-9_-]*$';
 const emailPattern = '^[w-.]+@([w-]+.)+[w-]{2,4}$';
 
-export const registrationValidationSchema: Schema<keyof RegistrationInputModel> = {
+export const registrationValidationSchema: Schema<keyof RegistrationInputDTO> = {
     login: {
         exists: {
             errorMessage: 'Login field is required',

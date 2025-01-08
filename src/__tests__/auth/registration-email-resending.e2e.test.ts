@@ -1,8 +1,8 @@
 import nodemailer from 'nodemailer';
 import { createErrorMessages, dbHelper, request } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
-import { RegistrationEmailResendingInputModel } from '../../features/auth/models';
 import { users } from '../dataset';
+import { RegistrationEmailResendingInputDTO } from '../../features/auth/application';
 
 jest.mock('nodemailer', () => ({
     createTransport: jest.fn().mockReturnValue({
@@ -29,7 +29,7 @@ describe('registration email resending', () => {
     });
 
     it('returns status NoContent 204 if registration email resending is successful', async () => {
-        const email: RegistrationEmailResendingInputModel = {
+        const email: RegistrationEmailResendingInputDTO = {
             email: 'angiejo04@example.com',
         };
 
@@ -61,7 +61,7 @@ describe('registration email resending', () => {
         describe('email', () => {
             it('returns 400 status code and proper error object if `email` is missing', async () => {
                 //@ts-expect-error bad request (email is missing)
-                const email: RegistrationEmailResendingInputModel = {};
+                const email: RegistrationEmailResendingInputDTO = {};
                 const { body } = await request
                     .post(`${ROUTES.AUTH}${ROUTES.REGISTRATION_EMAIL_RESENDING}`)
                     .send(email)
@@ -71,7 +71,7 @@ describe('registration email resending', () => {
             });
 
             it('returns 400 status code and proper error object if `email` is empty or contain only spaces', async () => {
-                const email: RegistrationEmailResendingInputModel = {
+                const email: RegistrationEmailResendingInputDTO = {
                     email: ' ',
                 };
                 const { body } = await request
@@ -83,7 +83,7 @@ describe('registration email resending', () => {
             });
 
             it('returns 400 status code and proper error object for bad `email` type', async () => {
-                const email: RegistrationEmailResendingInputModel = {
+                const email: RegistrationEmailResendingInputDTO = {
                     //@ts-expect-error bad request (email type is invalid)
                     email: [],
                 };
@@ -96,7 +96,7 @@ describe('registration email resending', () => {
             });
 
             it('returns 400 status code and proper error object for bad `email` pattern', async () => {
-                const email: RegistrationEmailResendingInputModel = {
+                const email: RegistrationEmailResendingInputDTO = {
                     email: 'user1george@',
                 };
                 const { body } = await request
@@ -110,7 +110,7 @@ describe('registration email resending', () => {
     });
 
     it('returns 400 status code and proper error object if `email` is not found in the database', async () => {
-        const email: RegistrationEmailResendingInputModel = {
+        const email: RegistrationEmailResendingInputDTO = {
             email: 'not_existing_email@example.com',
         };
 
@@ -123,7 +123,7 @@ describe('registration email resending', () => {
     });
 
     it('returns 400 status code and proper error object if `email` is already confirmed', async () => {
-        const email: RegistrationEmailResendingInputModel = {
+        const email: RegistrationEmailResendingInputDTO = {
             email: 'user4kate@example.com',
         };
 

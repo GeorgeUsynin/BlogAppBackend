@@ -1,8 +1,8 @@
-import { dbHelper, delay, generateRefreshTokenCookie, request } from '../test-helpers';
+import { dbHelper, delay, request } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
-import { users, authDeviceSessions, fakeRequestedObjectId } from '../dataset';
-import { LoginInputModel } from '../../features/auth/models/LoginInputModel';
+import { users, authDeviceSessions } from '../dataset';
 import { AuthDeviceViewModel } from '../../features/security/models';
+import { LoginInputDTO } from '../../features/auth/application';
 
 describe('delete auth device except current', () => {
     let loginRefreshTokenCookie: { Cookie: string[] };
@@ -15,7 +15,7 @@ describe('delete auth device except current', () => {
         await dbHelper.setDb({ authDeviceSessions, users });
 
         // create login refresh token using login credentials
-        const credentialsWithLogin: LoginInputModel = {
+        const credentialsWithLogin: LoginInputDTO = {
             loginOrEmail: 'george',
             password: '12345678',
         };

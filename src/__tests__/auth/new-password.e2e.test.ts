@@ -1,10 +1,6 @@
 import { createErrorMessages, dbHelper, delay, request } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
-import {
-    NewPasswordInputModel,
-    RegistrationConfirmationInputModel,
-    RegistrationInputModel,
-} from '../../features/auth/models';
+import { NewPasswordInputDTO } from '../../features/auth/application';
 import { users } from '../dataset';
 
 describe('new password', () => {
@@ -33,7 +29,7 @@ describe('new password', () => {
 
         await request.post(`${ROUTES.AUTH}${ROUTES.LOGIN}`).send(creds).expect(HTTP_STATUS_CODES.OK_200);
 
-        const payload: NewPasswordInputModel = {
+        const payload: NewPasswordInputDTO = {
             newPassword: '76543210',
             recoveryCode: '334455',
         };
@@ -55,7 +51,7 @@ describe('new password', () => {
         describe('newPassword', () => {
             it('returns 400 status code and proper error object if `newPassword` is missing', async () => {
                 //@ts-expect-error bad request (newPassword is missing)
-                const payload: NewPasswordInputModel = {
+                const payload: NewPasswordInputDTO = {
                     recoveryCode: '334455',
                 };
                 const { body } = await request
@@ -67,7 +63,7 @@ describe('new password', () => {
             });
 
             it('returns 400 status code and proper error object if `newPassword` is empty or contain only spaces', async () => {
-                const payload: NewPasswordInputModel = {
+                const payload: NewPasswordInputDTO = {
                     newPassword: ' ',
                     recoveryCode: '334455',
                 };
@@ -80,7 +76,7 @@ describe('new password', () => {
             });
 
             it('returns 400 status code and proper error object for bad `password` type', async () => {
-                const payload: NewPasswordInputModel = {
+                const payload: NewPasswordInputDTO = {
                     //@ts-expect-error bad request (newPassword type is invalid)
                     newPassword: [],
                     recoveryCode: '334455',
@@ -94,7 +90,7 @@ describe('new password', () => {
             });
 
             it('returns 400 status code and proper error object for bad `newPassword` min length', async () => {
-                const payload: NewPasswordInputModel = {
+                const payload: NewPasswordInputDTO = {
                     newPassword: '12345',
                     recoveryCode: '334455',
                 };
@@ -107,7 +103,7 @@ describe('new password', () => {
             });
 
             it('returns 400 status code and proper error object for bad `newPassword` max length', async () => {
-                const payload: NewPasswordInputModel = {
+                const payload: NewPasswordInputDTO = {
                     newPassword: '12345678901234567890122',
                     recoveryCode: '334455',
                 };
@@ -123,7 +119,7 @@ describe('new password', () => {
         describe('recoveryCode', () => {
             it('returns 400 status code and proper error object if `recoveryCode` is missing', async () => {
                 //@ts-expect-error bad request (recoveryCode is missing)
-                const payload: NewPasswordInputModel = {
+                const payload: NewPasswordInputDTO = {
                     newPassword: '12345678',
                 };
                 const { body } = await request
@@ -135,7 +131,7 @@ describe('new password', () => {
             });
 
             it('returns 400 status code and proper error object if `recoveryCode` is empty or contain only spaces', async () => {
-                const payload: NewPasswordInputModel = {
+                const payload: NewPasswordInputDTO = {
                     newPassword: '12345678',
                     recoveryCode: ' ',
                 };
@@ -148,7 +144,7 @@ describe('new password', () => {
             });
 
             it('returns 400 status code and proper error object for bad `recoveryCode` type', async () => {
-                const payload: NewPasswordInputModel = {
+                const payload: NewPasswordInputDTO = {
                     //@ts-expect-error bad request (recoveryCode type is invalid)
                     recoveryCode: [],
                     newPassword: '12345678',
@@ -164,7 +160,7 @@ describe('new password', () => {
     });
 
     it('returns 400 status code and proper error object if `recoveryCode` is not found in the database', async () => {
-        const payload: NewPasswordInputModel = {
+        const payload: NewPasswordInputDTO = {
             newPassword: '12345678',
             recoveryCode: '654321123456',
         };
@@ -178,7 +174,7 @@ describe('new password', () => {
     });
 
     it('returns 400 status code and proper error object if `recoveryCode` is expired', async () => {
-        const payload: NewPasswordInputModel = {
+        const payload: NewPasswordInputDTO = {
             newPassword: '12345678',
             recoveryCode: '111111',
         };

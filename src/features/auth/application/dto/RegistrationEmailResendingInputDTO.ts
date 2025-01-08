@@ -1,7 +1,7 @@
 /**
  * Represents the input model for resending a registration confirmation email.
  */
-export type RegistrationEmailResendingInputModel = {
+export type RegistrationEmailResendingInputDTO = {
     /**
      * The email address of a user who has registered but has not yet confirmed their account.
      * Must follow a valid email format.

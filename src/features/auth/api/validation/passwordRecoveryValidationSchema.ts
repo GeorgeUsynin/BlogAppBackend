@@ -1,9 +1,9 @@
 import { Schema } from 'express-validator';
-import { PasswordRecoveryInputModel } from '../models';
+import { PasswordRecoveryInputDTO } from '../../application';
 
 const emailPattern = '^[w-.]+@([w-]+.)+[w-]{2,4}$';
 
-export const passwordRecoveryValidationSchema: Schema<keyof PasswordRecoveryInputModel> = {
+export const passwordRecoveryValidationSchema: Schema<keyof PasswordRecoveryInputDTO> = {
     email: {
         exists: {
             errorMessage: 'Email field is required',

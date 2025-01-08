@@ -1,8 +1,8 @@
 import nodemailer from 'nodemailer';
 import { createErrorMessages, dbHelper, request } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
-import { PasswordRecoveryInputModel } from '../../features/auth/models';
 import { users } from '../dataset';
+import { PasswordRecoveryInputDTO } from '../../features/auth/application';
 
 jest.mock('nodemailer', () => ({
     createTransport: jest.fn().mockReturnValue({
@@ -29,7 +29,7 @@ describe('password recovery', () => {
     });
 
     it('returns status NoContent 204 if password recovery is successful for existing email', async () => {
-        const email: PasswordRecoveryInputModel = {
+        const email: PasswordRecoveryInputDTO = {
             email: 'angiejo04@example.com',
         };
 
@@ -58,7 +58,7 @@ describe('password recovery', () => {
     });
 
     it('returns status NoContent 204 if password recovery is successful for non-existing email', async () => {
-        const email: PasswordRecoveryInputModel = {
+        const email: PasswordRecoveryInputDTO = {
             email: 'example@example.com',
         };
 
@@ -72,7 +72,7 @@ describe('password recovery', () => {
         describe('email', () => {
             it('returns 400 status code and proper error object if `email` is missing', async () => {
                 //@ts-expect-error bad request (email is missing)
-                const email: PasswordRecoveryInputModel = {};
+                const email: PasswordRecoveryInputDTO = {};
                 const { body } = await request
                     .post(`${ROUTES.AUTH}${ROUTES.PASSWORD_RECOVERY}`)
                     .send(email)
@@ -82,7 +82,7 @@ describe('password recovery', () => {
             });
 
             it('returns 400 status code and proper error object if `email` is empty or contain only spaces', async () => {
-                const email: PasswordRecoveryInputModel = {
+                const email: PasswordRecoveryInputDTO = {
                     email: ' ',
                 };
                 const { body } = await request
@@ -94,7 +94,7 @@ describe('password recovery', () => {
             });
 
             it('returns 400 status code and proper error object for bad `email` type', async () => {
-                const email: PasswordRecoveryInputModel = {
+                const email: PasswordRecoveryInputDTO = {
                     //@ts-expect-error bad request (email type is invalid)
                     email: [],
                 };
@@ -107,7 +107,7 @@ describe('password recovery', () => {
             });
 
             it('returns 400 status code and proper error object for bad `email` pattern', async () => {
-                const email: PasswordRecoveryInputModel = {
+                const email: PasswordRecoveryInputDTO = {
                     email: 'user1george@',
                 };
                 const { body } = await request

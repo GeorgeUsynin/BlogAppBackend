@@ -1,7 +1,7 @@
 /**
  * Represents the input model for setting a new password.
  */
-export type NewPasswordInputModel = {
+export type NewPasswordInputDTO = {
     /**
      * The new password for the user.
      * @type {string}

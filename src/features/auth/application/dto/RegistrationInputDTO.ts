@@ -1,7 +1,7 @@
 /**
  * Represents the input model for user registration.
  */
-export type RegistrationInputModel = {
+export type RegistrationInputDTO = {
     /**
      * The username of the user.
      * Must be unique and meet the specified constraints.

@@ -1,6 +1,6 @@
 import { createErrorMessages, dbHelper, request } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
-import { LoginInputModel } from '../../features/auth/models';
+import { LoginInputDTO } from '../../features/auth/application';
 import { users } from '../dataset';
 
 describe('login', () => {
@@ -22,7 +22,7 @@ describe('login', () => {
     });
 
     it('returns access token if login/email and password are correct', async () => {
-        const credentialsWithLogin: LoginInputModel = {
+        const credentialsWithLogin: LoginInputDTO = {
             loginOrEmail: 'george',
             password: '12345678',
         };
@@ -34,7 +34,7 @@ describe('login', () => {
 
         expect(body.accessToken).toEqual(expect.any(String));
 
-        const credentialsWithEmail: LoginInputModel = {
+        const credentialsWithEmail: LoginInputDTO = {
             loginOrEmail: 'user1george@example.com',
             password: '12345678',
         };
@@ -48,7 +48,7 @@ describe('login', () => {
     });
 
     it('returns refresh token if login/email and password are correct', async () => {
-        const credentialsWithLogin: LoginInputModel = {
+        const credentialsWithLogin: LoginInputDTO = {
             loginOrEmail: 'george',
             password: '12345678',
         };
@@ -61,7 +61,7 @@ describe('login', () => {
         expect(response.headers['set-cookie']).toBeDefined();
         expect(response.headers['set-cookie'][0]).toContain('refreshToken');
 
-        const credentialsWithEmail: LoginInputModel = {
+        const credentialsWithEmail: LoginInputDTO = {
             loginOrEmail: 'user1george@example.com',
             password: '12345678',
         };
@@ -79,7 +79,7 @@ describe('login', () => {
         describe('loginOrEmail', () => {
             it('returns 400 status code and proper error object if `loginOrEmail` is missing', async () => {
                 //@ts-expect-error bad request (loginOrEmail is missing)
-                const credentials: LoginInputModel = {
+                const credentials: LoginInputDTO = {
                     password: '12345678',
                 };
                 const { body } = await request
@@ -91,7 +91,7 @@ describe('login', () => {
             });
 
             it('returns 400 status code and proper error object if `loginOrEmail` is empty or contain only spaces', async () => {
-                const credentials: LoginInputModel = {
+                const credentials: LoginInputDTO = {
                     loginOrEmail: ' ',
                     password: '12345678',
                 };
@@ -104,7 +104,7 @@ describe('login', () => {
             });
 
             it('returns 400 status code and proper error object for bad `loginOrEmail` type', async () => {
-                const credentials: LoginInputModel = {
+                const credentials: LoginInputDTO = {
                     //@ts-expect-error bad request (loginOrEmail type is invalid)
                     loginOrEmail: [],
                     password: '12345678',
@@ -121,7 +121,7 @@ describe('login', () => {
         describe('password', () => {
             it('returns 400 status code and proper error object if `password` is missing', async () => {
                 //@ts-expect-error bad request (password is missing)
-                const credentials: LoginInputModel = {
+                const credentials: LoginInputDTO = {
                     loginOrEmail: 'george',
                 };
                 const { body } = await request
@@ -133,7 +133,7 @@ describe('login', () => {
             });
 
             it('returns 400 status code and proper error object if `password` is empty or contain only spaces', async () => {
-                const credentials: LoginInputModel = {
+                const credentials: LoginInputDTO = {
                     loginOrEmail: 'george',
                     password: ' ',
                 };
@@ -146,7 +146,7 @@ describe('login', () => {
             });
 
             it('returns 400 status code and proper error object for bad `password` type', async () => {
-                const credentials: LoginInputModel = {
+                const credentials: LoginInputDTO = {
                     loginOrEmail: 'george',
                     //@ts-expect-error bad request (password type is invalid)
                     password: [],
@@ -162,7 +162,7 @@ describe('login', () => {
     });
 
     it('returns 401 Unauthorized status code if the password or login is wrong', async () => {
-        const credentialsWithWrongLogin: LoginInputModel = {
+        const credentialsWithWrongLogin: LoginInputDTO = {
             loginOrEmail: 'olga',
             password: '12345678',
         };
@@ -172,7 +172,7 @@ describe('login', () => {
             .send(credentialsWithWrongLogin)
             .expect(HTTP_STATUS_CODES.UNAUTHORIZED_401);
 
-        const credentialsWithWrongPassword: LoginInputModel = {
+        const credentialsWithWrongPassword: LoginInputDTO = {
             loginOrEmail: 'george',
             password: '12345679',
         };

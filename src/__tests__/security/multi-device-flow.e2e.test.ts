@@ -1,7 +1,7 @@
 import { dbHelper, getAuthorization, request } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 
-import { AuthDeviceViewModel } from '../../features/security/models';
+import { AuthDeviceViewModel } from '../../features/security/api/models';
 
 const userAgents = [
     {

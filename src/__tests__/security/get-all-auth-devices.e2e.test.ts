@@ -1,7 +1,7 @@
 import { dbHelper, delay, request } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 import { users, authDeviceSessions } from '../dataset';
-import { AuthDeviceViewModel } from '../../features/security/models';
+import { AuthDeviceViewModel } from '../../features/security/api/models';
 import { LoginInputDTO } from '../../features/auth/application';
 
 describe('get all auth devices', () => {

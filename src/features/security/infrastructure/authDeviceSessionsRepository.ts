@@ -1,5 +1,5 @@
 import { injectable } from 'inversify';
-import { AuthDeviceSessionModel, TDevice } from '../domain';
+import { AuthDeviceSessionModel, DeviceDocument, TDevice } from '../domain';
 
 export type TUpdateAuthDeviceSessionParams = {
     deviceId: string;
@@ -9,7 +9,7 @@ export type TUpdateAuthDeviceSessionParams = {
 
 @injectable()
 export class AuthDeviceSessionsRepository {
-    async addAuthDeviceSession(deviceSession: TDevice) {
+    async createAuthDeviceSession(deviceSession: TDevice) {
         return AuthDeviceSessionModel.create(deviceSession);
     }
 
@@ -17,17 +17,15 @@ export class AuthDeviceSessionsRepository {
         return AuthDeviceSessionModel.findOne({ deviceId });
     }
 
-    async updateAuthDeviceSession(payload: TUpdateAuthDeviceSessionParams) {
-        const { deviceId, expirationDateOfRefreshToken, issuedAt } = payload;
-
-        return AuthDeviceSessionModel.findOneAndUpdate({ deviceId }, { issuedAt, expirationDateOfRefreshToken });
-    }
-
-    async terminateAllOtherUserDeviceSessions(userId: string, deviceId: string) {
+    async deleteAllOtherUserDeviceSessions(userId: string, deviceId: string) {
         return AuthDeviceSessionModel.deleteMany({ $and: [{ userId }, { deviceId: { $ne: deviceId } }] });
     }
 
     async deleteDeviceSessionById(deviceId: string) {
         return AuthDeviceSessionModel.findOneAndDelete({ deviceId });
+    }
+
+    async save(authDeviceSession: DeviceDocument) {
+        return authDeviceSession.save();
     }
 }

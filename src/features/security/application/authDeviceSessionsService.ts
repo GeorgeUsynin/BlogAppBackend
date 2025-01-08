@@ -1,9 +1,9 @@
 import { inject, injectable } from 'inversify';
 import { ResultStatus } from '../../../constants';
 import { APIError } from '../../shared/helpers';
-import { AuthDeviceSessionsRepository } from '../repository';
-import { TUpdateAuthDeviceSessionParams } from '../repository/authDeviceSessionsRepository';
-import { TDevice } from './authDeviceSessionEntity';
+import { AuthDeviceSessionsRepository } from '../infrastructure';
+import { TUpdateAuthDeviceSessionParams } from '../infrastructure/authDeviceSessionsRepository';
+import { TDevice } from '../domain/authDeviceSessionEntity';
 
 @injectable()
 export class AuthDeviceSessionsService {
@@ -11,8 +11,8 @@ export class AuthDeviceSessionsService {
         @inject(AuthDeviceSessionsRepository) private authDeviceSessionsRepository: AuthDeviceSessionsRepository
     ) {}
 
-    async addAuthDeviceSession(deviceSession: TDevice) {
-        this.authDeviceSessionsRepository.addAuthDeviceSession(deviceSession);
+    async createAuthDeviceSession(deviceSession: TDevice) {
+        this.authDeviceSessionsRepository.createAuthDeviceSession(deviceSession);
     }
 
     async findDeviceById(deviceId: string) {
@@ -20,11 +20,25 @@ export class AuthDeviceSessionsService {
     }
 
     async updateAuthDeviceSession(payload: TUpdateAuthDeviceSessionParams) {
-        return this.authDeviceSessionsRepository.updateAuthDeviceSession(payload);
+        const { deviceId, expirationDateOfRefreshToken, issuedAt } = payload;
+
+        const foundAuthDeviceSession = await this.authDeviceSessionsRepository.findDeviceById(deviceId);
+
+        if (!foundAuthDeviceSession) {
+            throw new APIError({
+                status: ResultStatus.NotFound,
+                message: 'Device was not found',
+            });
+        }
+
+        foundAuthDeviceSession.issuedAt = issuedAt;
+        foundAuthDeviceSession.expirationDateOfRefreshToken = expirationDateOfRefreshToken;
+
+        return this.authDeviceSessionsRepository.save(foundAuthDeviceSession);
     }
 
     async terminateAllOtherUserDeviceSessions(userId: string, deviceId: string) {
-        return this.authDeviceSessionsRepository.terminateAllOtherUserDeviceSessions(userId, deviceId);
+        return this.authDeviceSessionsRepository.deleteAllOtherUserDeviceSessions(userId, deviceId);
     }
 
     async terminateDeviceSessionByIDHandler(userId: string, deviceId: string) {

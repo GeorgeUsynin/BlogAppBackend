@@ -5,8 +5,9 @@ import { ResultStatus } from '../../../constants';
 import { JWTService } from '../../shared/application/services';
 import { APIError, getDeviceName } from '../../shared/helpers';
 import { UsersRepository } from '../../users/infrastructure';
-import { AuthDeviceSessionsService } from '../../security/domain';
+import { AuthDeviceSessionsService } from '../../security/application';
 import { inject, injectable } from 'inversify';
+import { TDevice } from '../../security/domain';
 
 type TLoginPayload = {
     loginOrEmail: string;
@@ -92,7 +93,7 @@ export class AuthService {
         const issuedAt = new Date(Number(decodedRefreshToken?.iat) * 1000).toISOString();
         const expirationDateOfRefreshToken = new Date(Number(decodedRefreshToken?.exp) * 1000).toISOString();
 
-        await this.authDeviceSessionsService.addAuthDeviceSession({
+        const newAuthDeviceSession = new TDevice({
             userId: user._id.toString(),
             deviceId,
             issuedAt,
@@ -100,6 +101,8 @@ export class AuthService {
             clientIp,
             expirationDateOfRefreshToken,
         });
+
+        await this.authDeviceSessionsService.createAuthDeviceSession(newAuthDeviceSession);
 
         return { accessToken, refreshToken };
     }

@@ -1,13 +1,16 @@
+import { inject, injectable } from 'inversify';
 import { NextFunction, Request, Response } from 'express';
-import { AuthDeviceSessionsQueryRepository } from '../repository';
+import { AuthDeviceSessionsQueryRepository } from '../infrastructure';
 import { HTTP_STATUS_CODES } from '../../../constants';
-import { AuthDeviceViewModel, URIParamsDeviceIDModel } from '../models';
-import { AuthDeviceSessionsService } from '../domain';
+import { AuthDeviceViewModel, URIParamsDeviceIDModel } from './models';
+import { AuthDeviceSessionsService } from '../application';
 import { RequestWithParams } from '../../shared/types';
 
+@injectable()
 export class SecurityController {
     constructor(
-        private authDeviceSessionsService: AuthDeviceSessionsService,
+        @inject(AuthDeviceSessionsService) private authDeviceSessionsService: AuthDeviceSessionsService,
+        @inject(AuthDeviceSessionsQueryRepository)
         private authDeviceSessionsQueryRepository: AuthDeviceSessionsQueryRepository
     ) {}
 

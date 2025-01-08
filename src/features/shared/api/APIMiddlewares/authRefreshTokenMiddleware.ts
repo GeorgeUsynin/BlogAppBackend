@@ -1,12 +1,14 @@
 import { Response, Request, NextFunction } from 'express';
 import { HTTP_STATUS_CODES } from '../../../../constants';
 import { JWTService } from '../../../shared/application/services';
-import { container } from '../../../users/api/compositionRoot';
 import { UsersService } from '../../../users/application';
-import { authDeviceSessionsService } from '../../../security/router/compositionRoot';
+import { AuthDeviceSessionsService } from '../../../security/application';
+import { container as usersContainer } from '../../../users/api/compositionRoot';
+import { container as authDeviceSessionsContainer } from '../../../security/api/compositionRoot';
 import { ErrorViewModel } from '../../types';
 
-const usersService = container.get(UsersService);
+const usersService = usersContainer.get(UsersService);
+const authDeviceSessionsService = authDeviceSessionsContainer.get(AuthDeviceSessionsService);
 const jwtService = new JWTService();
 
 export const authRefreshTokenMiddleware = async (req: Request, res: Response<ErrorViewModel>, next: NextFunction) => {

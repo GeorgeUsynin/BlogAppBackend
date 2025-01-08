@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import { Container } from 'inversify';
 import { AuthService, RegistrationService, PasswordService } from '../application';
-import { AuthDeviceSessionsRepository } from '../../security/repository';
-import { AuthDeviceSessionsService } from '../../security/domain';
+import { AuthDeviceSessionsRepository } from '../../security/infrastructure';
+import { AuthDeviceSessionsService } from '../../security/application';
 import { JWTService } from '../../shared/application/services';
 import { UsersRepository, QueryUsersRepository } from '../../users/infrastructure';
 import { EmailManager } from '../../shared/application/managers/emailManager';

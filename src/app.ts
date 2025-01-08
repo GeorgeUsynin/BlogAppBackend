@@ -7,7 +7,7 @@ import { UsersRouter } from './features/users/api';
 import { BlogsRouter } from './features/blogs/api';
 import { PostsRouter } from './features/posts/api';
 import { CommentsRouter } from './features/comments/api';
-import { SecurityRouter } from './features/security/router';
+import { SecurityRouter } from './features/security/api';
 import { TestRouter } from './features/tests/router';
 import { APIErrorMiddleware } from './features/shared/api/APIMiddlewares';
 import { databaseConnectionMiddleware } from './database/databaseConnectionMiddleware';

@@ -3,17 +3,12 @@ import { ResultStatus } from '../../../constants';
 import { APIError } from '../../shared/helpers';
 import { AuthDeviceSessionsRepository } from '../infrastructure';
 import { TUpdateAuthDeviceSessionParams } from '../infrastructure/authDeviceSessionsRepository';
-import { TDevice } from '../domain/authDeviceSessionEntity';
 
 @injectable()
 export class AuthDeviceSessionsService {
     constructor(
         @inject(AuthDeviceSessionsRepository) private authDeviceSessionsRepository: AuthDeviceSessionsRepository
     ) {}
-
-    async createAuthDeviceSession(deviceSession: TDevice) {
-        this.authDeviceSessionsRepository.createAuthDeviceSession(deviceSession);
-    }
 
     async findDeviceById(deviceId: string) {
         return this.authDeviceSessionsRepository.findDeviceById(deviceId);

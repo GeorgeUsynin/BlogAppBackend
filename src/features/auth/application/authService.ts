@@ -7,7 +7,8 @@ import { APIError, getDeviceName } from '../../shared/helpers';
 import { UsersRepository } from '../../users/infrastructure';
 import { AuthDeviceSessionsService } from '../../security/application';
 import { inject, injectable } from 'inversify';
-import { TDevice } from '../../security/domain';
+import { AuthDeviceSessionModel } from '../../security/domain';
+import { AuthDeviceSessionsRepository } from '../../security/infrastructure';
 
 type TLoginPayload = {
     loginOrEmail: string;
@@ -24,7 +25,8 @@ export class AuthService {
     constructor(
         @inject(JWTService) private JWTService: JWTService,
         @inject(AuthDeviceSessionsService) private authDeviceSessionsService: AuthDeviceSessionsService,
-        @inject(UsersRepository) private usersRepository: UsersRepository
+        @inject(UsersRepository) private usersRepository: UsersRepository,
+        @inject(AuthDeviceSessionsRepository) private authDeviceSessionsRepository: AuthDeviceSessionsRepository
     ) {}
 
     verifyBasicAuthorization(authorizationHeader: string) {
@@ -93,7 +95,7 @@ export class AuthService {
         const issuedAt = new Date(Number(decodedRefreshToken?.iat) * 1000).toISOString();
         const expirationDateOfRefreshToken = new Date(Number(decodedRefreshToken?.exp) * 1000).toISOString();
 
-        const newAuthDeviceSession = new TDevice({
+        const newAuthDeviceSession = new AuthDeviceSessionModel({
             userId: user._id.toString(),
             deviceId,
             issuedAt,
@@ -102,7 +104,7 @@ export class AuthService {
             expirationDateOfRefreshToken,
         });
 
-        await this.authDeviceSessionsService.createAuthDeviceSession(newAuthDeviceSession);
+        await this.authDeviceSessionsRepository.save(newAuthDeviceSession);
 
         return { accessToken, refreshToken };
     }

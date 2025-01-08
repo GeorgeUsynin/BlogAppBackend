@@ -12,25 +12,15 @@ type TPostValues = {
     blogId: string;
     blogName: string;
 };
-export class TPost {
-    public title: string;
-    public shortDescription: string;
-    public content: string;
-    public blogId: string;
-    public blogName: string;
-    public createdAt: string;
-    public isDeleted: boolean;
-
-    constructor(values: TPostValues) {
-        this.title = values.title;
-        this.shortDescription = values.shortDescription;
-        this.content = values.content;
-        this.blogId = values.blogId;
-        this.blogName = values.blogName;
-        this.createdAt = defaultCreatedAt;
-        this.isDeleted = defaultIsDeleted;
-    }
-}
+export type TPost = {
+    title: string;
+    shortDescription: string;
+    content: string;
+    blogId: string;
+    blogName: string;
+    createdAt: string;
+    isDeleted: boolean;
+};
 
 type TPostModel = Model<TPost>;
 

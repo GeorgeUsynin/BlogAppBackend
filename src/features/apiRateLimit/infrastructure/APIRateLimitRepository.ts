@@ -1,9 +1,9 @@
-import { SETTINGS } from '../../../../app-settings';
-import { ApiRateLimitModel, TAPIRateLimit } from '../../application/services';
+import { SETTINGS } from '../../../app-settings';
+import { APIRateLimitDocument, ApiRateLimitModel, TAPIRateLimit } from '../domain';
 
 export class APIRateLimitRepository {
-    async addAPIRequest(payload: TAPIRateLimit) {
-        return ApiRateLimitModel.create(payload);
+    async save(apiRateLimitRequest: APIRateLimitDocument) {
+        return apiRateLimitRequest.save();
     }
 
     async getTotalCountOfFilteredAPIRequests(payload: TAPIRateLimit) {

@@ -2,23 +2,11 @@ import { HydratedDocument, model, Model, Schema } from 'mongoose';
 import { SETTINGS } from '../../../app-settings';
 import { LikeStatus } from '../../../constants';
 
-type TLikeValues = {
+export type TLike = {
     status: keyof typeof LikeStatus;
     userId: string;
     parentId: string;
 };
-
-export class TLike {
-    public status: keyof typeof LikeStatus;
-    public userId: string;
-    public parentId: string;
-
-    constructor(values: TLikeValues) {
-        this.status = values.status;
-        this.userId = values.userId;
-        this.parentId = values.parentId;
-    }
-}
 
 type TLikeModel = Model<TLike>;
 

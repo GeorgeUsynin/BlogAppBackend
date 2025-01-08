@@ -19,11 +19,7 @@ export class LikesRepository {
         return LikeModel.findOne({ $and: [params] });
     }
 
-    async createLike(payload: TLike) {
-        return LikeModel.create(payload);
-    }
-
-    async saveLike(likeDocument: LikeDocument) {
+    async save(likeDocument: LikeDocument) {
         return likeDocument.save();
     }
 }

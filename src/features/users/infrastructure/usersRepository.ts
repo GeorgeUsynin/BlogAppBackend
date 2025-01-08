@@ -3,10 +3,6 @@ import { TUser, UserDocument, UserModel } from '../domain';
 
 @injectable()
 export class UsersRepository {
-    async createUser(newUser: TUser) {
-        return UserModel.create(newUser);
-    }
-
     async findUserById(id: string) {
         return UserModel.findById(id);
     }

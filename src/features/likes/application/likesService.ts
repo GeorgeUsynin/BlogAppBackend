@@ -3,7 +3,7 @@ import { LikeStatus, ResultStatus } from '../../../constants';
 import { APIError } from '../../shared/helpers';
 import { CommentsRepository } from '../../comments/infrastructure';
 import { LikesRepository } from '../infrastructure';
-import { TLike } from '../domain';
+import { LikeModel } from '../domain';
 
 @injectable()
 export class LikesService {
@@ -27,9 +27,9 @@ export class LikesService {
         if (!like) {
             if (likeStatus === LikeStatus.None) return;
 
-            const newLike = new TLike({ parentId: commentId, userId, status: likeStatus });
+            const newLike = new LikeModel({ parentId: commentId, userId, status: likeStatus });
 
-            await this.likesRepository.createLike(newLike);
+            await this.likesRepository.save(newLike);
 
             if (likeStatus === LikeStatus.Like) {
                 foundComment.likesInfo.likesCount += 1;
@@ -50,7 +50,7 @@ export class LikesService {
 
         // Update and save like status
         like.status = likeStatus;
-        await this.likesRepository.saveLike(like);
+        await this.likesRepository.save(like);
 
         // Update likes and dislikes logic
         switch (currentStatus) {

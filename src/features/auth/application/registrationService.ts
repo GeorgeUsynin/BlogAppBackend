@@ -7,7 +7,7 @@ import { ResultStatus } from '../../../constants';
 import { EmailManager } from '../../shared/application/managers/emailManager';
 import { APIError } from '../../shared/helpers';
 import { SETTINGS } from '../../../app-settings';
-import { TUser } from '../../users/domain';
+import { UserModel } from '../../users/domain';
 import { RegistrationInputDTO } from './dto';
 
 @injectable()
@@ -36,7 +36,7 @@ export class RegistrationService {
         const hash = await bcrypt.hash(password, SETTINGS.HASH_ROUNDS);
 
         // create new user
-        const newUser = new TUser({
+        const newUser = new UserModel({
             login,
             email,
             passwordHash: hash,
@@ -47,7 +47,7 @@ export class RegistrationService {
             },
         });
 
-        await this.usersRepository.createUser(newUser);
+        await this.usersRepository.save(newUser);
 
         // sent confirmation email
         this.emailManager.sendPasswordConfirmationEmail(email, newUser.emailConfirmation.confirmationCode);

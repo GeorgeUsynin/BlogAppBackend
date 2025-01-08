@@ -5,7 +5,7 @@ import { ResultStatus } from '../../../constants';
 import { randomUUID } from 'crypto';
 import { add } from 'date-fns';
 import { APIError } from '../../shared/helpers';
-import { TUser } from '../domain/userEntity';
+import { UserModel } from '../domain/userEntity';
 import { SETTINGS } from '../../../app-settings';
 import { CreateUserInputDTO } from './dto';
 
@@ -25,7 +25,7 @@ export class UsersService {
 
         const hash = await bcrypt.hash(payload.password, SETTINGS.HASH_ROUNDS);
 
-        const newUser = new TUser({
+        const newUser = new UserModel({
             ...payload,
             passwordHash: hash,
             emailConfirmation: {
@@ -35,7 +35,7 @@ export class UsersService {
             },
         });
 
-        return this.usersRepository.createUser(newUser);
+        return this.usersRepository.save(newUser);
     }
 
     async findUserById(userId: string) {

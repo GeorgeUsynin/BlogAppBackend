@@ -1,9 +1,9 @@
 import { inject, injectable } from 'inversify';
 import { UsersRepository } from '../../users/infrastructure';
 import { CommentsRepository } from '../infrastructure';
-import { LikeStatus, ResultStatus } from '../../../constants';
+import { ResultStatus } from '../../../constants';
 import { APIError } from '../../shared/helpers';
-import { TComment } from '../domain/commentEntity';
+import { CommentModel } from '../domain/commentEntity';
 import { PostsRepository } from '../../posts/infrastructure';
 import { LikesRepository } from '../../likes/infrastructure';
 import { CreateUpdateCommentInputDTO } from './dto';
@@ -30,13 +30,13 @@ export class CommentsService {
 
         const user = await this.usersRepository.findUserById(userId);
 
-        const newComment = new TComment({
+        const newComment = new CommentModel({
             content,
             commentatorInfo: { userId, userLogin: user?.login as string },
             postId,
         });
 
-        return await this.commentsRepository.createComment(newComment);
+        return await this.commentsRepository.save(newComment);
     }
 
     async updateCommentById(commentId: string, userId: string, payload: CreateUpdateCommentInputDTO) {

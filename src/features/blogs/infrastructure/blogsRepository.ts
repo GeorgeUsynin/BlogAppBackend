@@ -7,10 +7,6 @@ export class BlogsRepository {
         return BlogModel.findById(id);
     }
 
-    async createBlog(blog: TBlog) {
-        return BlogModel.create(blog);
-    }
-
     async save(blog: BlogDocument) {
         return blog.save();
     }

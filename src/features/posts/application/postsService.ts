@@ -3,7 +3,7 @@ import { PostsRepository } from '../infrastructure';
 import { BlogsRepository } from '../../blogs/infrastructure';
 import { APIError } from '../../shared/helpers';
 import { ResultStatus } from '../../../constants';
-import { TPost } from '../domain/postEntity';
+import { PostModel } from '../domain/postEntity';
 import { CreateUpdatePostInputDTO } from './dto';
 
 @injectable()
@@ -16,7 +16,7 @@ export class PostsService {
     async createPost(payload: CreateUpdatePostInputDTO) {
         const { blogId, content, shortDescription, title } = payload;
         const linkedBlogName = (await this.blogsRepository.findBlogById(blogId))?.name as string;
-        const newPost = new TPost({
+        const newPost = new PostModel({
             title,
             shortDescription,
             content,
@@ -24,7 +24,7 @@ export class PostsService {
             blogName: linkedBlogName,
         });
 
-        return this.postsRepository.createPost(newPost);
+        return this.postsRepository.save(newPost);
     }
 
     async createPostByBlogId(payload: CreateUpdatePostInputDTO) {

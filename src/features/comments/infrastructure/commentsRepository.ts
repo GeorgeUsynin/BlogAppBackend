@@ -3,10 +3,6 @@ import { CommentDocument, CommentModel, TComment } from '../domain';
 
 @injectable()
 export class CommentsRepository {
-    async createComment(newComment: TComment) {
-        return CommentModel.create(newComment);
-    }
-
     async findCommentById(id: string) {
         return CommentModel.findById(id);
     }

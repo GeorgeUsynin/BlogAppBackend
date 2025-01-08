@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import { EmailAdapter } from '../../infrastructure/adapters';
+import { EmailAdapter } from '../../infrastructure';
 @injectable()
 export class EmailManager {
     constructor(@inject(EmailAdapter) private emailAdapter: EmailAdapter) {}

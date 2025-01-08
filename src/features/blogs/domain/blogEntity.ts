@@ -7,28 +7,14 @@ const defaultIsMembership = false;
 // Soft delete implementation
 const defaultIsDeleted = false;
 
-type TBlogValues = {
+export type TBlog = {
     name: string;
     description: string;
     websiteUrl: string;
+    createdAt: string;
+    isMembership: boolean;
+    isDeleted: boolean;
 };
-export class TBlog {
-    public name: string;
-    public description: string;
-    public websiteUrl: string;
-    public createdAt: string;
-    public isMembership: boolean;
-    public isDeleted: boolean;
-
-    constructor(values: TBlogValues) {
-        this.name = values.name;
-        this.description = values.description;
-        this.websiteUrl = values.websiteUrl;
-        this.createdAt = defaultCreatedAt;
-        this.isMembership = defaultIsMembership;
-        this.isDeleted = defaultIsDeleted;
-    }
-}
 
 type TBlogModel = Model<TBlog>;
 

@@ -1,9 +1,8 @@
 import { Response, Request, NextFunction } from 'express';
-import { APIRateLimitService } from '../../application/services';
-import { APIRateLimitRepository } from '../../infrastructure/repositories';
+import { container } from '../../../apiRateLimit/api';
+import { APIRateLimitService } from '../../../apiRateLimit/application';
 
-const apiRateLimitRepository = new APIRateLimitRepository();
-const apiRateLimitService = new APIRateLimitService(apiRateLimitRepository);
+const apiRateLimitService = container.get(APIRateLimitService);
 
 export const apiRateLimitMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {

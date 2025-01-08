@@ -9,46 +9,22 @@ const defaultExpirationDate = null;
 // Soft delete implementation
 const defaultIsDeleted = false;
 
-type TUserValues = {
+export type TUser = {
     login: string;
     email: string;
     passwordHash: string;
+    createdAt: string;
     emailConfirmation: {
         isConfirmed: boolean;
         confirmationCode: string;
         expirationDate: Date;
     };
-};
-
-export class TUser {
-    public login: string;
-    public email: string;
-    public passwordHash: string;
-    public createdAt: string;
-    public emailConfirmation: {
-        isConfirmed: boolean;
-        confirmationCode: string;
-        expirationDate: Date;
-    };
-    public passwordRecovery: {
+    passwordRecovery: {
         recoveryCode: string | null;
         expirationDate: Date | null;
     };
-    public isDeleted: boolean;
-
-    constructor(values: TUserValues) {
-        this.login = values.login;
-        this.email = values.email;
-        this.passwordHash = values.passwordHash;
-        this.createdAt = defaultCreatedAt;
-        this.emailConfirmation = values.emailConfirmation;
-        this.passwordRecovery = {
-            expirationDate: defaultExpirationDate,
-            recoveryCode: defaultRecoveryCode,
-        };
-        this.isDeleted = defaultIsDeleted;
-    }
-}
+    isDeleted: boolean;
+};
 
 type TUserModel = Model<TUser>;
 

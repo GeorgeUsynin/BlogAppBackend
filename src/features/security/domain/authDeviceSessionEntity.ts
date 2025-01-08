@@ -1,7 +1,7 @@
 import { HydratedDocument, model, Model, Schema } from 'mongoose';
 import { SETTINGS } from '../../../app-settings';
 
-type TDeviceValues = {
+export type TDevice = {
     userId: string;
     deviceId: string;
     issuedAt: string;
@@ -9,24 +9,6 @@ type TDeviceValues = {
     clientIp: string;
     expirationDateOfRefreshToken: string;
 };
-
-export class TDevice {
-    public userId: string;
-    public deviceId: string;
-    public issuedAt: string;
-    public deviceName: string;
-    public clientIp: string;
-    public expirationDateOfRefreshToken: string;
-
-    constructor(values: TDeviceValues) {
-        this.userId = values.userId;
-        this.deviceId = values.deviceId;
-        this.issuedAt = values.issuedAt;
-        this.deviceName = values.deviceName;
-        this.clientIp = values.clientIp;
-        this.expirationDateOfRefreshToken = values.expirationDateOfRefreshToken;
-    }
-}
 
 type TDeviceModel = Model<TDevice>;
 

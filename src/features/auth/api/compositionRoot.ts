@@ -6,7 +6,7 @@ import { AuthDeviceSessionsService } from '../../security/application';
 import { JWTService } from '../../shared/application/services';
 import { UsersRepository, QueryUsersRepository } from '../../users/infrastructure';
 import { EmailManager } from '../../shared/application/managers/emailManager';
-import { EmailAdapter } from '../../shared/infrastructure/adapters';
+import { EmailAdapter } from '../../shared/infrastructure';
 import { AuthController } from './authController';
 
 export const container: Container = new Container();

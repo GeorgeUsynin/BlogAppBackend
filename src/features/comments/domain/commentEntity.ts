@@ -15,32 +15,20 @@ type TCommentValues = {
     };
     postId: string;
 };
-export class TComment {
-    public content: string;
-    public commentatorInfo: {
+export type TComment = {
+    content: string;
+    commentatorInfo: {
         userId: string;
         userLogin: string;
     };
-    public createdAt: string;
-    public postId: string;
-    public likesInfo: {
+    createdAt: string;
+    postId: string;
+    likesInfo: {
         likesCount: number;
         dislikesCount: number;
     };
-    public isDeleted: boolean;
-
-    constructor(values: TCommentValues) {
-        this.content = values.content;
-        this.commentatorInfo = values.commentatorInfo;
-        this.createdAt = defaultCreatedAt;
-        this.postId = values.postId;
-        this.likesInfo = {
-            dislikesCount: defaultDislikesCount,
-            likesCount: defaultLikesCount,
-        };
-        this.isDeleted = defaultIsDeleted;
-    }
-}
+    isDeleted: boolean;
+};
 
 type TCommentModel = Model<TComment>;
 
@@ -55,8 +43,8 @@ const commentSchema = new Schema<TComment>({
     postId: { type: String, required: true },
     createdAt: { type: String, default: defaultCreatedAt },
     likesInfo: {
-        dislikesCount: { type: Number, default: 0 },
-        likesCount: { type: Number, default: 0 },
+        dislikesCount: { type: Number, default: defaultDislikesCount },
+        likesCount: { type: Number, default: defaultLikesCount },
     },
     isDeleted: { type: Boolean, default: defaultIsDeleted },
 });

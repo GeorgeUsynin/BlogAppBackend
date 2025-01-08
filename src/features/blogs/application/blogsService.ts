@@ -3,16 +3,16 @@ import { BlogsRepository } from '../infrastructure';
 import type { CreateUpdateBlogInputDTO } from '../application';
 import { APIError } from '../../shared/helpers';
 import { ResultStatus } from '../../../constants';
-import { TBlog } from '../domain';
+import { BlogModel } from '../domain';
 
 @injectable()
 export class BlogsService {
     constructor(@inject(BlogsRepository) private blogsRepository: BlogsRepository) {}
 
     async createBlog(payload: CreateUpdateBlogInputDTO) {
-        const newBlog = new TBlog(payload);
+        const newBlog = new BlogModel(payload);
 
-        return this.blogsRepository.createBlog(newBlog);
+        return this.blogsRepository.save(newBlog);
     }
 
     async updateBlog(blogId: string, payload: CreateUpdateBlogInputDTO) {

@@ -1,4 +1,4 @@
-import { EmailAdapter } from '../../infrastructure/adapters';
+import { EmailAdapter } from '../../infrastructure';
 import { EmailManager } from './emailManager';
 
 const emailAdapter = new EmailAdapter();

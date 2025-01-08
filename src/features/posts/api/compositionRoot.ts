@@ -7,7 +7,7 @@ import { PostsController } from './postsController';
 import { CommentsService } from '../../comments/application';
 import { CommentsRepository, QueryCommentsRepository } from '../../comments/infrastructure';
 import { UsersRepository } from '../../users/infrastructure';
-import { LikesRepository } from '../../likes/repository';
+import { LikesRepository } from '../../likes/infrastructure';
 
 export const container: Container = new Container();
 

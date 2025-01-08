@@ -1,6 +1,6 @@
 import { injectable } from 'inversify';
 import { LikeStatus } from '../../../constants';
-import { LikeDocument, LikeModel } from '../domain';
+import { LikeDocument, LikeModel, TLike } from '../domain';
 
 type TParams = {
     parentId?: string;
@@ -19,10 +19,8 @@ export class LikesRepository {
         return LikeModel.findOne({ $and: [params] });
     }
 
-    async createLike(payload: TPayload) {
-        const { parentId, likeStatus, userId } = payload;
-
-        return LikeModel.create({ parentId, userId, status: likeStatus });
+    async createLike(payload: TLike) {
+        return LikeModel.create(payload);
     }
 
     async saveLike(likeDocument: LikeDocument) {

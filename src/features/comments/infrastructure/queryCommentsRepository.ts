@@ -5,7 +5,7 @@ import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpe
 import { ResultStatus } from '../../../constants';
 import { PostModel } from '../../posts/domain';
 import { CommentModel, TComment } from '../domain';
-import { LikesRepository } from '../../likes/repository';
+import { LikesRepository } from '../../likes/infrastructure';
 
 type TFilter = ReturnType<typeof createFilter>;
 type TValues = {

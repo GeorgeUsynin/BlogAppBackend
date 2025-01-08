@@ -5,13 +5,14 @@ import { CommentItemViewModel, URIParamsCommentIDModel } from '../api/models';
 import { HTTP_STATUS_CODES } from '../../../constants';
 import { QueryCommentsRepository } from '../infrastructure';
 import { CommentsService } from '../application';
-import { CommentLikeStatusInputModel } from '../../likes/models';
 import { CreateUpdateCommentInputDTO } from '../application';
+import { CommentLikeStatusInputDTO, LikesService } from '../../likes/application';
 
 @injectable()
 export class CommentsController {
     constructor(
         @inject(CommentsService) private commentsService: CommentsService,
+        @inject(LikesService) private likesService: LikesService,
         @inject(QueryCommentsRepository) private queryCommentsRepository: QueryCommentsRepository
     ) {}
 
@@ -64,7 +65,7 @@ export class CommentsController {
     }
 
     async updateLikeStatusByCommentID(
-        req: RequestWithParamsAndBody<URIParamsCommentIDModel, CommentLikeStatusInputModel>,
+        req: RequestWithParamsAndBody<URIParamsCommentIDModel, CommentLikeStatusInputDTO>,
         res: Response,
         next: NextFunction
     ) {
@@ -73,7 +74,7 @@ export class CommentsController {
             const likeStatus = req.body.likeStatus;
             const userId = req.userId;
 
-            await this.commentsService.updateLikeStatusByCommentID(commentId, likeStatus, userId as string);
+            await this.likesService.updateLikeStatusByCommentID(commentId, likeStatus, userId as string);
 
             res.sendStatus(HTTP_STATUS_CODES.NO_CONTENT_204);
         } catch (err) {

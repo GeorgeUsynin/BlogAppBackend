@@ -6,7 +6,7 @@ import {
     getUserIdFromAccessTokenMiddleware,
 } from '../../shared/api/APIMiddlewares';
 import { createUpdateCommentValidationSchema } from './validation';
-import { updateLikeStatusValidationSchema } from '../../likes/validation';
+import { updateLikeStatusValidationSchema } from '../../likes/api/validation';
 import { ROUTES } from '../../../constants';
 import { container } from './compositionRoot';
 import { CommentsController } from './commentsController';

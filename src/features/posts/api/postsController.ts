@@ -21,7 +21,6 @@ import { QueryCommentsRepository } from '../../comments/infrastructure';
 import { CreateUpdatePostInputDTO } from '../application';
 import { CreateUpdateCommentInputDTO } from '../../comments/application';
 
-@injectable()
 export class PostsController {
     constructor(
         @inject(PostsService) private postsService: PostsService,

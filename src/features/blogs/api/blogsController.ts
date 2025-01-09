@@ -16,7 +16,6 @@ import { QueryBlogsRepository } from '../infrastructure';
 import { PostsService } from '../../posts/application';
 import { CreateUpdatePostInputDTO } from '../../posts/application';
 
-@injectable()
 export class BlogsController {
     constructor(
         @inject(BlogsService) private blogsService: BlogsService,

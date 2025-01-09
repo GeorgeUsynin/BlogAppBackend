@@ -6,7 +6,6 @@ import { UsersPaginatedViewModel, QueryParamsUserModel, UserItemViewModel, URIPa
 import { CreateUserInputDTO, UsersService } from '../application';
 import { QueryUsersRepository } from '../infrastructure';
 
-@injectable()
 export class UsersController {
     constructor(
         @inject(UsersService) private usersService: UsersService,

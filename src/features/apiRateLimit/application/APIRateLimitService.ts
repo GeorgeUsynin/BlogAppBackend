@@ -1,10 +1,9 @@
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import { APIError } from '../../shared/helpers';
 import { ResultStatus } from '../../../constants';
 import { APIRateLimitRepository } from '../infrastructure';
 import { ApiRateLimitModel, TAPIRateLimit } from '../domain';
 
-@injectable()
 export class APIRateLimitService {
     constructor(@inject(APIRateLimitRepository) private APIRateLimitRepository: APIRateLimitRepository) {}
 

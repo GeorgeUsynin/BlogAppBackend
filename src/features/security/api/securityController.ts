@@ -6,7 +6,6 @@ import { AuthDeviceViewModel, URIParamsDeviceIDModel } from './models';
 import { AuthDeviceSessionsService } from '../application';
 import { RequestWithParams } from '../../shared/types';
 
-@injectable()
 export class SecurityController {
     constructor(
         @inject(AuthDeviceSessionsService) private authDeviceSessionsService: AuthDeviceSessionsService,

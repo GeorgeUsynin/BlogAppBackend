@@ -8,7 +8,6 @@ import { CommentsService } from '../application';
 import { CreateUpdateCommentInputDTO } from '../application';
 import { CommentLikeStatusInputDTO, LikesService } from '../../likes/application';
 
-@injectable()
 export class CommentsController {
     constructor(
         @inject(CommentsService) private commentsService: CommentsService,

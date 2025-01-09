@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import { NextFunction, Request, Response } from 'express';
 import { ErrorViewModel, RequestWithBody } from '../../shared/types';
 import { AuthMeViewModel, LoginViewModel, RefreshTokenViewModel } from './models';
@@ -16,7 +16,6 @@ import {
 } from '../application';
 import { QueryUsersRepository } from '../../users/infrastructure';
 
-@injectable()
 export class AuthController {
     constructor(
         @inject(AuthService) private authService: AuthService,

@@ -1,10 +1,6 @@
 import { HydratedDocument, model, Model, Schema } from 'mongoose';
 import { SETTINGS } from '../../../app-settings';
 
-const defaultCreatedAt = new Date().toISOString();
-// Soft delete implementation
-const defaultIsDeleted = false;
-
 type TPostValues = {
     title: string;
     shortDescription: string;
@@ -32,8 +28,8 @@ const postSchema = new Schema<TPost>({
     content: { type: String, maxLength: 1000, required: true },
     blogId: { type: String, required: true },
     blogName: { type: String, required: true },
-    createdAt: { type: String, default: defaultCreatedAt },
-    isDeleted: { type: Boolean, default: defaultIsDeleted },
+    createdAt: { type: String, default: () => new Date().toISOString() },
+    isDeleted: { type: Boolean, default: false },
 });
 
 // Soft delete implementation

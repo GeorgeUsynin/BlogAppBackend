@@ -3,11 +3,6 @@ import { SETTINGS } from '../../../app-settings';
 
 const loginPattern = '^[a-zA-Z0-9_-]*$';
 const emailPattern = '^[w-.]+@([w-]+.)+[w-]{2,4}$';
-const defaultCreatedAt = new Date().toISOString();
-const defaultRecoveryCode = null;
-const defaultExpirationDate = null;
-// Soft delete implementation
-const defaultIsDeleted = false;
 
 export type TUser = {
     login: string;
@@ -56,17 +51,17 @@ const userSchema = new Schema<TUser>({
         },
     },
     passwordHash: { type: String, required: true },
-    createdAt: { type: String, default: defaultCreatedAt },
+    createdAt: { type: String, default: () => new Date().toISOString() },
     emailConfirmation: {
         isConfirmed: { type: Boolean, required: true },
         confirmationCode: { type: String, required: true },
         expirationDate: { type: Date, required: true },
     },
     passwordRecovery: {
-        recoveryCode: { type: String, default: defaultRecoveryCode },
-        expirationDate: { type: Date, default: defaultExpirationDate },
+        recoveryCode: { type: String, default: null },
+        expirationDate: { type: Date, default: null },
     },
-    isDeleted: { type: Boolean, default: defaultIsDeleted },
+    isDeleted: { type: Boolean, default: false },
 });
 
 // Soft delete implementation

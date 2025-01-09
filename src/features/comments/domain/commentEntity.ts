@@ -1,20 +1,6 @@
 import { HydratedDocument, model, Model, Schema } from 'mongoose';
 import { SETTINGS } from '../../../app-settings';
 
-const defaultLikesCount = 0;
-const defaultDislikesCount = 0;
-const defaultCreatedAt = new Date().toISOString();
-// Soft delete implementation
-const defaultIsDeleted = false;
-
-type TCommentValues = {
-    content: string;
-    commentatorInfo: {
-        userId: string;
-        userLogin: string;
-    };
-    postId: string;
-};
 export type TComment = {
     content: string;
     commentatorInfo: {
@@ -41,12 +27,12 @@ const commentSchema = new Schema<TComment>({
         userLogin: { type: String, required: true },
     },
     postId: { type: String, required: true },
-    createdAt: { type: String, default: defaultCreatedAt },
+    createdAt: { type: String, default: () => new Date().toISOString() },
     likesInfo: {
-        dislikesCount: { type: Number, default: defaultDislikesCount },
-        likesCount: { type: Number, default: defaultLikesCount },
+        dislikesCount: { type: Number, default: 0 },
+        likesCount: { type: Number, default: 0 },
     },
-    isDeleted: { type: Boolean, default: defaultIsDeleted },
+    isDeleted: { type: Boolean, default: false },
 });
 
 // Soft delete implementation

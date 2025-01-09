@@ -1,5 +1,5 @@
 import { injectable } from 'inversify';
-import { CommentDocument, CommentModel, TComment } from '../domain';
+import { CommentDocument, CommentModel } from '../domain';
 
 @injectable()
 export class CommentsRepository {

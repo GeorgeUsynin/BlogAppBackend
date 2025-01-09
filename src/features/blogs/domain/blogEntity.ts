@@ -2,10 +2,7 @@ import { HydratedDocument, model, Model, Schema } from 'mongoose';
 import { SETTINGS } from '../../../app-settings';
 
 const pattern = '^https://([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$';
-const defaultCreatedAt = new Date().toISOString();
-const defaultIsMembership = false;
 // Soft delete implementation
-const defaultIsDeleted = false;
 
 export type TBlog = {
     name: string;
@@ -22,10 +19,10 @@ export type BlogDocument = HydratedDocument<TBlog>;
 
 const blogSchema = new Schema<TBlog>({
     name: { type: String, maxLength: 15, required: true },
-    createdAt: { type: String, default: defaultCreatedAt },
+    createdAt: { type: String, default: () => new Date().toISOString() },
     description: { type: String, maxLength: 500, required: true },
-    isMembership: { type: Boolean, default: defaultIsMembership },
-    isDeleted: { type: Boolean, default: defaultIsDeleted },
+    isMembership: { type: Boolean, default: false },
+    isDeleted: { type: Boolean, default: false },
     websiteUrl: {
         type: String,
         maxLength: 100,

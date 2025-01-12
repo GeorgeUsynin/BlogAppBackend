@@ -1,26 +1,7 @@
-import { HydratedDocument, model, Model, Schema } from 'mongoose';
+import { model, Schema } from 'mongoose';
 import { SETTINGS } from '../../../app-settings';
-
-type TPostValues = {
-    title: string;
-    shortDescription: string;
-    content: string;
-    blogId: string;
-    blogName: string;
-};
-export type TPost = {
-    title: string;
-    shortDescription: string;
-    content: string;
-    blogId: string;
-    blogName: string;
-    createdAt: string;
-    isDeleted: boolean;
-};
-
-type TPostModel = Model<TPost>;
-
-export type PostDocument = HydratedDocument<TPost>;
+import { TPost, TPostModel } from './types';
+import { CreatePostDTO } from '../application/dto';
 
 const postSchema = new Schema<TPost>({
     title: { type: String, maxLength: 30, required: true },
@@ -31,6 +12,16 @@ const postSchema = new Schema<TPost>({
     createdAt: { type: String, default: () => new Date().toISOString() },
     isDeleted: { type: Boolean, default: false },
 });
+
+export const postStatics = {
+    createPost(dto: CreatePostDTO) {
+        const newPost = new PostModel(dto);
+
+        return newPost;
+    },
+};
+
+postSchema.statics = postStatics;
 
 // Soft delete implementation
 postSchema.pre('find', function () {

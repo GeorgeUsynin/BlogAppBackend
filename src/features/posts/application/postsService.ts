@@ -16,7 +16,8 @@ export class PostsService {
     async createPost(payload: CreateUpdatePostInputDTO) {
         const { blogId, content, shortDescription, title } = payload;
         const linkedBlogName = (await this.blogsRepository.findBlogById(blogId))?.name as string;
-        const newPost = new PostModel({
+
+        const newPost = PostModel.createPost({
             title,
             shortDescription,
             content,

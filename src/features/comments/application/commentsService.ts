@@ -28,9 +28,16 @@ export class CommentsService {
 
         const user = await this.usersRepository.findUserById(userId);
 
-        const newComment = new CommentModel({
+        if (!user) {
+            throw new APIError({
+                status: ResultStatus.NotFound,
+                message: 'User was not found',
+            });
+        }
+
+        const newComment = CommentModel.createComment({
             content,
-            commentatorInfo: { userId, userLogin: user?.login as string },
+            commentatorInfo: { userId, userLogin: user.login },
             postId,
         });
 
@@ -48,16 +55,10 @@ export class CommentsService {
             });
         }
 
-        if (foundComment.commentatorInfo.userId !== userId) {
-            throw new APIError({
-                status: ResultStatus.Forbidden,
-                message: 'You are not allowed to update this comment',
-            });
+        if (foundComment.isCommentOwner(userId)) {
+            foundComment.content = content;
+            await this.commentsRepository.save(foundComment);
         }
-
-        foundComment.content = content;
-
-        await this.commentsRepository.save(foundComment);
     }
 
     async deleteCommentById(commentId: string, userId: string) {
@@ -70,15 +71,9 @@ export class CommentsService {
             });
         }
 
-        if (foundComment.commentatorInfo.userId !== userId) {
-            throw new APIError({
-                status: ResultStatus.Forbidden,
-                message: 'You are not allowed to delete this comment',
-            });
+        if (foundComment.isCommentOwner(userId)) {
+            foundComment.isDeleted = true;
+            await this.commentsRepository.save(foundComment);
         }
-
-        foundComment.isDeleted = true;
-
-        await this.commentsRepository.save(foundComment);
     }
 }

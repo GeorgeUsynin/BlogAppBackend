@@ -28,59 +28,25 @@ export class LikesService {
             if (likeStatus === LikeStatus.None) return;
 
             const newLike = LikeModel.createLike({ parentId: commentId, userId, status: likeStatus });
-
             await this.likesRepository.save(newLike);
 
-            if (likeStatus === LikeStatus.Like) {
-                foundComment.likesInfo.likesCount += 1;
-            } else if (likeStatus === LikeStatus.Dislike) {
-                foundComment.likesInfo.dislikesCount += 1;
-            }
-
+            foundComment.updateLikesInfoCount(likeStatus);
             await this.commentsRepository.save(foundComment);
+
             return;
         }
 
-        const currentStatus = like.status;
+        const oldLikeStatus = like.status;
 
         // Avoid update if new status is the same as current one
-        if (like.canBeUpdated(likeStatus)) {
+        if (like.isSameStatus(likeStatus)) {
+            return;
+        } else {
             like.status = likeStatus;
             await this.likesRepository.save(like);
-        } else {
-            return;
         }
 
-        // Update likes and dislikes logic
-        switch (currentStatus) {
-            case LikeStatus.Like:
-                if (likeStatus === LikeStatus.Dislike) {
-                    foundComment.likesInfo.likesCount -= 1;
-                    foundComment.likesInfo.dislikesCount += 1;
-                } else if (likeStatus === LikeStatus.None) {
-                    foundComment.likesInfo.likesCount -= 1;
-                }
-                break;
-
-            case LikeStatus.Dislike:
-                if (likeStatus === LikeStatus.Like) {
-                    foundComment.likesInfo.likesCount += 1;
-                    foundComment.likesInfo.dislikesCount -= 1;
-                } else if (likeStatus === LikeStatus.None) {
-                    foundComment.likesInfo.dislikesCount -= 1;
-                }
-                break;
-
-            case LikeStatus.None:
-                if (likeStatus === LikeStatus.Like) {
-                    foundComment.likesInfo.likesCount += 1;
-                } else if (likeStatus === LikeStatus.Dislike) {
-                    foundComment.likesInfo.dislikesCount += 1;
-                }
-                break;
-        }
-
-        // Save the updated comment
+        foundComment.updateLikesInfoCount(likeStatus, oldLikeStatus);
         await this.commentsRepository.save(foundComment);
     }
 }

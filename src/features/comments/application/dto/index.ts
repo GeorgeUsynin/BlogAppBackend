@@ -1,3 +1,4 @@
 import { CreateUpdateCommentInputDTO } from './CreateUpdateCommentInputDTO';
+import { CreateCommentDTO } from './CreateCommentDTO';
 
-export { CreateUpdateCommentInputDTO };
+export { CreateUpdateCommentInputDTO, CreateCommentDTO };

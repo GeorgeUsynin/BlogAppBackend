@@ -1,24 +1,9 @@
-import { HydratedDocument, model, Model, Schema } from 'mongoose';
+import { model, Schema } from 'mongoose';
 import { SETTINGS } from '../../../app-settings';
-
-export type TComment = {
-    content: string;
-    commentatorInfo: {
-        userId: string;
-        userLogin: string;
-    };
-    createdAt: string;
-    postId: string;
-    likesInfo: {
-        likesCount: number;
-        dislikesCount: number;
-    };
-    isDeleted: boolean;
-};
-
-type TCommentModel = Model<TComment>;
-
-export type CommentDocument = HydratedDocument<TComment>;
+import { CommentDocument, TComment, TCommentModel } from './types';
+import { CreateCommentDTO } from '../application';
+import { APIError } from '../../shared/helpers';
+import { LikeStatus, ResultStatus } from '../../../constants';
 
 const commentSchema = new Schema<TComment>({
     content: { type: String, minlength: 20, maxLength: 300, required: true },
@@ -34,6 +19,72 @@ const commentSchema = new Schema<TComment>({
     },
     isDeleted: { type: Boolean, default: false },
 });
+
+export const commentStatics = {
+    createComment(dto: CreateCommentDTO) {
+        const newComment = new CommentModel(dto);
+
+        return newComment;
+    },
+};
+
+export const commentMethods = {
+    isCommentOwner(userId: string) {
+        const that = this as CommentDocument;
+
+        if (that.commentatorInfo.userId !== userId) {
+            throw new APIError({
+                status: ResultStatus.Forbidden,
+                message: 'You are not allowed to modify this comment',
+            });
+        }
+
+        return true;
+    },
+
+    updateLikesInfoCount(newLikeStatus: keyof typeof LikeStatus, oldLikeStatus?: keyof typeof LikeStatus) {
+        const that = this as CommentDocument;
+
+        if (!oldLikeStatus) {
+            if (newLikeStatus === LikeStatus.Like) {
+                that.likesInfo.likesCount += 1;
+            } else if (newLikeStatus === LikeStatus.Dislike) {
+                that.likesInfo.dislikesCount += 1;
+            }
+        } else {
+            switch (oldLikeStatus) {
+                case LikeStatus.Like:
+                    if (newLikeStatus === LikeStatus.Dislike) {
+                        that.likesInfo.likesCount -= 1;
+                        that.likesInfo.dislikesCount += 1;
+                    } else if (newLikeStatus === LikeStatus.None) {
+                        that.likesInfo.likesCount -= 1;
+                    }
+                    break;
+
+                case LikeStatus.Dislike:
+                    if (newLikeStatus === LikeStatus.Like) {
+                        that.likesInfo.likesCount += 1;
+                        that.likesInfo.dislikesCount -= 1;
+                    } else if (newLikeStatus === LikeStatus.None) {
+                        that.likesInfo.dislikesCount -= 1;
+                    }
+                    break;
+
+                case LikeStatus.None:
+                    if (newLikeStatus === LikeStatus.Like) {
+                        that.likesInfo.likesCount += 1;
+                    } else if (newLikeStatus === LikeStatus.Dislike) {
+                        that.likesInfo.dislikesCount += 1;
+                    }
+                    break;
+            }
+        }
+    },
+};
+
+commentSchema.statics = commentStatics;
+commentSchema.methods = commentMethods;
 
 // Soft delete implementation
 commentSchema.pre('find', function () {

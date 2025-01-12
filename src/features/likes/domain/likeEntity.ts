@@ -19,10 +19,10 @@ export const likeStatics = {
 };
 
 export const likeMethods = {
-    canBeUpdated(status: keyof typeof LikeStatus) {
+    isSameStatus(status: keyof typeof LikeStatus) {
         const that = this as LikeDocument;
 
-        return that.status !== status;
+        return that.status === status;
     },
 };
 

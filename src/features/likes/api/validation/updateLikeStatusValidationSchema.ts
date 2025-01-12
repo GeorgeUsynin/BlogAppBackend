@@ -1,8 +1,8 @@
 import { Schema } from 'express-validator';
 import { LikeStatus } from '../../../../constants';
-import { CommentLikeStatusInputDTO } from '../../application';
+import { LikeStatusInputDTO } from '../../application';
 
-export const updateLikeStatusValidationSchema: Schema<keyof CommentLikeStatusInputDTO> = {
+export const updateLikeStatusValidationSchema: Schema<keyof LikeStatusInputDTO> = {
     likeStatus: {
         exists: {
             errorMessage: 'LikeStatus field is required',

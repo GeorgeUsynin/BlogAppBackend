@@ -1,7 +1,7 @@
 import { createErrorMessages, dbHelper, getBearerAuthorization, request } from '../test-helpers';
 import { HTTP_STATUS_CODES, ROUTES } from '../../constants';
 import { users, comments, fakeRequestedObjectId } from '../dataset';
-import { CommentLikeStatusInputDTO } from '../../features/likes/application';
+import { LikeStatusInputDTO } from '../../features/likes/application';
 
 describe('create/update like by comment ID', () => {
     beforeAll(async () => {
@@ -93,7 +93,7 @@ describe('create/update like by comment ID', () => {
     });
 
     it('returns 404 status code if there is no requested comment in database', async () => {
-        const payload: CommentLikeStatusInputDTO = {
+        const payload: LikeStatusInputDTO = {
             likeStatus: 'Like',
         };
 
@@ -109,7 +109,7 @@ describe('create/update like by comment ID', () => {
         describe('likeStatus', () => {
             it('returns 400 status code and proper error object if `likeStatus` is missing', async () => {
                 //@ts-expect-error bad request (likeStatus is missing)
-                const payload: CommentLikeStatusInputDTO = {};
+                const payload: LikeStatusInputDTO = {};
                 const { body } = await request
                     .put(`${ROUTES.COMMENTS}/${secondCommentId}${ROUTES.LIKE_STATUS}`)
                     .set(getBearerAuthorization(firstUser._id.toString()))
@@ -120,7 +120,7 @@ describe('create/update like by comment ID', () => {
             });
 
             it('returns 400 status code and proper error object if `likeStatus` is empty or contain only spaces', async () => {
-                const payload: CommentLikeStatusInputDTO = {
+                const payload: LikeStatusInputDTO = {
                     //@ts-expect-error bad request (likeStatus contain only spaces)
                     likeStatus: ' ',
                 };
@@ -134,7 +134,7 @@ describe('create/update like by comment ID', () => {
             });
 
             it('returns 400 status code and proper error object for bad `likeStatus` type', async () => {
-                const payload: CommentLikeStatusInputDTO = {
+                const payload: LikeStatusInputDTO = {
                     //@ts-expect-error bad request (likeStatus type is invalid)
                     likeStatus: [],
                 };
@@ -148,7 +148,7 @@ describe('create/update like by comment ID', () => {
             });
 
             it('returns 400 status code and proper error object for bad `likeStatus` value', async () => {
-                const payload: CommentLikeStatusInputDTO = {
+                const payload: LikeStatusInputDTO = {
                     //@ts-expect-error bad request (likeStatus value is invalid)
                     likeStatus: 'Nan',
                 };
@@ -164,7 +164,7 @@ describe('create/update like by comment ID', () => {
     });
 
     it('returns 401 status code if request is not authorized', async () => {
-        const payload: CommentLikeStatusInputDTO = {
+        const payload: LikeStatusInputDTO = {
             likeStatus: 'Like',
         };
 

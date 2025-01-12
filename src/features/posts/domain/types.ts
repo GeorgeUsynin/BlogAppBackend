@@ -11,7 +11,7 @@ export type TPost = {
     isDeleted: boolean;
 };
 
-export type TPostStatics = typeof postStatics;
+type TPostStatics = typeof postStatics;
 
 export type TPostModel = Model<TPost, {}, {}> & TPostStatics;
 

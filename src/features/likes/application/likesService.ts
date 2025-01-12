@@ -27,7 +27,7 @@ export class LikesService {
         if (!like) {
             if (likeStatus === LikeStatus.None) return;
 
-            const newLike = new LikeModel({ parentId: commentId, userId, status: likeStatus });
+            const newLike = LikeModel.createLike({ parentId: commentId, userId, status: likeStatus });
 
             await this.likesRepository.save(newLike);
 
@@ -44,13 +44,12 @@ export class LikesService {
         const currentStatus = like.status;
 
         // Avoid update if new status is the same as current one
-        if (currentStatus === likeStatus) {
+        if (like.canBeUpdated(likeStatus)) {
+            like.status = likeStatus;
+            await this.likesRepository.save(like);
+        } else {
             return;
         }
-
-        // Update and save like status
-        like.status = likeStatus;
-        await this.likesRepository.save(like);
 
         // Update likes and dislikes logic
         switch (currentStatus) {

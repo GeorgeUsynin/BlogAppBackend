@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import { NextFunction, Response } from 'express';
 import { RequestWithParams, RequestWithParamsAndBody } from '../../shared/types';
 import { CommentItemViewModel, URIParamsCommentIDModel } from '../api/models';
@@ -6,7 +6,7 @@ import { HTTP_STATUS_CODES } from '../../../constants';
 import { QueryCommentsRepository } from '../infrastructure';
 import { CommentsService } from '../application';
 import { CreateUpdateCommentInputDTO } from '../application';
-import { CommentLikeStatusInputDTO, LikesService } from '../../likes/application';
+import { LikeStatusInputDTO, LikesService } from '../../likes/application';
 
 export class CommentsController {
     constructor(
@@ -64,7 +64,7 @@ export class CommentsController {
     }
 
     async updateLikeStatusByCommentID(
-        req: RequestWithParamsAndBody<URIParamsCommentIDModel, CommentLikeStatusInputDTO>,
+        req: RequestWithParamsAndBody<URIParamsCommentIDModel, LikeStatusInputDTO>,
         res: Response,
         next: NextFunction
     ) {

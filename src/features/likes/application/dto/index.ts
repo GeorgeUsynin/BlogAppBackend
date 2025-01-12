@@ -1,3 +1,4 @@
-import { CommentLikeStatusInputDTO } from './CommentLikeStatusInputDTO';
+import { LikeStatusInputDTO } from './LikeStatusInputDTO';
+import { CreateLikeDTO } from './CreateLikeDTO';
 
-export { CommentLikeStatusInputDTO };
+export { LikeStatusInputDTO, CreateLikeDTO };

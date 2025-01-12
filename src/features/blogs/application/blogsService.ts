@@ -10,7 +10,7 @@ export class BlogsService {
     constructor(@inject(BlogsRepository) private blogsRepository: BlogsRepository) {}
 
     async createBlog(payload: CreateUpdateBlogInputDTO) {
-        const newBlog = new BlogModel(payload);
+        const newBlog = BlogModel.createBlog(payload);
 
         return this.blogsRepository.save(newBlog);
     }

@@ -1,21 +1,10 @@
-import { HydratedDocument, model, Model, Schema } from 'mongoose';
+import { model, Schema } from 'mongoose';
 import { SETTINGS } from '../../../app-settings';
+import { CreateUpdateBlogInputDTO } from '../application/dto';
+import { TBlog, TBlogModel } from './types';
 
 const pattern = '^https://([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$';
 // Soft delete implementation
-
-export type TBlog = {
-    name: string;
-    description: string;
-    websiteUrl: string;
-    createdAt: string;
-    isMembership: boolean;
-    isDeleted: boolean;
-};
-
-type TBlogModel = Model<TBlog>;
-
-export type BlogDocument = HydratedDocument<TBlog>;
 
 const blogSchema = new Schema<TBlog>({
     name: { type: String, maxLength: 15, required: true },
@@ -36,6 +25,18 @@ const blogSchema = new Schema<TBlog>({
     },
 });
 
+export const blogStatics = {
+    createBlog(dto: CreateUpdateBlogInputDTO) {
+        const newBlog = new BlogModel(dto);
+
+        return newBlog;
+    },
+};
+
+blogSchema.statics = blogStatics;
+
+export const BlogModel = model<TBlog, TBlogModel>(SETTINGS.DB_COLLECTIONS.blogsCollection, blogSchema);
+
 // Soft delete implementation
 blogSchema.pre('find', function () {
     this.where({ isDeleted: false });
@@ -46,5 +47,3 @@ blogSchema.pre('findOne', function () {
 blogSchema.pre('countDocuments', function () {
     this.where({ isDeleted: false });
 });
-
-export const BlogModel = model<TBlog, TBlogModel>(SETTINGS.DB_COLLECTIONS.blogsCollection, blogSchema);

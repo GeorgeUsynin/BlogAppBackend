@@ -35,8 +35,6 @@ export const blogStatics = {
 
 blogSchema.statics = blogStatics;
 
-export const BlogModel = model<TBlog, TBlogModel>(SETTINGS.DB_COLLECTIONS.blogsCollection, blogSchema);
-
 // Soft delete implementation
 blogSchema.pre('find', function () {
     this.where({ isDeleted: false });
@@ -47,3 +45,5 @@ blogSchema.pre('findOne', function () {
 blogSchema.pre('countDocuments', function () {
     this.where({ isDeleted: false });
 });
+
+export const BlogModel = model<TBlog, TBlogModel>(SETTINGS.DB_COLLECTIONS.blogsCollection, blogSchema);

@@ -20,16 +20,12 @@ export class PasswordService {
 
         if (!user) return;
 
-        const recoveryCode = randomUUID();
-        const expirationDate = add(new Date(), { hours: SETTINGS.RECOVERY_CODE_EXPIRATION_TIME_IN_HOURS });
-
-        user.passwordRecovery.recoveryCode = recoveryCode;
-        user.passwordRecovery.expirationDate = expirationDate;
-
+        user.generatePasswordRecoveryCode();
+        const passwordRecoveryCode = user.passwordRecovery.recoveryCode!;
         await this.usersRepository.save(user);
 
         // sent confirmation email
-        this.emailManager.sendPasswordRecoveryEmail(email, recoveryCode);
+        this.emailManager.sendPasswordRecoveryEmail(email, passwordRecoveryCode);
     }
 
     async changePassword(newPassword: string, recoveryCode: string) {
@@ -43,19 +39,12 @@ export class PasswordService {
             });
         }
 
-        if (Date.now() > user.passwordRecovery.expirationDate!.getTime()) {
-            throw new APIError({
-                status: ResultStatus.BadRequest,
-                field: 'recoveryCode',
-                message: 'Code expired',
-            });
+        if (user.canChangePassword(recoveryCode)) {
+            const passwordHash = await bcrypt.hash(newPassword, SETTINGS.HASH_ROUNDS);
+
+            user.changePassword(recoveryCode, passwordHash);
+
+            await this.usersRepository.save(user);
         }
-
-        // hash password
-        const hash = await bcrypt.hash(newPassword, SETTINGS.HASH_ROUNDS);
-
-        user.passwordHash = hash;
-
-        await this.usersRepository.save(user);
     }
 }

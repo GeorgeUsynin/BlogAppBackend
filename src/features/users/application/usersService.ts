@@ -2,8 +2,6 @@ import bcrypt from 'bcrypt';
 import { inject, injectable } from 'inversify';
 import { UsersRepository } from '../infrastructure';
 import { ResultStatus } from '../../../constants';
-import { randomUUID } from 'crypto';
-import { add } from 'date-fns';
 import { APIError } from '../../shared/helpers';
 import { UserModel } from '../domain/userEntity';
 import { SETTINGS } from '../../../app-settings';
@@ -14,7 +12,9 @@ export class UsersService {
     constructor(@inject(UsersRepository) private usersRepository: UsersRepository) {}
 
     async createUser(payload: CreateUserInputDTO) {
-        const user = await this.usersRepository.findUserByLoginOrEmail(payload.login, payload.email);
+        const { email, login, password } = payload;
+
+        const user = await this.usersRepository.findUserByLoginOrEmail(login, email);
 
         if (user) {
             throw new APIError({
@@ -23,17 +23,9 @@ export class UsersService {
             });
         }
 
-        const hash = await bcrypt.hash(payload.password, SETTINGS.HASH_ROUNDS);
+        const passwordHash = await bcrypt.hash(password, SETTINGS.HASH_ROUNDS);
 
-        const newUser = new UserModel({
-            ...payload,
-            passwordHash: hash,
-            emailConfirmation: {
-                isConfirmed: true,
-                confirmationCode: randomUUID(),
-                expirationDate: add(new Date(), { hours: 1 }),
-            },
-        });
+        const newUser = UserModel.createConfirmedUser({ email, login, passwordHash });
 
         return this.usersRepository.save(newUser);
     }

@@ -10,6 +10,8 @@ export type TBlog = {
     isDeleted: boolean;
 };
 
+type BlogStatics = typeof blogStatics;
+
 export type BlogDocument = HydratedDocument<TBlog>;
 
-export type TBlogModel = Model<TBlog, {}, {}> & typeof blogStatics;
+export type TBlogModel = Model<TBlog, {}, {}> & BlogStatics;

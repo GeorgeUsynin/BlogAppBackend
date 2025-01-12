@@ -1,7 +1,5 @@
 import bcrypt from 'bcrypt';
 import { inject, injectable } from 'inversify';
-import { add } from 'date-fns/add';
-import { randomUUID } from 'crypto';
 import { UsersRepository } from '../../users/infrastructure';
 import { ResultStatus } from '../../../constants';
 import { EmailManager } from '../../shared/application/managers/emailManager';
@@ -33,18 +31,13 @@ export class RegistrationService {
         }
 
         // hash password
-        const hash = await bcrypt.hash(password, SETTINGS.HASH_ROUNDS);
+        const passwordHash = await bcrypt.hash(password, SETTINGS.HASH_ROUNDS);
 
         // create new user
-        const newUser = new UserModel({
+        const newUser = UserModel.createUnconfirmedUser({
             login,
             email,
-            passwordHash: hash,
-            emailConfirmation: {
-                isConfirmed: false,
-                confirmationCode: randomUUID(),
-                expirationDate: add(new Date(), { hours: SETTINGS.CONFIRMATION_CODE_EXPIRATION_TIME_IN_HOURS }),
-            },
+            passwordHash,
         });
 
         await this.usersRepository.save(newUser);
@@ -64,23 +57,9 @@ export class RegistrationService {
             });
         }
 
-        if (user.emailConfirmation.isConfirmed) {
-            throw new APIError({
-                status: ResultStatus.BadRequest,
-                field: 'code',
-                message: 'Email already confirmed',
-            });
+        if (user.canBeConfirmed(code)) {
+            user.confirmUserEmail(code);
         }
-
-        if (Date.now() > user.emailConfirmation.expirationDate.getTime()) {
-            throw new APIError({
-                status: ResultStatus.BadRequest,
-                field: 'code',
-                message: 'Code expired',
-            });
-        }
-
-        user.emailConfirmation.isConfirmed = true;
 
         await this.usersRepository.save(user);
     }
@@ -96,22 +75,12 @@ export class RegistrationService {
             });
         }
 
-        if (user.emailConfirmation.isConfirmed) {
-            throw new APIError({
-                status: ResultStatus.BadRequest,
-                field: 'email',
-                message: 'Email already confirmed',
-            });
+        if (user.canResendEmailConfirmationCode()) {
+            user.generateEmailConfirmationCode();
+            const newConfirmationCode = user.emailConfirmation.confirmationCode;
+            await this.usersRepository.save(user);
+
+            this.emailManager.sendPasswordConfirmationEmail(email, newConfirmationCode);
         }
-
-        const newConfirmationCode = randomUUID();
-        const newExpirationDate = add(new Date(), { hours: SETTINGS.CONFIRMATION_CODE_EXPIRATION_TIME_IN_HOURS });
-
-        user.emailConfirmation.confirmationCode = newConfirmationCode;
-        user.emailConfirmation.expirationDate = newExpirationDate;
-
-        await this.usersRepository.save(user);
-
-        this.emailManager.sendPasswordConfirmationEmail(email, newConfirmationCode);
     }
 }

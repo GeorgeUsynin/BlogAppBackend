@@ -82,6 +82,7 @@ export class AuthService {
 
         const deviceId = randomUUID();
 
+        // Creating access and refresh tokens
         const accessToken = this.JWTService.createJWTToken(
             { userId: user._id.toString() },
             { expiresIn: accessTokenExpirationTime }
@@ -91,11 +92,12 @@ export class AuthService {
             { expiresIn: refreshTokenExpirationTime }
         );
 
+        // Adding new device into database
         const decodedRefreshToken = await this.JWTService.parseJWTToken(refreshToken);
         const issuedAt = new Date(Number(decodedRefreshToken?.iat) * 1000).toISOString();
         const expirationDateOfRefreshToken = new Date(Number(decodedRefreshToken?.exp) * 1000).toISOString();
 
-        const newAuthDeviceSession = new AuthDeviceSessionModel({
+        const newAuthDeviceSession = AuthDeviceSessionModel.createAuthDeviceSession({
             userId: user._id.toString(),
             deviceId,
             issuedAt,
@@ -103,7 +105,6 @@ export class AuthService {
             clientIp,
             expirationDateOfRefreshToken,
         });
-
         await this.authDeviceSessionsRepository.save(newAuthDeviceSession);
 
         return { accessToken, refreshToken };

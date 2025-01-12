@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose';
 import { SETTINGS } from '../../../app-settings';
 import { TAPIRateLimit, TAPIRateLimitModel } from './types';
-import { CreateAPIRateLimitDTO } from './dto';
+import { CreateAPIRateLimitDTO } from '../application/dto';
 
 const APIRateLimitSchema = new Schema<TAPIRateLimit>({
     IP: { type: String, required: true },

@@ -1,18 +1,9 @@
-import { HydratedDocument, model, Model, Schema } from 'mongoose';
+import { model, Schema } from 'mongoose';
 import { SETTINGS } from '../../../app-settings';
-
-export type TDevice = {
-    userId: string;
-    deviceId: string;
-    issuedAt: string;
-    deviceName: string;
-    clientIp: string;
-    expirationDateOfRefreshToken: string;
-};
-
-type TDeviceModel = Model<TDevice>;
-
-export type DeviceDocument = HydratedDocument<TDevice>;
+import { DeviceDocument, TDevice, TDeviceModel } from './types';
+import { CreateAuthDeviceSessionDTO } from '../application/dto';
+import { APIError } from '../../shared/helpers';
+import { ResultStatus } from '../../../constants';
 
 const deviceSchema = new Schema<TDevice>({
     userId: { type: String, required: true },
@@ -22,6 +13,32 @@ const deviceSchema = new Schema<TDevice>({
     clientIp: { type: String, required: true },
     expirationDateOfRefreshToken: { type: String, required: true },
 });
+
+export const authDeviceSessionStatics = {
+    createAuthDeviceSession(dto: CreateAuthDeviceSessionDTO) {
+        const newAuthDeviceSession = new AuthDeviceSessionModel(dto);
+
+        return newAuthDeviceSession;
+    },
+};
+
+export const authDeviceSessionMethods = {
+    isDeviceOwner(userId: string) {
+        const that = this as DeviceDocument;
+
+        if (that.userId !== userId) {
+            throw new APIError({
+                status: ResultStatus.Forbidden,
+                message: '',
+            });
+        }
+
+        return true;
+    },
+};
+
+deviceSchema.statics = authDeviceSessionStatics;
+deviceSchema.methods = authDeviceSessionMethods;
 
 export const AuthDeviceSessionModel = model<TDevice, TDeviceModel>(
     SETTINGS.DB_COLLECTIONS.authDeviceSessionsCollection,

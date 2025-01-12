@@ -46,13 +46,8 @@ export class AuthDeviceSessionsService {
             });
         }
 
-        if (foundDevice.userId !== userId) {
-            throw new APIError({
-                status: ResultStatus.Forbidden,
-                message: '',
-            });
+        if (foundDevice.isDeviceOwner(userId)) {
+            await this.authDeviceSessionsRepository.deleteDeviceSessionById(deviceId);
         }
-
-        await this.authDeviceSessionsRepository.deleteDeviceSessionById(deviceId);
     }
 }

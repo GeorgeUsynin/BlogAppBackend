@@ -20,7 +20,6 @@ export class APIRateLimitService {
         }
 
         const newAPIRateLimitRequest = new ApiRateLimitModel(payload);
-
         await this.APIRateLimitRepository.save(newAPIRateLimitRequest);
     }
 }

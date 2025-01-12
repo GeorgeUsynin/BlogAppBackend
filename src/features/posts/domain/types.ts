@@ -13,6 +13,6 @@ export type TPost = {
 
 type TPostStatics = typeof postStatics;
 
-export type TPostModel = Model<TPost, {}, {}> & TPostStatics;
+export type TPostModel = Model<TPost> & TPostStatics;
 
 export type PostDocument = HydratedDocument<TPost>;

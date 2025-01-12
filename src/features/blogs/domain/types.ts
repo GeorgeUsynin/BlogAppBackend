@@ -14,4 +14,4 @@ type BlogStatics = typeof blogStatics;
 
 export type BlogDocument = HydratedDocument<TBlog>;
 
-export type TBlogModel = Model<TBlog, {}, {}> & BlogStatics;
+export type TBlogModel = Model<TBlog> & BlogStatics;

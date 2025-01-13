@@ -8,7 +8,7 @@ import {
 import { createUpdateCommentValidationSchema } from './validation';
 import { updateLikeStatusValidationSchema } from '../../likes/api/validation';
 import { ROUTES } from '../../../constants';
-import { container } from '../compositionRoot';
+import { container } from '../../compositionRoot';
 import { CommentsController } from './commentsController';
 
 const commentsController = container.get(CommentsController);

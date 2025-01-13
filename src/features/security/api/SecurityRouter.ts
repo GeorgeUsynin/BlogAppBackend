@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { ROUTES } from '../../../constants';
 import { authRefreshTokenMiddleware } from '../../shared/api/APIMiddlewares';
-import { container } from '../compositionRoot';
+import { container } from '../../compositionRoot';
 import { SecurityController } from './securityController';
 
 const securityController = container.get(SecurityController);

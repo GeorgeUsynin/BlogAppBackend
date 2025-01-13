@@ -1,11 +1,10 @@
 import { Response, Request, NextFunction } from 'express';
-import { container as authContainer } from '../../../auth/compositionRoot';
-import { container as usersContainer } from '../../../users/compositionRoot';
+import { container } from '../../../compositionRoot';
 import { UsersService } from '../../../users/application';
 import { AuthService } from '../../../auth/application';
 
-const authService = authContainer.get(AuthService);
-const usersService = usersContainer.get(UsersService);
+const authService = container.get(AuthService);
+const usersService = container.get(UsersService);
 
 export const getUserIdFromAccessTokenMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     req.userId = '';

@@ -3,12 +3,11 @@ import { HTTP_STATUS_CODES } from '../../../../constants';
 import { JWTService } from '../../../shared/application/services';
 import { UsersService } from '../../../users/application';
 import { AuthDeviceSessionsService } from '../../../security/application';
-import { container as usersContainer } from '../../../users/compositionRoot';
-import { container as authDeviceSessionsContainer } from '../../../security/compositionRoot';
+import { container } from '../../../compositionRoot';
 import { ErrorViewModel } from '../../types';
 
-const usersService = usersContainer.get(UsersService);
-const authDeviceSessionsService = authDeviceSessionsContainer.get(AuthDeviceSessionsService);
+const usersService = container.get(UsersService);
+const authDeviceSessionsService = container.get(AuthDeviceSessionsService);
 const jwtService = new JWTService();
 
 export const authRefreshTokenMiddleware = async (req: Request, res: Response<ErrorViewModel>, next: NextFunction) => {

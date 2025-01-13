@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import { NextFunction, Request, Response } from 'express';
 import { HTTP_STATUS_CODES } from '../../../constants';
 import { QueryPostsRepository } from '../../posts/infrastructure';

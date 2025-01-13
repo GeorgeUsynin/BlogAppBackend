@@ -1,11 +1,11 @@
-import { inject, injectable } from 'inversify';
+import { injectable } from 'inversify';
 import { WithId } from 'mongodb';
 import { QueryParamsCommentModel, CommentItemViewModel, CommentsPaginatedViewModel } from '../api/models';
 import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
 import { ResultStatus } from '../../../constants';
 import { PostModel } from '../../posts/domain';
 import { CommentModel, TComment } from '../domain';
-import { LikesRepository } from '../../likes/infrastructure';
+import { LikeModel } from '../../likes/domain';
 
 type TFilter = ReturnType<typeof createFilter>;
 type TValues = {
@@ -18,8 +18,6 @@ type TValues = {
 
 @injectable()
 export class QueryCommentsRepository {
-    constructor(@inject(LikesRepository) private likesRepository: LikesRepository) {}
-
     async getAllCommentsByPostId(queryParams: QueryParamsCommentModel, postId: string, userId: string) {
         const post = await PostModel.findById(postId);
 
@@ -75,8 +73,7 @@ export class QueryCommentsRepository {
     }
 
     async mapMongoCommentToViewModel(comment: WithId<TComment>, userId: string): Promise<CommentItemViewModel> {
-        const myStatus = (await this.likesRepository.findLikeByParams({ parentId: comment._id.toString(), userId }))
-            ?.status;
+        const myStatus = (await LikeModel.findOne({ $and: [{ parentId: comment._id.toString(), userId }] }))?.status;
 
         return {
             id: comment._id.toString(),

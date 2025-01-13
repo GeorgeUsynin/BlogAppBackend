@@ -2,9 +2,11 @@ import { injectable } from 'inversify';
 import { WithId } from 'mongodb';
 import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
 import { QueryParamsPostModel, PostsPaginatedViewModel, PostItemViewModel } from '../api/models';
-import { ResultStatus } from '../../../constants';
+import { LikeStatus, ResultStatus } from '../../../constants';
 import { BlogModel } from '../../blogs/domain';
 import { PostModel, TPost } from '../domain';
+import { LikeModel } from '../../likes/domain';
+import { UserModel } from '../../users/domain';
 
 type TFilter = ReturnType<typeof createFilter>;
 type TValues = {
@@ -12,11 +14,12 @@ type TValues = {
     totalCount: number;
     pageNumber: number;
     pageSize: number;
+    userId: string;
 };
 
 @injectable()
 export class QueryPostsRepository {
-    async getAllPosts(queryParams: QueryParamsPostModel, blogId?: string) {
+    async getAllPosts(queryParams: QueryParamsPostModel, userId: string, blogId?: string) {
         const params = normalizeQueryParams(queryParams);
         const filter = createFilter({ blogId });
 
@@ -28,10 +31,11 @@ export class QueryPostsRepository {
             totalCount,
             pageNumber: params.pageNumber,
             pageSize: params.pageSize,
+            userId,
         });
     }
 
-    async getAllPostsByBlogId(queryParams: QueryParamsPostModel, blogId: string) {
+    async getAllPostsByBlogId(queryParams: QueryParamsPostModel, userId: string, blogId: string) {
         const blog = await BlogModel.findById(blogId).lean();
 
         if (!blog) {
@@ -41,10 +45,10 @@ export class QueryPostsRepository {
             });
         }
 
-        return this.getAllPosts(queryParams, blogId);
+        return this.getAllPosts(queryParams, userId, blogId);
     }
 
-    async getPostById(postId: string) {
+    async getPostById(postId: string, userId: string) {
         const post = await PostModel.findById(postId);
 
         if (!post) {
@@ -54,7 +58,7 @@ export class QueryPostsRepository {
             });
         }
 
-        return this.mapMongoPostToViewModel(post);
+        return this.mapMongoPostToViewModel(post, userId);
     }
 
     async findTotalCountOfFilteredPosts(filter: TFilter) {
@@ -73,7 +77,24 @@ export class QueryPostsRepository {
             .lean();
     }
 
-    mapMongoPostToViewModel(post: WithId<TPost>): PostItemViewModel {
+    async mapMongoPostToViewModel(post: WithId<TPost>, userId: string): Promise<PostItemViewModel> {
+        const myStatus = (await LikeModel.findOne({ $and: [{ parentId: post._id.toString(), userId }] }))?.status;
+        const newestLikesRaw = await LikeModel.find({ parentId: post._id.toString(), status: LikeStatus.Like })
+            .sort({ createdAt: -1 })
+            .limit(3)
+            .lean();
+
+        const newestLikes = await Promise.all(
+            newestLikesRaw.map(async like => {
+                const user = await UserModel.findById(like.userId);
+                return {
+                    addedAt: like.createdAt,
+                    login: user?.login!,
+                    userId: like.userId,
+                };
+            })
+        );
+
         return {
             id: post._id.toString(),
             title: post.title,
@@ -82,16 +103,29 @@ export class QueryPostsRepository {
             content: post.content,
             blogId: post.blogId,
             createdAt: post.createdAt,
+            extendedLikesInfo: {
+                dislikesCount: post.likesInfo.dislikesCount,
+                likesCount: post.likesInfo.likesCount,
+                myStatus: myStatus ?? 'None',
+                newestLikes,
+            },
         };
     }
 
-    mapPostsToPaginationModel(values: TValues): PostsPaginatedViewModel {
+    async mapPostsToPaginationModel(values: TValues): Promise<PostsPaginatedViewModel> {
+        let items: PostItemViewModel[] = [];
+
+        for (let promiseItem of values.items) {
+            const item = await this.mapMongoPostToViewModel(promiseItem, values.userId);
+            items.push(item);
+        }
+
         return {
             pagesCount: Math.ceil(values.totalCount / values.pageSize),
             page: values.pageNumber,
             pageSize: values.pageSize,
             totalCount: values.totalCount,
-            items: values.items.map(this.mapMongoPostToViewModel.bind(this)),
+            items,
         };
     }
 }

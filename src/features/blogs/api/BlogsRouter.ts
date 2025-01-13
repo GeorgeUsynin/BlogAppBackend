@@ -1,7 +1,11 @@
 import { Router } from 'express';
 import { checkSchema } from 'express-validator';
 import { createUpdateBlogValidationSchema } from './validation';
-import { authBasicMiddleware, errorMiddleware } from '../../shared/api/APIMiddlewares';
+import {
+    authBasicMiddleware,
+    errorMiddleware,
+    getUserIdFromAccessTokenMiddleware,
+} from '../../shared/api/APIMiddlewares';
 import { queryParamsValidationSchema } from '../../shared/api/validation';
 import { createUpdatePostValidationSchema } from '../../posts/api/validation';
 import { ROUTES } from '../../../constants';
@@ -26,7 +30,11 @@ const createUpdatePostValidators = [
 
 const getAllBlogsValidators = [checkSchema(queryParamsValidationSchema('blogs'), ['query']), errorMiddleware];
 
-const getAllPostsValidators = [checkSchema(queryParamsValidationSchema('posts'), ['query']), errorMiddleware];
+const getAllPostsValidators = [
+    getUserIdFromAccessTokenMiddleware,
+    checkSchema(queryParamsValidationSchema('posts'), ['query']),
+    errorMiddleware,
+];
 
 BlogsRouter.get('/', ...getAllBlogsValidators, blogsController.getAllBlogs.bind(blogsController));
 BlogsRouter.get('/:id', blogsController.getBlogByID.bind(blogsController));

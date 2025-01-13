@@ -41,6 +41,12 @@ describe('create a post', () => {
             content: newPost.content,
             shortDescription: newPost.shortDescription,
             title: newPost.title,
+            extendedLikesInfo: {
+                dislikesCount: 0,
+                likesCount: 0,
+                myStatus: 'None',
+                newestLikes: [],
+            },
         };
 
         //creating new post

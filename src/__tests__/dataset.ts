@@ -78,6 +78,10 @@ export const posts: WithId<TPost>[] = [
         blogId: firstId.toString(),
         blogName: 'Eco Lifestyle',
         createdAt: '2024-12-28T10:50:15.222Z',
+        likesInfo: {
+            dislikesCount: 0,
+            likesCount: 0,
+        },
         isDeleted: false,
     },
     {
@@ -89,6 +93,10 @@ export const posts: WithId<TPost>[] = [
         blogId: firstId.toString(),
         blogName: 'Eco Lifestyle',
         createdAt: '2024-12-22T10:50:15.222Z',
+        likesInfo: {
+            dislikesCount: 0,
+            likesCount: 0,
+        },
         isDeleted: false,
     },
     {
@@ -100,6 +108,10 @@ export const posts: WithId<TPost>[] = [
         blogId: secondId.toString(),
         blogName: 'Tech Trends',
         createdAt: '2024-12-27T10:50:15.222Z',
+        likesInfo: {
+            dislikesCount: 0,
+            likesCount: 0,
+        },
         isDeleted: false,
     },
     {
@@ -111,6 +123,10 @@ export const posts: WithId<TPost>[] = [
         blogId: secondId.toString(),
         blogName: 'Tech Trends',
         createdAt: '2024-12-22T10:50:15.222Z',
+        likesInfo: {
+            dislikesCount: 0,
+            likesCount: 0,
+        },
         isDeleted: false,
     },
     {
@@ -122,6 +138,10 @@ export const posts: WithId<TPost>[] = [
         blogId: thirdId.toString(),
         blogName: 'Wellness Path',
         createdAt: '2024-12-26T10:50:15.222Z',
+        likesInfo: {
+            dislikesCount: 0,
+            likesCount: 0,
+        },
         isDeleted: false,
     },
     {
@@ -133,6 +153,10 @@ export const posts: WithId<TPost>[] = [
         blogId: thirdId.toString(),
         blogName: 'Wellness Path',
         createdAt: '2024-12-22T10:50:15.222Z',
+        likesInfo: {
+            dislikesCount: 0,
+            likesCount: 0,
+        },
         isDeleted: false,
     },
     {
@@ -144,6 +168,10 @@ export const posts: WithId<TPost>[] = [
         blogId: fourthId.toString(),
         blogName: 'Creative Minds',
         createdAt: '2024-12-25T10:50:15.222Z',
+        likesInfo: {
+            dislikesCount: 0,
+            likesCount: 0,
+        },
         isDeleted: false,
     },
     {
@@ -155,6 +183,10 @@ export const posts: WithId<TPost>[] = [
         blogId: fourthId.toString(),
         blogName: 'Creative Minds',
         createdAt: '2024-12-22T10:50:15.222Z',
+        likesInfo: {
+            dislikesCount: 0,
+            likesCount: 0,
+        },
         isDeleted: false,
     },
 ];

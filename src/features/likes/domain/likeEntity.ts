@@ -8,6 +8,7 @@ const likeSchema = new Schema<TLike>({
     userId: { type: String, required: true },
     parentId: { type: String, required: true },
     status: { type: String, enum: LikeStatus, required: true },
+    createdAt: { type: String, default: () => new Date().toISOString() },
 });
 
 export const likeStatics = {

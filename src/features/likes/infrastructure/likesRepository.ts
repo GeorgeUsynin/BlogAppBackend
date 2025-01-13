@@ -1,16 +1,10 @@
 import { injectable } from 'inversify';
 import { LikeStatus } from '../../../constants';
-import { LikeDocument, LikeModel, TLike } from '../domain';
+import { LikeDocument, LikeModel } from '../domain';
 
 type TParams = {
     parentId?: string;
     userId?: string;
-};
-
-type TPayload = {
-    parentId: string;
-    userId: string;
-    likeStatus: keyof typeof LikeStatus;
 };
 
 @injectable()

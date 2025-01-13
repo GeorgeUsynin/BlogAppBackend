@@ -6,6 +6,7 @@ export type TLike = {
     status: keyof typeof LikeStatus;
     userId: string;
     parentId: string;
+    createdAt: string;
 };
 
 type TLikeStatics = typeof likeStatics;

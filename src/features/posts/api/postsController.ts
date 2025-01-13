@@ -1,4 +1,4 @@
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
 import { NextFunction, Request, Response } from 'express';
 import type {
     RequestWithBody,
@@ -20,11 +20,13 @@ import { CommentsService } from '../../comments/application';
 import { QueryCommentsRepository } from '../../comments/infrastructure';
 import { CreateUpdatePostInputDTO } from '../application';
 import { CreateUpdateCommentInputDTO } from '../../comments/application';
+import { LikesService, LikeStatusInputDTO } from '../../likes/application';
 
 export class PostsController {
     constructor(
         @inject(PostsService) private postsService: PostsService,
         @inject(CommentsService) private commentsService: CommentsService,
+        @inject(LikesService) private likesService: LikesService,
         @inject(QueryPostsRepository) private queryPostsRepository: QueryPostsRepository,
         @inject(QueryCommentsRepository) private queryCommentsRepository: QueryCommentsRepository
     ) {}
@@ -36,7 +38,9 @@ export class PostsController {
     ) {
         try {
             const queryParams = req.query;
-            const allPosts = await this.queryPostsRepository.getAllPosts(queryParams);
+            const userId = req.userId;
+
+            const allPosts = await this.queryPostsRepository.getAllPosts(queryParams, userId as string);
 
             res.status(HTTP_STATUS_CODES.OK_200).send(allPosts);
         } catch (err) {
@@ -47,8 +51,9 @@ export class PostsController {
     async getPostByID(req: Request<URIParamsPostIDModel>, res: Response<PostItemViewModel>, next: NextFunction) {
         try {
             const postId = req.params.id;
+            const userId = req.userId;
 
-            const foundPost = await this.queryPostsRepository.getPostById(postId);
+            const foundPost = await this.queryPostsRepository.getPostById(postId, userId as string);
 
             res.send(foundPost);
         } catch (err) {
@@ -87,7 +92,7 @@ export class PostsController {
             const payload = req.body;
 
             const { id } = await this.postsService.createPost(payload);
-            const newPost = await this.queryPostsRepository.getPostById(id);
+            const newPost = await this.queryPostsRepository.getPostById(id, '');
 
             res.status(HTTP_STATUS_CODES.CREATED_201).send(newPost);
         } catch (err) {
@@ -125,6 +130,24 @@ export class PostsController {
             const payload = req.body;
 
             await this.postsService.updatePost(postId, payload);
+
+            res.sendStatus(HTTP_STATUS_CODES.NO_CONTENT_204);
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async updateLikeStatusByPostID(
+        req: RequestWithParamsAndBody<URIParamsPostIDModel, LikeStatusInputDTO>,
+        res: Response,
+        next: NextFunction
+    ) {
+        try {
+            const postId = req.params.id;
+            const likeStatus = req.body.likeStatus;
+            const userId = req.userId;
+
+            await this.likesService.updateLikeStatusByPostID(postId, likeStatus, userId as string);
 
             res.sendStatus(HTTP_STATUS_CODES.NO_CONTENT_204);
         } catch (err) {

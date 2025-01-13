@@ -47,6 +47,12 @@ describe('update post by id', () => {
             id: requestedId,
             blogName: (await dbHelper.getBlog(0)).name,
             createdAt: expect.any(String),
+            extendedLikesInfo: {
+                dislikesCount: 0,
+                likesCount: 0,
+                myStatus: 'None',
+                newestLikes: [],
+            },
             ...updatedPost,
         });
     });

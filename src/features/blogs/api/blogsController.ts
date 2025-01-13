@@ -48,8 +48,9 @@ export class BlogsController {
         try {
             const blogId = req.params.id;
             const queryParams = req.query;
+            const userId = req.userId;
 
-            const allPosts = await this.queryPostsRepository.getAllPostsByBlogId(queryParams, blogId);
+            const allPosts = await this.queryPostsRepository.getAllPostsByBlogId(queryParams, userId as string, blogId);
 
             res.status(HTTP_STATUS_CODES.OK_200).send(allPosts);
         } catch (err) {
@@ -127,7 +128,7 @@ export class BlogsController {
 
             const { id } = await this.postsService.createPostByBlogId({ ...payload, blogId });
 
-            const newPost = await this.queryPostsRepository.getPostById(id);
+            const newPost = await this.queryPostsRepository.getPostById(id, '');
 
             res.status(HTTP_STATUS_CODES.CREATED_201).send(newPost);
         } catch (err) {

@@ -1,3 +1,4 @@
+import { LikeStatus } from '../../../../constants';
 import { PaginatedViewModel } from '../../../shared/types';
 /**
  * Represents the paginated response model for posts.
@@ -55,4 +56,62 @@ export type PostItemViewModel = {
      * @type {string}
      */
     createdAt: string;
+
+    /**
+     * Extended likes information for the post.
+     * @type {ExtendedLikesInfoViewModel}
+     */
+    extendedLikesInfo: ExtendedLikesInfoViewModel;
+};
+
+/**
+ * Represents the extended likes information view model.
+ */
+export type ExtendedLikesInfoViewModel = {
+    /**
+     * Total likes for the parent item.
+     * @type {number}
+     */
+    likesCount: number;
+
+    /**
+     * Total dislikes for the parent item.
+     * @type {number}
+     */
+    dislikesCount: number;
+
+    /**
+     * The like status of the current user.
+     * @type {LikeStatus}
+     */
+    myStatus: keyof typeof LikeStatus;
+
+    /**
+     * Last 3 likes (status "Like").
+     * @type {LikeDetailsViewModel[] | null}
+     */
+    newestLikes: LikeDetailsViewModel[] | null;
+};
+
+/**
+ * Represents the details of a single like.
+ */
+export type LikeDetailsViewModel = {
+    /**
+     * The date and time when the like was added.
+     * @type {string}
+     */
+    addedAt: string;
+
+    /**
+     * The user ID of the person who liked.
+     * @type {string | null}
+     */
+    userId: string | null;
+
+    /**
+     * The login of the user who liked.
+     * @type {string | null}
+     */
+    login: string | null;
 };

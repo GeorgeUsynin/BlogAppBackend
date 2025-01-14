@@ -73,7 +73,12 @@ export class CommentsController {
             const likeStatus = req.body.likeStatus;
             const userId = req.userId;
 
-            await this.likesService.updateLikeStatusByCommentID(commentId, likeStatus, userId as string);
+            await this.likesService.updateLikeStatusByParentID({
+                parentId: commentId,
+                likeStatus,
+                userId: userId as string,
+                parentType: 'comment',
+            });
 
             res.sendStatus(HTTP_STATUS_CODES.NO_CONTENT_204);
         } catch (err) {

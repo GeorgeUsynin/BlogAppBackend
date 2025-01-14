@@ -147,7 +147,12 @@ export class PostsController {
             const likeStatus = req.body.likeStatus;
             const userId = req.userId;
 
-            await this.likesService.updateLikeStatusByPostID(postId, likeStatus, userId as string);
+            await this.likesService.updateLikeStatusByParentID({
+                parentId: postId,
+                likeStatus,
+                userId: userId as string,
+                parentType: 'post',
+            });
 
             res.sendStatus(HTTP_STATUS_CODES.NO_CONTENT_204);
         } catch (err) {

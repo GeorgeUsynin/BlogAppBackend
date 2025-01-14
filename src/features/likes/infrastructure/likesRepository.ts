@@ -1,5 +1,4 @@
 import { injectable } from 'inversify';
-import { LikeStatus } from '../../../constants';
 import { LikeDocument, LikeModel } from '../domain';
 
 type TParams = {

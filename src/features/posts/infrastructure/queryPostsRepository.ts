@@ -113,12 +113,7 @@ export class QueryPostsRepository {
     }
 
     async mapPostsToPaginationModel(values: TValues): Promise<PostsPaginatedViewModel> {
-        let items: PostItemViewModel[] = [];
-
-        for (let promiseItem of values.items) {
-            const item = await this.mapMongoPostToViewModel(promiseItem, values.userId);
-            items.push(item);
-        }
+        const items = await Promise.all(values.items.map(item => this.mapMongoPostToViewModel(item, values.userId)));
 
         return {
             pagesCount: Math.ceil(values.totalCount / values.pageSize),

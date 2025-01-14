@@ -92,12 +92,7 @@ export class QueryCommentsRepository {
     }
 
     async mapCommentsToPaginationModel(values: TValues): Promise<CommentsPaginatedViewModel> {
-        let items: CommentItemViewModel[] = [];
-
-        for (let promiseItem of values.items) {
-            const item = await this.mapMongoCommentToViewModel(promiseItem, values.userId);
-            items.push(item);
-        }
+        const items = await Promise.all(values.items.map(item => this.mapMongoCommentToViewModel(item, values.userId)));
 
         return {
             pagesCount: Math.ceil(values.totalCount / values.pageSize),

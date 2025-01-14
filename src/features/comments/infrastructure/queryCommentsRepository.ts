@@ -2,7 +2,7 @@ import { injectable } from 'inversify';
 import { WithId } from 'mongodb';
 import { QueryParamsCommentModel, CommentItemViewModel, CommentsPaginatedViewModel } from '../api/models';
 import { APIError, createFilter, normalizeQueryParams } from '../../shared/helpers';
-import { ResultStatus } from '../../../constants';
+import { LikeStatus, ResultStatus } from '../../../constants';
 import { PostModel } from '../../posts/domain';
 import { CommentModel, TComment } from '../domain';
 import { LikeModel } from '../../likes/domain';
@@ -32,6 +32,7 @@ export class QueryCommentsRepository {
         const filter = createFilter({ postId });
 
         const items = await this.findCommentItemsByParamsAndFilter(params, filter);
+
         const totalCount = await this.findTotalCountOfFilteredComments(filter);
 
         return this.mapCommentsToPaginationModel({
@@ -53,7 +54,14 @@ export class QueryCommentsRepository {
             });
         }
 
-        return this.mapMongoCommentToViewModel(comment, userId);
+        let myStatus: keyof typeof LikeStatus = LikeStatus.None;
+
+        if (userId) {
+            const like = await LikeModel.findOne({ parentId: comment._id.toString(), userId });
+            myStatus = like ? like.status : LikeStatus.None;
+        }
+
+        return this.mapMongoCommentToViewModel(comment, myStatus);
     }
 
     async findTotalCountOfFilteredComments(filter: TFilter) {
@@ -72,9 +80,7 @@ export class QueryCommentsRepository {
             .lean();
     }
 
-    async mapMongoCommentToViewModel(comment: WithId<TComment>, userId: string): Promise<CommentItemViewModel> {
-        const myStatus = (await LikeModel.findOne({ $and: [{ parentId: comment._id.toString(), userId }] }))?.status;
-
+    mapMongoCommentToViewModel(comment: WithId<TComment>, myStatus: keyof typeof LikeStatus): CommentItemViewModel {
         return {
             id: comment._id.toString(),
             content: comment.content,
@@ -86,13 +92,19 @@ export class QueryCommentsRepository {
             likesInfo: {
                 dislikesCount: comment.likesInfo.dislikesCount,
                 likesCount: comment.likesInfo.likesCount,
-                myStatus: myStatus ?? 'None',
+                myStatus,
             },
         };
     }
 
     async mapCommentsToPaginationModel(values: TValues): Promise<CommentsPaginatedViewModel> {
-        const items = await Promise.all(values.items.map(item => this.mapMongoCommentToViewModel(item, values.userId)));
+        const commentsIds = values.items.map(item => item._id.toString());
+        const likes = await LikeModel.find({ parentId: { $in: commentsIds } });
+        const items = values.items.map(item => {
+            const like = likes.find(like => like.parentId === item._id.toString());
+            const myStatus = like && like.userId === values.userId ? like.status : LikeStatus.None;
+            return this.mapMongoCommentToViewModel(item, myStatus);
+        });
 
         return {
             pagesCount: Math.ceil(values.totalCount / values.pageSize),

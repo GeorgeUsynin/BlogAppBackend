@@ -9,7 +9,7 @@ type TParams = {
 @injectable()
 export class LikesRepository {
     async findLikeByParams(params: TParams) {
-        return LikeModel.findOne({ $and: [params] });
+        return LikeModel.findOne(params);
     }
 
     async save(likeDocument: LikeDocument) {

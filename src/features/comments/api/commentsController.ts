@@ -24,7 +24,7 @@ export class CommentsController {
             const commentId = req.params.id;
             const userId = req.userId;
 
-            const comment = await this.queryCommentsRepository.getCommentById(commentId, userId as string);
+            const comment = await this.queryCommentsRepository.getCommentById(commentId, userId!);
 
             res.status(HTTP_STATUS_CODES.OK_200).send(comment);
         } catch (err) {

@@ -58,7 +58,14 @@ export class QueryPostsRepository {
             });
         }
 
-        return this.mapMongoPostToViewModel(post, userId);
+        let myStatus: keyof typeof LikeStatus = LikeStatus.None;
+
+        if (userId) {
+            const like = await LikeModel.findOne({ parentId: post._id.toString(), userId });
+            myStatus = like ? like.status : LikeStatus.None;
+        }
+
+        return this.mapMongoPostToViewModel(post, myStatus);
     }
 
     async findTotalCountOfFilteredPosts(filter: TFilter) {
@@ -77,23 +84,22 @@ export class QueryPostsRepository {
             .lean();
     }
 
-    async mapMongoPostToViewModel(post: WithId<TPost>, userId: string): Promise<PostItemViewModel> {
-        const myStatus = (await LikeModel.findOne({ $and: [{ parentId: post._id.toString(), userId }] }))?.status;
+    async mapMongoPostToViewModel(post: WithId<TPost>, myStatus: keyof typeof LikeStatus): Promise<PostItemViewModel> {
         const newestLikesRaw = await LikeModel.find({ parentId: post._id.toString(), status: LikeStatus.Like })
             .sort({ createdAt: -1 })
-            .limit(3)
-            .lean();
+            .limit(3);
 
-        const newestLikes = await Promise.all(
-            newestLikesRaw.map(async like => {
-                const user = await UserModel.findById(like.userId);
-                return {
-                    addedAt: like.createdAt,
-                    login: user?.login!,
-                    userId: like.userId,
-                };
-            })
-        );
+        const likesUsersIds = newestLikesRaw.map(like => like.userId);
+        const users = await UserModel.find({ _id: { $in: likesUsersIds } });
+
+        const newestLikes = newestLikesRaw.map(like => {
+            const user = users.find(user => user._id.toString() === like.userId);
+            return {
+                addedAt: like.createdAt,
+                login: user?.login!,
+                userId: like.userId,
+            };
+        });
 
         return {
             id: post._id.toString(),
@@ -106,21 +112,27 @@ export class QueryPostsRepository {
             extendedLikesInfo: {
                 dislikesCount: post.likesInfo.dislikesCount,
                 likesCount: post.likesInfo.likesCount,
-                myStatus: myStatus ?? 'None',
+                myStatus,
                 newestLikes,
             },
         };
     }
 
     async mapPostsToPaginationModel(values: TValues): Promise<PostsPaginatedViewModel> {
-        const items = await Promise.all(values.items.map(item => this.mapMongoPostToViewModel(item, values.userId)));
+        const postsIds = values.items.map(item => item._id.toString());
+        const likes = await LikeModel.find({ parentId: { $in: postsIds } });
+        const items = values.items.map(item => {
+            const like = likes.find(like => like.parentId === item._id.toString());
+            const myStatus = like && like.userId === values.userId ? like.status : LikeStatus.None;
+            return this.mapMongoPostToViewModel(item, myStatus);
+        });
 
         return {
             pagesCount: Math.ceil(values.totalCount / values.pageSize),
             page: values.pageNumber,
             pageSize: values.pageSize,
             totalCount: values.totalCount,
-            items,
+            items: await Promise.all(items),
         };
     }
 }

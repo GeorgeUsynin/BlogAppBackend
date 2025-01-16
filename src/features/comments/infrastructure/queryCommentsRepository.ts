@@ -99,10 +99,10 @@ export class QueryCommentsRepository {
 
     async mapCommentsToPaginationModel(values: TValues): Promise<CommentsPaginatedViewModel> {
         const commentsIds = values.items.map(item => item._id.toString());
-        const likes = await LikeModel.find({ parentId: { $in: commentsIds } });
+        const likes = await LikeModel.find({ parentId: { $in: commentsIds }, userId: values.userId });
         const items = values.items.map(item => {
             const like = likes.find(like => like.parentId === item._id.toString());
-            const myStatus = like && like.userId === values.userId ? like.status : LikeStatus.None;
+            const myStatus = like ? like.status : LikeStatus.None;
             return this.mapMongoCommentToViewModel(item, myStatus);
         });
 

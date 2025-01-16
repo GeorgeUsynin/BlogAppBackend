@@ -120,10 +120,10 @@ export class QueryPostsRepository {
 
     async mapPostsToPaginationModel(values: TValues): Promise<PostsPaginatedViewModel> {
         const postsIds = values.items.map(item => item._id.toString());
-        const likes = await LikeModel.find({ parentId: { $in: postsIds } });
+        const likes = await LikeModel.find({ parentId: { $in: postsIds }, userId: values.userId });
         const items = values.items.map(item => {
             const like = likes.find(like => like.parentId === item._id.toString());
-            const myStatus = like && like.userId === values.userId ? like.status : LikeStatus.None;
+            const myStatus = like ? like.status : LikeStatus.None;
             return this.mapMongoPostToViewModel(item, myStatus);
         });
 

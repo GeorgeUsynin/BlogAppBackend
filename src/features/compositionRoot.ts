@@ -35,7 +35,20 @@ import { QueryUsersRepository, UsersRepository } from './users/infrastructure';
 // Manager imports
 import { EmailManager } from './shared/application/managers/emailManager';
 
-export const container: Container = new Container();
+class SingletonContainer {
+    static #instance: Container;
+
+    private constructor() {}
+
+    public static get instance(): Container {
+        if (!SingletonContainer.#instance) {
+            SingletonContainer.#instance = new Container();
+        }
+        return SingletonContainer.#instance;
+    }
+}
+
+export const container: Container = SingletonContainer.instance;
 
 // Bindings
 container.bind(APIRateLimitRepository).toSelf();
